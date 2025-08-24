@@ -1,0 +1,88 @@
+.header {
+	background: #e85c24;
+	padding: 24px 0 0 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.header-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 40px;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+}
+
+.logo img {
+	height: 80px;
+	margin-right: 16px;
+}
+
+.brand {
+	font-size: 2.5rem;
+	font-weight: bold;
+	color: #fff;
+}
+
+.search-bar {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+}
+
+.search-bar input {
+	width: 500px;
+	padding: 10px 16px;
+	border: none;
+	border-radius: 4px;
+	background: #232323;
+	color: #fff;
+	font-size: 1.1rem;
+}
+
+.user-menu {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	color: #fff;
+	font-size: 1.1rem;
+}
+
+.wishlist-btn {
+	background: #d3d3d3;
+	border: none;
+	border-radius: 4px;
+	padding: 4px 12px;
+	margin-left: 8px;
+	font-size: 1rem;
+}
+
+.header-bottom {
+	background: #232323;
+	padding: 8px 0;
+	display: flex;
+	justify-content: center;
+}
+
+.nav-links {
+	display: flex;
+	gap: 40px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-links li a {
+	color: #fff;
+	text-decoration: none;
+	font-size: 1.1rem;
+	transition: color 0.2s;
+}
+
+.nav-links li a:hover {
+	color: #e85c24;
+}
