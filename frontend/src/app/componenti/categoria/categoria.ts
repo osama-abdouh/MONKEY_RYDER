@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-
 @Component({
-  selector: 'app-footer',
+  selector: 'app-categoria',
   imports: [RouterModule],
-  templateUrl: './footer.html',
-  styleUrl: './footer.css'
+  templateUrl: './categoria.html',
+  styleUrls: ['./categoria.css']
 })
-export class Footer {
+export class Categoria {
 
 }
