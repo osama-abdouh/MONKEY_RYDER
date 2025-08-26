@@ -70,7 +70,7 @@
 
 .Tutti-Prodotti {
     display: flex;
-    background: linear-gradient(90deg, #ff9800 60%, #e85c24 100%);
+    background: linear-gradient(90deg, #c70101 60%, #962a00 100%);
     color: #fff;
     border-radius: 32px;
     width: 20%;
@@ -81,7 +81,7 @@
     margin-left: auto;
     margin-right: auto;
     box-shadow:
-		0 8px 24px rgba(255, 86, 1, 0.32),
+		0 8px 24px rgba(255, 1, 1, 0.32),
 		0 2px 8px rgba(44,62,80,0.22);
     font-size: 1.2rem;
     font-weight: bold;
@@ -94,13 +94,13 @@
 
 .Tutti-Prodotti:hover {
 	box-shadow:
-		0 16px 32px rgba(255, 86, 1, 0.42),
+		0 16px 32px rgba(255, 1, 1, 0.42),
 		0 4px 16px rgba(44,62,80,0.32);
 	transform: translateY(-4px) scale(1.04);
 }
 
 .Tutti-Prodotti:active {
-	box-shadow: 0 2px 8px rgba(255, 86, 1, 0.22);
+	box-shadow: 0 2px 8px rgba(255, 1, 1, 0.22);
 	transform: translateY(2px) scale(0.98);
 }
 
