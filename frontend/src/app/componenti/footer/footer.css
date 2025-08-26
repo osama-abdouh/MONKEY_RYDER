@@ -22,9 +22,7 @@ button, .destra .sinistra {
     margin-top: 0;
    
 }
-.info {
-  position: relative;
-}
+
 .destra {
   position: absolute;
   top: 50px;
