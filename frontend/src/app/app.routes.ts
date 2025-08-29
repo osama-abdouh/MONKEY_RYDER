@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home';
-import { CartComponent } from './components/cart/cart';
-import { RegisterComponent } from './components/register/register';
-import { WishlistComponent } from './components/wishlist/wishlist';
+import { HomeComponent } from './features/home/home';
+import { CartComponent } from './features/cart/cart';
+import { RegisterComponent } from './features/auth/register/register';
+import { WishlistComponent } from './features/wishlist/wishlist';
 
 
 export const routes: Routes = [

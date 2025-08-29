@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Api } from './services/api';
-import { HeaderComponent } from "./components/header/header"; // Importa il servizio Api
+import { HeaderComponent } from "./layuot/header/header"; // Importa il servizio Api
 
 @Component({
   selector: 'app-root',

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from "../login/login";
+import { LoginComponent } from "../../features/auth/login/login";
 
 @Component({
   selector: 'app-header',
