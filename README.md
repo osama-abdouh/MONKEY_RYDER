@@ -4,6 +4,7 @@ Accendi la tua passione per i motori: scegli il meglio per la tua auto, scegli n
 * Frontend: ng serve
 * Backend: npm start
 # Struttura Frontend:
+```bash
 src/
 │
 ├── app/
@@ -27,6 +28,7 @@ src/
 ├── assets/                  // Immagini, icone, file statici
 ├── environments/            // env files
 └── styles/                  // SCSS/CSS globali
+```
 
 ## COLORI:
 * marrone scurissimo: #423E37
