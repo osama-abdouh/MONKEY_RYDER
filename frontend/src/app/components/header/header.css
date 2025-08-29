@@ -1,0 +1,151 @@
+.header-container {
+position: sticky;
+top: 0;
+left: 0;
+width: 100%;
+z-index: 1000;
+background: #8A9B68;
+box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.header-top {
+    background: #423E37;
+    font-size: 0.95rem;
+    padding: 0.3rem 0;
+}
+.header-top .container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.lang-switcher {
+    display: flex;
+    gap: 0.5rem;
+}
+.lang-btn {
+    background: none;
+    border: none;
+    color: black;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.header-middle {
+    padding: 1rem 0;
+    border-bottom: 1.5px solid #403D39; /* linea divisoria */
+    overflow-x: visible;
+}
+.header-middle .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+.logo {
+    display: flex;
+    align-items: center;
+}
+.logo a {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    text-decoration: none;
+}
+.logo-img {
+    height: 100px;
+    width: auto;
+    margin-right: 0.7rem;
+}
+.logo-text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    color: #18191a;
+}
+
+.search-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+.search-input {
+    background: #D5DDBC;
+    padding: 0.5rem;
+    border: 1px solid #8A9B68;
+    color: #423E37;
+    border-radius: 2px;
+    height: 40px;
+    width: 500px;
+    text-align: left;
+    font-size: 1rem;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24)
+}
+.search-input::placeholder {
+    color: #423E37;
+}
+.navUser-actions{
+    display: flex;
+    justify-content: end;
+    flex-direction: row;
+    gap: 1rem
+}
+.cart-icon,
+.user-icon,
+.wishlist-icon{
+    width: 1.75rem;
+    height: 1.75rem;
+}
+.cart-btn,
+.user-btn,
+.whishlist-btn {
+    border: none;
+    padding: 0.5rem 0.5rem;
+    border-radius: 3px;
+    background: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    transition: background 0.2s, color 0.2s;
+}
+
+.cart-btn:hover,
+.user-btn:hover,
+.whishlist-btn:hover{
+    background: #B6C197;
+    color: black;
+    opacity: 0.85;
+
+}
+
+
+
+.profile-menu {
+    position: relative;
+}
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    background: #8A9B68;
+    min-width: 20rem;
+    border: 1px solid #423E37;
+    border-radius: 8px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+    z-index: 10;
+}
+.dropdown-menu a {
+    text-decoration: none;
+    color: black;
+}
+.dropdown-menu a:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+

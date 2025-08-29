@@ -1,0 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Configurazione per permettere sticky positioning */
+html {
+  height: 100%;
+  overflow-x: hidden; /* Previene scroll orizzontale */
+  scroll-behavior: smooth; /* Scroll fluido */
+}
+
+body {
+  background-color: #423E37;
+  min-height: 100vh; /* Garantisce altezza minima per lo scroll */
+  overflow-x: hidden; /* Previene scroll orizzontale */
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+:root {
+  font-family: Inter, sans-serif;
+  font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+}
+@supports (font-variation-settings: normal) {
+  :root { font-family: InterVariable, sans-serif; }
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
