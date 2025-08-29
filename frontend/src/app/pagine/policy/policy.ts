@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { Header } from '../../componenti/header/header';
+import { Footer } from '../../componenti/footer/footer';
 
 @Component({
   selector: 'app-policy',
-  imports: [],
+  imports: [Header, Footer],
   templateUrl: './policy.html',
-  styleUrl: './policy.css'
+  styleUrls: ['./policy.css']
 })
 export class Policy {
 
