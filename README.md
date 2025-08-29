@@ -30,6 +30,18 @@ src/
 └── styles/                  // SCSS/CSS globali
 ```
 
+# INFO PER IL DB
+```bash
+Monkey_Rider/
+├── docker-compose.yml          ← Il "ricettario" per Docker
+├── database/                   ← Cartella con i file SQL
+│   └── init/                   ← Script che si eseguono all'avvio
+│       ├── 01_create_tables.sql
+│       └── 02_insert_data.sql
+├── frontend/                   ← Il tuo Angular
+└── backend/                    ← Il tuo Express.js
+```
+
 ## COLORI:
 * marrone scurissimo: #423E37
 * verde scuro: #8A9B68

@@ -1,0 +1,33 @@
+# Docker Compose per Monkey Rider - Setup PostgreSQL condiviso
+# Questo file descrive come creare e configurare il container del database
+
+version: '3.8'  # Versione del formato docker-compose (standard moderna)
+
+services:       # Elenco dei "servizi" (applicazioni) che vogliamo far girare
+  postgres:     # Nome del servizio (possiamo chiamarlo come vogliamo)
+    image: postgres:15                    # Scarica PostgreSQL versione 15 da Docker Hub
+    container_name: monkey_rider_db       # Nome del container (per riconoscerlo facilmente)
+    
+    environment:  # Variabili di ambiente per configurare PostgreSQL
+      POSTGRES_DB: monkey_rider           # Nome del database che verrà creato
+      POSTGRES_USER: admin               # Username per accedere (uguale per tutti)
+      POSTGRES_PASSWORD: password123     # Password (uguale per tutti)
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"  # Encoding per caratteri italiani
+    
+    ports:        # Mapping delle porte: porta_del_computer:porta_del_container
+      - "5432:5432"  # PostgreSQL sarà accessibile su localhost:5432
+    
+    volumes:      # "Collegamenti" tra cartelle del computer e del container
+      # Questa riga dice: "Prendi i file dalla cartella ./database/init/ 
+      # e mettili in /docker-entrypoint-initdb.d/ nel container"
+      # PostgreSQL esegue automaticamente tutti i .sql in quella cartella
+      - ./database/init:/docker-entrypoint-initdb.d/
+      
+      # Questa riga salva i dati del database in modo persistente
+      # Anche se fermi Docker, i dati rimangono
+      - postgres_data:/var/lib/postgresql/data
+    
+    restart: unless-stopped  # Riavvia automaticamente se si chiude per errore
+
+volumes:  # Definizione dei "volumi" (spazi di archiviazione persistenti)
+  postgres_data:  # Nome del volume per salvare i dati del database

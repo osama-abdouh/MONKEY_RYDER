@@ -1,8 +1,21 @@
-<app-header></app-header>
+
+<!-- Header visibile solo se splash NON è attiva -->
+@if (!splashService.isSplashActive()) {
+  <app-header></app-header>
+}
 
 <main class="main">
   <div style="text-align:center; font-family: nerd, sans-serif;">
     <router-outlet></router-outlet>
-    <p>Stato del server: {{ serverStatus() }}</p>
+    <!-- Status del server visibile solo se splash NON è attiva -->
+    @if (!splashService.isSplashActive()) {
+      <p>Stato del server: {{ serverStatus() }}</p>
+    }
   </div>
 </main>
+
+<!-- Colab e Footer visibili solo se splash NON è attiva -->
+@if (!splashService.isSplashActive()) {
+  <app-colab></app-colab>
+  <app-footer></app-footer>
+}

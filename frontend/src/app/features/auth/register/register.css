@@ -42,7 +42,7 @@ button{
 	font-weight: bolder;
 	cursor: pointer;
 	margin-top: 0.5rem;
-	width: 100%;
+	width: 50%;
 	box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
 	transition: background-color 0.3s ease, color 0.3s ease;
 }

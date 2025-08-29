@@ -1,0 +1,35 @@
+
+.contattaci-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	min-height: 60vh;
+	padding: 2rem 5vw;
+	gap: 2rem;
+    color: #fff;
+}
+
+h1{
+    text-align: center;
+}
+
+.contattaci-left {
+	flex: 1;
+}
+
+.contattaci-right {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.contattaci-img {
+	max-width: 350px;
+	width: 100%;
+	height: auto;
+
+	background-color: none;
+}
+
+

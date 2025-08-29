@@ -38,12 +38,14 @@
                 <option value="carrozzeria">Carrozzeria</option>
             </select>
             </div>
+            
+            <div class="search-field">
+                <label>&nbsp;</label> <!-- Label vuota per allineare -->
+                <button type="submit" class="search-button" (click)="searchProducts($event)">
+                    🔍 Cerca
+                </button>
+            </div>
         </div>
-
-        <button type="submit" class="search-button" (click)="searchProducts($event)">
-            🔍 Cerca
-        </button>
-        
         </form>
     </div>
 </section>
