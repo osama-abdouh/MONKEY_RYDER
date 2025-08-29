@@ -4,11 +4,21 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
 }
 
-body{
+/* Configurazione per permettere sticky positioning */
+html {
+  height: 100%;
+  overflow-x: hidden; /* Previene scroll orizzontale */
+  scroll-behavior: smooth; /* Scroll fluido */
+}
+
+body {
   background-color: #423E37;
+  min-height: 100vh; /* Garantisce altezza minima per lo scroll */
+  overflow-x: hidden; /* Previene scroll orizzontale */
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 :root {
   font-family: Inter, sans-serif;

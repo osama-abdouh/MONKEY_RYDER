@@ -1,3 +1,5 @@
-body{
-    background: black;
+/* Stili specifici per il componente app - body viene gestito in styles.css globale */
+.main {
+    min-height: 100vh; /* Garantisce altezza per testare lo scroll */
+    padding-top: 0; /* Rimuove padding se non necessario con sticky */
 }

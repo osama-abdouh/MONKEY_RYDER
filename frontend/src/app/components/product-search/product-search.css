@@ -1,9 +1,8 @@
 .search-section{
-    background: #D5DDBC;
-    border: 1px solid #B6C197;
-    color: #423E37;
-    width: 80vw;
-    height: 15vh;
+    background: #8A9B68;
+    color: black;
+    width: 80%;
+    height: 50vh;
     margin: 0 auto;
 }
 .search-container {
@@ -16,7 +15,7 @@
 .search-container h2 {
     text-align: start;
     color: #18191a;
-    font-size: 1rem;
+    font-size: 1.7rem;
     margin-bottom: 1.5rem;
     font-weight: bold;
 }
@@ -47,7 +46,7 @@
     border: 1px solid #18191a;
     border-radius: none;
     font-size: 1.25rem;
-    background: rgb(255, 0, 0);
+    background: #8A9B68;
     transition: all 0.3s ease;
 }
 .search-field select:focus,
