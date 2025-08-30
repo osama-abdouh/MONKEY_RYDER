@@ -1,5 +1,5 @@
 # Docker Compose per Monkey Rider - Setup PostgreSQL condiviso
-# Questo file descrive come creare e configurare il container del database
+# Configurazione corretta per creare utente "admin" come richiesto dal backend
 
 version: '3.8'  # Versione del formato docker-compose (standard moderna)
 
@@ -9,10 +9,11 @@ services:       # Elenco dei "servizi" (applicazioni) che vogliamo far girare
     container_name: monkey_rider_db       # Nome del container (per riconoscerlo facilmente)
     
     environment:  # Variabili di ambiente per configurare PostgreSQL
-      POSTGRES_DB: monkey_rider           # Nome del database che verrà creato
-      POSTGRES_USER: admin               # Username per accedere (uguale per tutti)
-      POSTGRES_PASSWORD: password123     # Password (uguale per tutti)
-      POSTGRES_INITDB_ARGS: "--encoding=UTF8"  # Encoding per caratteri italiani
+      # Configurazione database - DEVE corrispondere al file .env del backend
+      POSTGRES_DB: monkey_rider              # Nome del database
+      POSTGRES_USER: admin                  # Crea utente "admin" invece del default "postgres"
+      POSTGRES_PASSWORD: password123        # Password per l'utente "admin"
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --auth-host=md5 --auth-local=md5"
     
     ports:        # Mapping delle porte: porta_del_computer:porta_del_container
       - "5432:5432"  # PostgreSQL sarà accessibile su localhost:5432
@@ -28,6 +29,14 @@ services:       # Elenco dei "servizi" (applicazioni) che vogliamo far girare
       - postgres_data:/var/lib/postgresql/data
     
     restart: unless-stopped  # Riavvia automaticamente se si chiude per errore
+    
+    # Health check per monitorare lo stato del database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d monkey_rider"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:  # Definizione dei "volumi" (spazi di archiviazione persistenti)
   postgres_data:  # Nome del volume per salvare i dati del database
+    driver: local

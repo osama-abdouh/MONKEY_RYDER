@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +22,23 @@ export class RegisterComponent {
   indirizzo: string = '';
   message: string = '';
 
-  onRegister(): void {
-    this.message = `Benvenuto, ${this.username}! Registrazione completata.`;
+  constructor(private http: HttpClient, private router: Router) {}
+
+  onRegister() {
+    this.http.post('http://localhost:3000/api/register', {
+      username: this.username,
+      password: this.password,
+      email: this.email
+    }).subscribe({
+      next: (res: any) => {
+        this.message = res.message;
+        console.log('Registrazione avvenuta:', res);
+      },
+      error: (err) => {
+        this.message = err.error.error;
+        console.error('Errore durante la registrazione:', err);
+      }
+    });
   }
 }
+

@@ -31,6 +31,20 @@ src/
 ```
 
 # INFO PER IL DB
+### per avviare:
+```bash
+# 1. Verifica che Docker sia attivo
+docker --version
+
+# 2. Avvia il database PostgreSQL
+docker-compose up -d
+
+# 3. Verifica che il container sia in esecuzione
+docker-compose ps
+
+# 4. Controlla i log per assicurarti che tutto sia OK
+docker-compose logs postgres
+```
 ```bash
 Monkey_Rider/
 ├── docker-compose.yml          ← Il "ricettario" per Docker
