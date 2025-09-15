@@ -1,0 +1,112 @@
+
+.categorie-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: repeat(2, 1fr);
+		gap: 32px;
+		justify-items: center;
+		align-items: center;
+		margin: 40px auto 0 auto;
+		max-width: 900px;
+       
+}
+
+.categoria-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(145deg, #c4c3c3 0%, #f5f5f5 100%);
+	border-radius: 24px;
+	box-shadow:
+		0 12px 36px rgba(44,62,80,0.32),
+		0 2px 8px rgba(255, 86, 1, 0.22),
+		0 1.5px 0px #fff inset,
+		0 0.5px 0px #e2e2e2 inset;
+	border: none;
+	padding: 18px 12px;
+	width: 250px;
+	height: 250px;
+	cursor: pointer;
+	transition: box-shadow 0.2s, transform 0.2s;
+	position: relative;
+	overflow: hidden;
+}
+
+.categoria-card:hover {
+	box-shadow:
+		0 24px 48px rgba(255, 86, 1, 0.32),
+		0 4px 16px rgba(46, 0, 253, 0.22),
+		0 2px 8px rgba(44,62,80,0.22);
+	transform: translateY(-8px) scale(1.08);
+}
+
+.categoria-card:active {
+	box-shadow: 0 2px 8px rgba(255, 86, 1, 0.18);
+	transform: translateY(2px) scale(0.98);
+}
+
+.categoria-card img {
+	width: 100%;
+	height: 180px;
+	object-fit: cover;
+	margin-bottom: 0;
+	border-top-left-radius: 24px;
+	border-top-right-radius: 24px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	display: block;
+    margin-top: -12px;
+}
+
+
+.categoria-title {
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: #000000;
+	text-align: center;
+    margin-top: 16px;
+}
+
+.Tutti-Prodotti {
+    display: flex;
+    background: linear-gradient(90deg, #D64933 60%, #a13625 100%);
+    color: #fff;
+    border-radius: 32px;
+    width: 20%;
+    height: 80px;
+	margin-top: 50px;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow:
+		0 8px 24px rgba(255, 1, 1, 0.32),
+		0 2px 8px rgba(44,62,80,0.22);
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+    padding: 18px 40px;
+
+}
+
+.Tutti-Prodotti:hover {
+	box-shadow:
+		0 16px 32px rgba(255, 1, 1, 0.42),
+		0 4px 16px rgba(44,62,80,0.32);
+	transform: translateY(-4px) scale(1.04);
+}
+
+.Tutti-Prodotti:active {
+	box-shadow: 0 2px 8px rgba(255, 1, 1, 0.22);
+	transform: translateY(2px) scale(0.98);
+}
+
+.Tutti-Prodotti a {
+	color: inherit;
+	text-decoration: none;
+	font-weight: inherit;
+	font-size: inherit;
+}
