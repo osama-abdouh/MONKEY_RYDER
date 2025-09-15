@@ -1,0 +1,52 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    align-items: center;
+    background-color: #8A9B68;
+    margin: 32px auto;
+    padding: 24px;
+    border-radius: 4px;
+    max-width: 80%;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+}
+form {
+    display: flex;
+    flex-direction: column; /* Disposizione in riga */
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+input {
+    background: #D5DDBC;
+    border: none;
+    border-radius: 2px;
+    padding: 0.5rem;
+    height: 1.8rem;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 50%;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+    box-sizing: border-box;
+}
+input::placeholder{
+	color: #423E37;
+}
+button{
+	background: #D5DDBC;
+	border: none;
+	border-radius: 2px;
+	padding: 0.5rem 1rem;
+	color: black;
+	font-size: 1rem;
+	font-weight: bolder;
+	cursor: pointer;
+	margin-top: 0.5rem;
+	width: 50%;
+	box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+button:hover{
+	background: #423E37;
+	color: white;
+}

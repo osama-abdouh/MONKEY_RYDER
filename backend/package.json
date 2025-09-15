@@ -1,19 +1,26 @@
 {
-  "name": "monkeydriver_backend",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "e-commerce backend server",
+  "description": "monkey rider API",
+  "homepage": "https://github.com/osama-abdouh/Monkey_Rider#readme",
+  "bugs": {
+    "url": "https://github.com/osama-abdouh/Monkey_Rider/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osama-abdouh/Monkey_Rider.git"
+  },
   "license": "ISC",
-  "author": "",
+  "author": "os & imwa",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0"
-  },
-  "keywords": []
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "pg-promise": "^12.1.3"
+  }
 }
