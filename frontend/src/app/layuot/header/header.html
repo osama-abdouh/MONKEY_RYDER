@@ -1,0 +1,49 @@
+<div class="header-container"> 
+    <div class="header-top">
+        <div class="container">
+            <div></div> <!-- Placeholder for future content -->
+            <div class="lang-switcher">
+            <button class="lang-btn">IT</button>
+            <button class="lang-btn">EN</button>
+            </div>
+        </div>
+    </div>
+    <div class="header-middle">
+        <div class="container">
+          <div class="logo">
+            <a routerLink="/home">
+              <img src="assets/images/logo.png" alt="Logo Monkey Rider" class="logo-img" />
+              <span class="logo-text">Monkey Rider</span>
+            </a>
+          </div>
+          <div class="search search-center">
+            <input 
+              type="text" 
+              placeholder="Cerca"
+              class="search-input">
+          </div>
+          <div class="navUser-actions">
+            <div class="profile-menu">
+              <button class="user-btn" (click)="ToggleDropdown()">
+                <img src="assets/icone/user.svg" alt="User" class="user-icon"/>
+              </button>
+              @if (showDropdown) {
+                <div class="dropdown-menu">
+                  <app-login [closeDropdown]="closeDropdown"></app-login>
+                </div>
+              }
+            </div>
+            <button class="whishlist-btn" routerLink="/wishlist">
+              <img src="assets/icone/heart.svg" alt="Wishlist" class="wishlist-icon"/>
+            </button>
+            <button class="cart-btn" routerLink="/cart">
+              <img src="assets/icone/shopping-cart.svg" alt="cart" class="cart-icon"/>
+              <!--({{ cartItemCount }})-->
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+
+</div>
