@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-body {
-	background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
-}
-=======
 /* You can add global styles to this file, and also import other style files */
 
 * {
@@ -34,4 +29,3 @@ body {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
->>>>>>> 025a782116520e57b9576adfa264847de08dead9
