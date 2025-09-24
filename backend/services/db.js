@@ -1,9 +1,7 @@
-// Servizio Supabase
-// Inizializza il client Supabase per usarlo in tutto il backend
 const { createClient } = require('@supabase/supabase-js');
-const { SUPABASE_URL, SUPABASE_ANON_KEY } = require('../config');
+const config = require('../config');
 
 // Il client è l'oggetto che userai per tutte le operazioni (query, auth, storage)
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient(config.db.url, config.db.anonKey);
 
 module.exports = supabase;
