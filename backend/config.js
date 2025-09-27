@@ -2,9 +2,13 @@ require('dotenv').config();
 
 const config={
 	db:{
-		url: process.env.SUPABASE_URL,
-		anonKey: process.env.SUPABASE_ANON_KEY
+		user: process.env.DB_USER,
+		password: process.env.DB_PASSWORD,
+		host: process.env.DB_HOST,
+		port: process.env.DB_PORT,
+		database: process.env.DB_NAME,
 	}
 }; 
 
 module.exports = config;
+

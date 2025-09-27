@@ -1,7 +1,25 @@
-const { createClient } = require('@supabase/supabase-js');
+const pgp = require('pg-promise')();
 const config = require('../config');
 
-// Il client è l'oggetto che userai per tutte le operazioni (query, auth, storage)
-const supabase = createClient(config.db.url, config.db.anonKey);
+// Crea l'istanza DB una volta sola
+const db = pgp(config.db);
 
-module.exports = supabase;
+async function getConnection() {
+    try {
+        const connection = await db.connect();
+        console.log('Database connected successfully');
+        return connection;
+    } catch (error) {
+        console.error('Database connection error:', error);
+        throw error;
+    }
+}
+
+async function execute(connection, sql, params) {
+  const results = await connection.any(sql, params);
+  return results;
+}
+
+
+// Esporta l'istanza DB direttamente
+module.exports = { getConnection, execute };

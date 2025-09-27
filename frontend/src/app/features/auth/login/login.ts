@@ -31,11 +31,13 @@ export class LoginComponent {
       next: (res: any) => {
         this.message = res.message;
         console.log('Login effettuato:', res);
+        this.router.navigate(['/profile']); // Aggiungi navigazione
+        this.closeDropdown(); // Chiudi dropdown
         // Salva il token JWT (opzionale)
         localStorage.setItem('token', res.token);
       },
       error: (err) => {
-        this.message = err.error.error;
+        this.message = err.error.message;
         console.error('Errore durante il login:', err);
       }
     });
