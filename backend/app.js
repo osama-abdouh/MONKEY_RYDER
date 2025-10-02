@@ -1,51 +1,33 @@
 const express = require('express');
+const cors = require('cors');
+const testRouter = require('./routes/test');
+const userRouter = require('./routes/user');
+const registerRouter = require('./routes/register');
+const loginRouter = require('./routes/login');
+const productRouter = require('./routes/products');
+
 const app = express();
+const port = process.env.PORT || 3000;
 
-const { Client } = require('pg');
+const contextPath = '/api';
 
-// Funzione per connettere al database con retry
-async function connectToDatabase() {
-  const client = new Client({
-    host: 'localhost',
-    user: 'postgres',
-    database: 'postgres',
-    port: 5432,
-    // Rimuoviamo la password per usare trust authentication
-  });
+app.use(cors({origin:"http://localhost:4200"}));
+app.use(express.json()); // necessario per leggere il body JSON
 
-  try {
-    await client.connect();
-    console.log('Connesso al database PostgreSQL');
-    
-    // Eseguiamo la query
-    const res = await client.query('SELECT * FROM utenti;');
-    console.log('Utenti trovati:', res.rows);
-    
-    return client;
-  } catch (err) {
-    console.error('Errore di connessione:', err.message);
-    return null;
-  }
-}
+//aggiungo le rotte al server
+app.use(contextPath, testRouter);
+app.use(contextPath, userRouter);
+app.use(contextPath, registerRouter);
+app.use(contextPath, loginRouter);
+app.use(contextPath, productRouter);
 
-// Chiamiamo la funzione dopo un breve ritardo
-setTimeout(connectToDatabase, 2000);
 
-app.get('/test', async (req, res) => {
-  try {
-    const result = await db.any('SELECT * FROM test');
-    console.log('Database contenuto:', result);
-    res.json({ success: true, data: result });
-  } catch (error) {
-    console.error('Errore:', error);
-    res.json({ success: false, error: error.message });
-  }
+// Endpoint per controllare lo stato del server per il frontend
+app.get('/health', (req, res) => {
+  // Restituisce un oggetto JSON che indica che il server è attivo
+  res.json({ status: 'ok', message: 'Server is running' });
 });
 
-app.get('/hello', (req, res) => {
-  res.send('Hola Mundo!');
-});
-
-app.listen(3000, () => {
-  console.log('Server is running on port http://localhost:3000');
+app.listen(port, () => {
+  console.log(`Server is running on port http://localhost:${port}`);
 });

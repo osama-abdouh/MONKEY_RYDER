@@ -1,0 +1,36 @@
+<div class="product-list-container">
+  <h2>Lista Prodotti</h2>
+  
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading">
+    Caricamento prodotti...
+  </div>
+  
+  <!-- Error state -->
+  <div *ngIf="error" class="error">
+    {{ error }}
+    <button (click)="getAllProducts()">Riprova</button>
+  </div>
+  
+  <!-- Products grid -->
+  <div *ngIf="!loading && !error" class="products-grid">
+    <div *ngFor="let product of products" class="product-box">
+      <div class="product-info">
+        <h3>{{ product.name }}</h3>
+        <p class="product-description" *ngIf="product.description">
+          {{ product.description }}
+        </p>
+        <p class="product-category">Categoria: {{ product.category_name }}</p>
+        <p class="product-price">€{{ product.price }}</p>
+        <p class="product-altreinfo" *ngIf="product.altreInfo">
+          {{ product.altreInfo }}
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Empty state -->
+  <div *ngIf="!loading && !error && products.length === 0" class="empty-state">
+    Nessun prodotto disponibile
+  </div>
+</div>

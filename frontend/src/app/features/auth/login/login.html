@@ -15,10 +15,10 @@
     </div>
     <button type="submit" class="login-btn">ACCEDI</button>
   </form>
+  @if(message) {
+    <div class="form-message">{{ message }}</div>
+  }  
 </div>
 <div class="login-footer">
   <p>Non hai un account? <a routerLink="/register" (click)="closeDropdown()">Crea un account</a></p>
-  @if(message){
-    <div class="form-message" >{{ message }}</div>
-  }
 </div>

@@ -5,10 +5,18 @@
     align-items: center;
     background-color: #8A9B68;
     margin: 32px auto;
-    padding: 24px;
+    padding-top: 1rem;
     border-radius: 4px;
-    max-width: 80%;
+    max-width: 40%;
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+}
+.name-surname-container {
+    display: flex;
+    gap: 10px; /* Spaziatura tra i campi */
+}
+
+.name-surname-container input {
+    flex: 1; /* I campi avranno la stessa larghezza */
 }
 form {
     display: flex;
@@ -49,4 +57,21 @@ button{
 button:hover{
 	background: #423E37;
 	color: white;
+}
+
+.login-redirect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+}
+.login-redirect a {
+	color: #423E37;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+	transition: color 0.3s ease;
+}
+.login-redirect a:hover {
+	color: #D64933;
 }
