@@ -7,6 +7,7 @@ import { ContactUsComponent } from './features/contact-us/contact-us';
 import { SplashComponent } from './features/splash/splash';
 import { ProfileComponent } from './features/profile/profile';
 import { LoginComponent } from './features/auth/login/login';
+import { ProductListComponent } from './features/product-list/product-list';
 
 
 export const routes: Routes = [
@@ -18,5 +19,6 @@ export const routes: Routes = [
     { path: 'wishlist', component: WishlistComponent },
     { path: 'contact-us', component: ContactUsComponent },
     { path: 'profile', component: ProfileComponent },
+    { path: 'product-list', component: ProductListComponent },
     { path: '**', redirectTo: '' } // Rotta di fallback per URL non validi
 ];

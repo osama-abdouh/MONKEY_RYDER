@@ -15,4 +15,5 @@ export class Api {
   getHealth(): Observable<any> {
     return this.http.get(`${this.baseUrl}/health`);
   }
+  
 }

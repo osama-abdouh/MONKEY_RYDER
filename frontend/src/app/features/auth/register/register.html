@@ -2,18 +2,20 @@
 	<h2>Crea il tuo account</h2>
 
 	<form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-		<input type="text" formControlName="nome" placeholder="Nome">
-		@if(registerForm.get('nome')?.invalid && registerForm.get('nome')?.touched) {
-  			<div class="error">
-				Il nome è obbligatorio.
-  			</div>
-		}
-		<input type="text" formControlName="cognome" placeholder="Cognome">
-		@if(registerForm.get('cognome')?.invalid && registerForm.get('cognome')?.touched) {
-  			<div class="error">
-				Il cognome è obbligatorio.
-  			</div>
-		}
+		<div class="name-surname-container">
+			<input type="text" formControlName="nome" placeholder="Nome">
+			@if(registerForm.get('nome')?.invalid && registerForm.get('nome')?.touched) {
+				<div class="error">
+					Il nome è obbligatorio.
+				</div>
+			}
+			<input type="text" formControlName="cognome" placeholder="Cognome">
+			@if(registerForm.get('cognome')?.invalid && registerForm.get('cognome')?.touched) {
+				<div class="error">
+					Il cognome è obbligatorio.
+				</div>
+			}
+		</div>
 		<input type="email" formControlName="email" placeholder="Email" required>
 		@if(registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
   			<div class="error">
