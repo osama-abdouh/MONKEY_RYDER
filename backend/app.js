@@ -1,31 +1,33 @@
 const express = require('express');
+const cors = require('cors');
+const testRouter = require('./routes/test');
+const userRouter = require('./routes/user');
+const registerRouter = require('./routes/register');
+const loginRouter = require('./routes/login');
+const productRouter = require('./routes/products');
+
 const app = express();
+const port = process.env.PORT || 3000;
+
+const contextPath = '/api';
+
+app.use(cors({origin:"http://localhost:4200"}));
+app.use(express.json()); // necessario per leggere il body JSON
+
+//aggiungo le rotte al server
+app.use(contextPath, testRouter);
+app.use(contextPath, userRouter);
+app.use(contextPath, registerRouter);
+app.use(contextPath, loginRouter);
+app.use(contextPath, productRouter);
 
 
-// Importa il client Supabase
-const supabase = require('./services/db');
-
-
-// Esempio di endpoint che legge dati dalla tabella "test" usando Supabase
-app.get('/test', async (req, res) => {
-  // Le query con Supabase sono asincrone e restituiscono un oggetto con "data" e "error"
-  const { data, error } = await supabase
-    .from('utenti') // Nome della tabella
-    .select('*'); // Seleziona tutte le colonne
-
-  if (error) {
-    // Se c'è un errore, lo mostriamo e restituiamo un messaggio
-    console.error('Errore Supabase:', error.message);
-    return res.json({ success: false, error: error.message });
-  }
-  // Se la query va a buon fine, restituiamo i dati
-  res.json({ success: true, data });
+// Endpoint per controllare lo stato del server per il frontend
+app.get('/health', (req, res) => {
+  // Restituisce un oggetto JSON che indica che il server è attivo
+  res.json({ status: 'ok', message: 'Server is running' });
 });
 
-app.get('/hello', (req, res) => {
-  res.send('Hola Mundo!');
-});
-
-app.listen(3000, () => {
-  console.log('Server is running on port http://localhost:3000');
+app.listen(port, () => {
+  console.log(`Server is running on port http://localhost:${port}`);
 });

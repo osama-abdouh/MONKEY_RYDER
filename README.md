@@ -4,6 +4,21 @@ Accendi la tua passione per i motori: scegli il meglio per la tua auto, scegli n
 * Frontend: ng serve
 * Backend: npm start
 # Struttura Frontend:
+``` bash
+backend/
+├── controllers //le funzioni che gestiscono le richieste HTTP
+├── DAO // query al database
+├── middleware
+├── models
+├── routes // endpoint API
+├── services // connessione al DB
+├── .env
+├── app.js
+└── config.js
+``` bash
+
+
+# Struttura Frontend:
 ```bash
 src/
 │

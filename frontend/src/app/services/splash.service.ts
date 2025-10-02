@@ -5,7 +5,7 @@ import { Injectable, signal } from '@angular/core';
 })
 export class SplashService {
   // Signal semplice per controllare se mostrare header/footer
-  public readonly isSplashActive = signal(true);
+  public readonly isSplashActive = signal(false);
 
   // Metodo per nascondere header/footer (chiamato dalla splash page)
   showSplash() {

@@ -1,9 +1,25 @@
-// Servizio Supabase
-// Inizializza il client Supabase per usarlo in tutto il backend
-const { createClient } = require('@supabase/supabase-js');
-const { SUPABASE_URL, SUPABASE_ANON_KEY } = require('../config');
+const pgp = require('pg-promise')();
+const config = require('../config');
 
-// Il client è l'oggetto che userai per tutte le operazioni (query, auth, storage)
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Crea l'istanza DB una volta sola
+const db = pgp(config.db);
 
-module.exports = supabase;
+async function getConnection() {
+    try {
+        const connection = await db.connect();
+        console.log('Database connected successfully');
+        return connection;
+    } catch (error) {
+        console.error('Database connection error:', error);
+        throw error;
+    }
+}
+
+async function execute(connection, sql, params) {
+  const results = await connection.any(sql, params);
+  return results;
+}
+
+
+// Esporta l'istanza DB direttamente
+module.exports = { getConnection, execute };

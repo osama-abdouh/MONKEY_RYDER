@@ -5,6 +5,9 @@ import { RegisterComponent } from './features/auth/register/register';
 import { WishlistComponent } from './features/wishlist/wishlist';
 import { ContactUsComponent } from './features/contact-us/contact-us';
 import { SplashComponent } from './features/splash/splash';
+import { ProfileComponent } from './features/profile/profile';
+import { LoginComponent } from './features/auth/login/login';
+import { ProductListComponent } from './features/product-list/product-list';
 
 
 export const routes: Routes = [
@@ -12,7 +15,10 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent }, // Home accessibile dopo la splash
     { path: 'cart', component: CartComponent },
     { path: 'register', component: RegisterComponent },
+    { path: 'login', component: LoginComponent },
     { path: 'wishlist', component: WishlistComponent },
     { path: 'contact-us', component: ContactUsComponent },
+    { path: 'profile', component: ProfileComponent },
+    { path: 'product-list', component: ProductListComponent },
     { path: '**', redirectTo: '' } // Rotta di fallback per URL non validi
 ];

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class Api {
-  private baseUrl = 'http://localhost:3000/api'; // URL del backend
+  private baseUrl = 'http://localhost:3000'; // URL del backend
 
   constructor(private http: HttpClient) {}
 
@@ -15,4 +15,5 @@ export class Api {
   getHealth(): Observable<any> {
     return this.http.get(`${this.baseUrl}/health`);
   }
+  
 }
