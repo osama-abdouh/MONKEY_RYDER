@@ -21,6 +21,7 @@ app.use(contextPath, userRouter);
 app.use(contextPath, registerRouter);
 app.use(contextPath, loginRouter);
 app.use(contextPath, productRouter);
+app.use('/assets/Immagini', express.static('assets/Immagini'));
 
 
 // Endpoint per controllare lo stato del server per il frontend
