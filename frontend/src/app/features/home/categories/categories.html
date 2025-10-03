@@ -1,27 +1,16 @@
 <div class="categorie-grid">
-  <button class="categoria-card" type="button">
-    <img src="assets/images/categories/freni.jpg" alt="Freni" />
-    <div class="categoria-title">Freni</div>
-  </button>
-  <button class="categoria-card" type="button">
-    <img src="assets/images/categories/ammortizzatori.jpg" alt="Ammortizzatori" />
-    <div class="categoria-title">Ammortizzatori</div>
-  </button>
-  <button class="categoria-card" type="button">
-    <img src="assets/images/categories/impianto.jpg" alt="Impianto" />
-    <div class="categoria-title">Impianto</div>
-  </button>
-  <button class="categoria-card" type="button">
-    <img src="assets/images/categories/motore.jpg" alt="Motore" />
-    <div class="categoria-title">Motore</div>
-  </button>
-  <button class="categoria-card" type="button">
-    <img src="assets/images/categories/pneumatici.jpg" alt="Pneumatici" />
-    <div class="categoria-title">Pneumatici</div>
-  </button>
-  <button class="categoria-card" type="button">
-    <img src="assets/images/categories/carrozzeria.jpg" alt="Carrozzeria" />
-    <div class="categoria-title">Carrozzeria</div>
+  <button 
+    class="categoria-card" 
+    type="button"
+    *ngFor="let category of categories"
+    (click)="onCategoryClick(category)"
+  >
+    <img 
+      [src]="backendUrl + category.image" 
+      [alt]="category.name"
+      (error)="onImageError($event)"
+    />
+    <div class="categoria-title">{{ category.name }}</div>
   </button>
 </div>
 

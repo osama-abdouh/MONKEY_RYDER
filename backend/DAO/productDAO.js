@@ -50,7 +50,21 @@ const getProductsByCategoryName = async function (connection, categoryName) {
   return result;
 };
 
-module.exports = { 
+
+const getAllCategories = async function (connection) {
+  const query = `
+    SELECT 
+      categories.id,
+      categories.name,
+      categories.image
+    FROM categories
+  `;
+  const result = await db.execute(connection, query);
+  return result;
+}
+
+module.exports = {
+  getAllCategories,
   getAllProducts,
   getProductsByCategory,
   getProductsByCategoryName

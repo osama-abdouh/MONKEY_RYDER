@@ -41,3 +41,16 @@ exports.getProductsByCategoryName = async (req, res) => {
     if (conn) conn.done();
     }
 }
+
+exports.getAllCategories = async (req, res) => {
+    conn = await db.getConnection();
+    try {
+        const categories = await productDAO.getAllCategories(conn);
+        res.json(categories);
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        if (conn) conn.done();
+    }
+}
