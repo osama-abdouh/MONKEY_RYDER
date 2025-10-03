@@ -6,7 +6,7 @@
     (click)="onCategoryClick(category)"
   >
     <img 
-      [src]="backendUrl + category.image" 
+      [src]="category.image" 
       [alt]="category.name"
       (error)="onImageError($event)"
     />

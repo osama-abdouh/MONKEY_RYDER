@@ -50,7 +50,9 @@ export class CategoriesComponent implements OnInit {
   onImageError(event: Event) {
     const target = event.target as HTMLImageElement;
     if (target) {
-      target.src = 'assets/Immagini/Categorie/default.jpg';
+      console.log('Errore caricamento immagine:', target.src);
+      // Temporaneamente commentato per debug
+      // target.src = 'http://localhost:3000/images/Categorie/motore.jpg';
     }
   }
 }
