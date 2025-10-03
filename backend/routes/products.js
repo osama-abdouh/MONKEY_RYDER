@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/products', productController.getAllProducts);
 router.get('/products/category/:categoryId', productController.getProductsByCategory);
 router.get('/products/category/name/:categoryName', productController.getProductsByCategoryName);
+router.get('/categories', productController.getAllCategories);
 router.get('/db-structure', async (req, res) => {
   const connection = await db.getConnection();
   try {
