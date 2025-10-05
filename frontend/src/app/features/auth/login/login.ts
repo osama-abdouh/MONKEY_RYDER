@@ -1,47 +1,48 @@
 import { Component, Input } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common'; //??
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { SessionService } from '../../../services/session.service';
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
 export class LoginComponent {
-  username = '';
-  email = '';
-  password = '';
-  message = '';
-  
-  constructor(private http: HttpClient, private router: Router) {}
+  loginForm: FormGroup;
+  error='';
+  @Input() closeDropdown!: () => void; // Riceve la funzione dal genitore
 
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private sessionService: SessionService,
+    private router: Router
+  ) {
+    this.loginForm = this.fb.group({
+      email: [''],
+      password: ['']
+    });
+  }
 
-  OnLogin() {
-    this.http.post('http://localhost:3000/api/login', {
-      email: this.email,
-      password: this.password
-    }).subscribe({
-      next: (res: any) => {
-        this.message = res.message;
-        console.log('Login effettuato:', res);
-        this.router.navigate(['/profile']); // Aggiungi navigazione
-        this.closeDropdown(); // Chiudi dropdown
-        // Salva il token JWT (opzionale)
-        localStorage.setItem('token', res.token);
+  OnSubmit() {
+    const { email, password } = this.loginForm.value;
+    
+    this.authService.login(email, password).subscribe({
+      next: (res) => {
+        this.sessionService.setToken(res.token); //salva il token
+        this.router.navigate(['/profile']);
+        this.closeDropdown?.(); // Chiude il dropdown se la funzione è definita
       },
-      error: (err) => {
-        this.message = err.error.message;
-        console.error('Errore durante il login:', err);
+      error: (error) => {
+        this.error = 'Email o password errati.';
+        console.error('Errore durante il login:', error);
       }
     });
   }
-  @Input() closeDropdown!: () => void; // Riceve la funzione dal genitore
-
 }

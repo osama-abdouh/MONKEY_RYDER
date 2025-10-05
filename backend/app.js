@@ -1,10 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const testRouter = require('./routes/test');
-const userRouter = require('./routes/user');
-const registerRouter = require('./routes/register');
-const loginRouter = require('./routes/login');
+require('dotenv').config();
+const authRouter = require('./routes/authRoutes');
 const productRouter = require('./routes/products');
+const testRouter = require('./routes/test');
+const userRouter = require('./routes/userRoutes');
 
 
 const app = express();
@@ -16,12 +16,14 @@ app.use(cors({origin:"http://localhost:4200"}));
 app.use(express.json()); // necessario per leggere il body JSON
 
 //aggiungo le rotte al server
-app.use(contextPath, testRouter);
-app.use(contextPath, userRouter);
-app.use(contextPath, registerRouter);
-app.use(contextPath, loginRouter);
+app.use(contextPath, authRouter);
 app.use(contextPath, productRouter);
+
 app.use('/assets/Immagini', express.static('assets/Immagini'));
+
+//rotte ancora da implementare
+app.use(contextPath, userRouter);
+app.use(contextPath, testRouter);
 
 
 // Endpoint per controllare lo stato del server per il frontend
