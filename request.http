@@ -1,0 +1,48 @@
+### Test login per ottenere token
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "password123"
+}
+
+### Test get user by ID (usa il token dal login)
+GET http://localhost:3000/api/user/7
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTk1MTEwNzcsImV4cCI6MTc1OTUxNDY3N30.DH5tOs4fqcGc-Q9GFcwTT50MDDGGwFhIMQfzz6VDDSk
+
+### Test get user by email
+GET http://localhost:3000/api/user?email=newuser@example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTk1MTEwNzcsImV4cCI6MTc1OTUxNDY3N30.DH5tOs4fqcGc-Q9GFcwTT50MDDGGwFhIMQfzz6VDDSk
+
+##############################
+GET http://localhost:3000/api/products/category/name/Pneumatici
+
+### Test login
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "password123"
+}
+
+### Test register
+POST http://localhost:3000/api/register
+Content-Type: application/json
+
+{
+  "first_name": "New",
+  "last_name": "User",
+  "email": "newuser@example.com",
+  "password": "password123"
+}
+
+### Test con credenziali errate
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "email": "wrong@example.com",
+  "password": "wrongpassword"
+}

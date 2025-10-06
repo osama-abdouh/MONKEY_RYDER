@@ -1,0 +1,31 @@
+.menu-header {
+	display: flex; /*uso le flexbox*/
+	justify-content: space-between; /*aggiungo spazio tra gli elementi*/
+	align-items: center; /*centro verticalme*/
+	padding: 1rem;
+	border-bottom: 1px solid #423E37;
+}
+.close-icon {
+	cursor: pointer;
+}
+
+.menu-content{
+	display: flex;
+	flex-direction: column; /*mette i flexbox in colonna*/
+	align-items: center; /*gli elementi si espandono per riempire la larghezza*/
+	padding: 1rem;
+}
+
+.menu-content a{
+	color: #171613;
+	font-size: 1rem;
+    cursor: pointer;
+	text-decoration: none;
+	transition: color 0.3s ease;
+	margin: 0.5rem 0;
+
+}
+.menu-content a:hover {
+    color: black;
+    text-decoration: underline;
+}

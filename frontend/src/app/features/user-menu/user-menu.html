@@ -1,0 +1,11 @@
+<div class="menu-header">
+  <h2>Benvenuto.  </h2>
+  <img src="assets/icone/close.svg" alt="Close Icon" class="close-icon" (click)="closeDropdown()"/>
+</div>
+<div class="menu-content">
+    <a routerLink="/profile" class="dropdown-item" (click)="closeDropdown()">Profilo</a>
+    <a routerLink="/orders" class="dropdown-item" (click)="closeDropdown()">Ordini</a>
+    <a (click)="authService.logout(); closeDropdown()" class="dropdown-item">Logout</a>
+</div>
+<div class="menu-footer">
+</div>

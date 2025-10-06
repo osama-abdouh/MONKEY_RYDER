@@ -27,9 +27,16 @@
               <button class="user-btn" (click)="ToggleDropdown()">
                 <img src="assets/icone/user.svg" alt="User" class="user-icon"/>
               </button>
-              @if (showDropdown) {
+              <!-- Dropdown menu for login -->
+              @if (showDropdown && !authService.isAuthenticated()) {
                 <div class="dropdown-menu">
                   <app-login [closeDropdown]="closeDropdown"></app-login>
+                </div>
+              }
+              <!-- Dropdown menu for user profile -->
+              @if (showDropdown && authService.isAuthenticated()) {
+                <div class="dropdown-menu">
+                  <app-user-menu [closeDropdown]="closeDropdown"></app-user-menu>
                 </div>
               }
             </div>
