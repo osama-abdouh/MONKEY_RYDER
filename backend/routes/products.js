@@ -8,6 +8,8 @@ router.get('/products', productController.getAllProducts);
 router.get('/products/category/:categoryId', productController.getProductsByCategory);
 router.get('/products/category/name/:categoryName', productController.getProductsByCategoryName);
 router.get('/categories', productController.getAllCategories);
+router.post('/products/:productId/increment-sales', productController.incrementSales);
+router.get('/products/push', productController.getPushProducts);  
 router.get('/db-structure', async (req, res) => {
   const connection = await db.getConnection();
   try {

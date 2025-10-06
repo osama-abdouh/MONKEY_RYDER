@@ -6,6 +6,8 @@ const registerRouter = require('./routes/register');
 const loginRouter = require('./routes/login');
 const productRouter = require('./routes/products');
 
+const staticImagesMiddleware = express.static('assets/Immagini');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,7 +23,7 @@ app.use(contextPath, userRouter);
 app.use(contextPath, registerRouter);
 app.use(contextPath, loginRouter);
 app.use(contextPath, productRouter);
-app.use('/assets/Immagini', express.static('assets/Immagini'));
+app.use('/assets/Immagini', staticImagesMiddleware);
 
 
 // Endpoint per controllare lo stato del server per il frontend
