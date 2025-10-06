@@ -25,6 +25,9 @@
         <p class="product-altreinfo" *ngIf="product.altreInfo">
           {{ product.altreInfo }}
         </p>
+        <div class="product-actions">
+          <button class="add-to-cart" (click)="addToCart(product)">Aggiungi al carrello</button>
+        </div>
       </div>
     </div>
   </div>

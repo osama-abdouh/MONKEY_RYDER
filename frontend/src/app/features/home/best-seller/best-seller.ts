@@ -39,12 +39,14 @@ export class BestSellerComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.updateScrollButtons();
+    // Defer initial update so change detection stabilizes and avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => this.updateScrollButtons());
     
     // Add scroll event listener to update button states
     if (this.carouselContainer) {
       this.carouselContainer.nativeElement.addEventListener('scroll', () => {
-        this.updateScrollButtons();
+        // schedule update after scrolling to avoid sync change detection issues
+        setTimeout(() => this.updateScrollButtons());
       });
     }
   }
