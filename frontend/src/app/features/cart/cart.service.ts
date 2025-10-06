@@ -67,7 +67,7 @@ export class CartService {
     return this.getItems().reduce((s, i) => s + (i.price || 0) * i.quantity, 0);
   }
 
-  // se vogliamo sincronizare il carrello locale conn il carrello dopo il login
+  // se vogliamo sincronizare il carrello locale con il carrello dopo il login
   syncToServer(userId: number): Observable<any> {
     const payload = { userId, items: this.getItems() };
     return this.http.post('/api/cart/sync', payload);
