@@ -1,7 +1,28 @@
 <div class="cart-page">
-      <div class="container">
-        <h1>Il Tuo Carrello</h1>
-        
+  <div class="container">
+    <h1>Il Tuo Carrello</h1>
 
-      </div>
+    <div *ngIf="cartItems.length === 0">Il carrello è vuoto.</div>
+
+    <ul *ngIf="cartItems.length > 0" class="cart-list">
+      <li *ngFor="let it of cartItems" class="cart-item">
+        <div class="info">
+          <div class="name">{{ it.name }}</div>
+          <div class="price">{{ it.price | currency:'EUR' }}</div>
+        </div>
+        <div class="controls">
+          <button (click)="decrease(it)">-</button>
+          <span>{{ it.quantity }}</span>
+          <button (click)="increase(it)">+</button>
+          <button (click)="remove(it)">Elimina</button>
+        </div>
+      </li>
+    </ul>
+
+    <div *ngIf="cartItems.length > 0" class="summary">
+      Totale: {{ getTotalPrice() | currency:'EUR' }}
+      <button (click)="clear()">Svuota carrello</button>
     </div>
+  </div>
+</div>
+

@@ -1,11 +1,13 @@
 <section class="hero">
         <div class="hero-content">
-          <img src="assets/images/logo.jpg" alt="Monkey Rider Logo" class="hero-logo"(error)="onImageError($event)"/>
+          <img src="assets/images/logo.jpg" alt="Monkey Rider Logo" class="hero-logo" (error)="onImageError($event)"/>
         </div>
 </section>
 
 <app-product-search></app-product-search>
 <app-categories></app-categories>
+<app-best-seller></app-best-seller>
+
 <!-- Contenuto temporaneo per testare lo sticky scroll -->
 <section class="test-content">
   <div style="height: 100vh; background: #D5DDBC; padding: 2rem; margin: 2rem auto; max-width: 1200px;">

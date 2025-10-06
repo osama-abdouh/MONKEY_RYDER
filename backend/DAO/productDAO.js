@@ -63,9 +63,49 @@ const getAllCategories = async function (connection) {
   return result;
 }
 
+// Funzione per incrementare il contatore vendite
+const incrementSalesCount = async function (connection, productId, quantity = 1) {
+  const query = `
+    UPDATE products 
+    SET 
+      sales_count = sales_count + $2,
+      last_sold_date = NOW()
+    WHERE id = $1
+    RETURNING sales_count
+  `;
+  const result = await db.execute(connection, query, [productId, quantity]);
+  return result[0];
+};
+
+const getPushProducts = async function (connection, limit = 9) {
+  const query = `
+    SELECT
+      products.id,
+      products.name,
+      products.description,
+      products.price,
+      products.category_id,
+      products.sales_count,
+      categories.name as category_name
+    FROM products
+    JOIN categories ON products.category_id = categories.id
+    WHERE products.sales_count > 0  -- Solo prodotti venduti almeno una volta
+    ORDER BY products.sales_count DESC  -- Ordinati per più venduti
+    LIMIT $1
+  `;
+
+  const result = await db.execute(connection, query, [limit]);
+  return result;
+};
+
+
+
+
 module.exports = {
   getAllCategories,
   getAllProducts,
   getProductsByCategory,
+  getPushProducts,
+  incrementSalesCount,
   getProductsByCategoryName
 };
