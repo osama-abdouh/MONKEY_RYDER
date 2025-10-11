@@ -101,5 +101,17 @@ const updateUserRole = async function (connection, userId, role) {
   return rows[0] || null;
 };
 
+const ordersCountPerUser = async function (connection) {
+  // Conta il numero di ordini per ogni utente (inclusi utenti senza ordini)
+  const sql = `
+    SELECT u.user_id, u.email, u.first_name, u.last_name, COALESCE(COUNT(o.id_ordine), 0) AS orders_count
+    FROM users u
+    LEFT JOIN ordini o ON u.user_id = o.user_id
+    GROUP BY u.user_id, u.email, u.first_name, u.last_name
+    ORDER BY orders_count DESC, u.user_id ASC`;
+  const rows = await db.execute(connection, sql);
+  return rows || [];
+};
 
-module.exports = { findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, RecentOrders, updateAccountStatus, updateUserRole, Users };
+
+module.exports = { findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, RecentOrders, updateAccountStatus, updateUserRole, Users, ordersCountPerUser };

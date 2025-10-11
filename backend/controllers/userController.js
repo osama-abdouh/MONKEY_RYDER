@@ -152,3 +152,16 @@ exports.updateUserRole = async function (req, res) {
         if (conn) conn.done();
     }
 }
+exports.ordersCountPerUser = async function (req, res) {
+    let conn;
+    try {
+        conn = await db.getConnection();
+        const result = await userDAO.ordersCountPerUser(conn);
+        res.json(result);
+    } catch (error) {
+        console.error('controller/userController.js ordersCountPerUser', error);
+        res.status(500).json({ message: 'Failed to get orders count per user', error: error.message });
+    } finally {
+        if (conn) conn.done();
+    }
+}

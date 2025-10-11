@@ -52,6 +52,11 @@ export class UserService {
         return this.http.get<User[]>(`${this.apiUrl}/user/all`);
     }
 
+    // get orders count per user
+    getOrdersCount(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/user/orders-count`);
+    }
+
     // update account status for a user (e.g., 'blocked' or 'active')
     updateAccountStatus(userId: number | string, account_status: string): Observable<any> {
         return this.http.patch<any>(`${this.apiUrl}/user/${userId}/status`, { account_status });

@@ -113,6 +113,7 @@ const countLessProducts = async function (connection) {
   return { id: r.id, name: r.name, category: r.category, quantity: r.quantity != null ? Number(r.quantity) : null };
 };
 
+
 module.exports = {
   getAllCategories,
   getAllProducts,
