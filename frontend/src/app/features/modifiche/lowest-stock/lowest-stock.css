@@ -1,0 +1,8 @@
+.lowest-stock-card{ padding:1rem; border:1px solid #e6e6e6; border-radius:8px; background:#fff; max-width:560px }
+.lowest-stock-card h3{ margin:0 0 0.5rem 0 }
+.product-row{ display:flex; justify-content:space-between; align-items:center }
+.product-info .product-name{ font-weight:600 }
+.product-info .product-category{ font-size:0.9rem; color:#6b7280 }
+.product-qty .qty-badge{ display:inline-block; min-width:36px; text-align:center; padding:0.2rem 0.4rem; border-radius:4px; background:#eef2ff; color:#1e40af }
+.product-qty .qty-badge.low{ background:#ffeaea; color:#9b1c1c }
+.meta{ margin-top:0.5rem; font-size:0.9rem }

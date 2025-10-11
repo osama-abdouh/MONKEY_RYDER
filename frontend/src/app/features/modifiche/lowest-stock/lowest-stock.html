@@ -1,0 +1,20 @@
+<div class="lowest-stock-card">
+	<h3>Prodotto con scorte minime</h3>
+
+	<div *ngIf="incomingProduct; else noProd">
+		<div class="product-row">
+			<div class="product-info">
+				<div class="product-name">{{ incomingProduct.name }}</div>
+				<div class="product-category muted">{{ incomingProduct.category }}</div>
+			</div>
+			<div class="product-qty">
+				<span class="qty-badge" [class.low]="incomingProduct.quantity !== null && incomingProduct.quantity <= 5">{{ incomingProduct.quantity !== null ? incomingProduct.quantity : 'N/A' }}</span>
+			</div>
+		</div>
+		<div class="meta muted">Prezzo stimato: {{ formatCurrency(incomingProduct.price || incomingProduct.prezzo) }}</div>
+	</div>
+
+	<ng-template #noProd>
+		<p class="muted">Nessun prodotto disponibile.</p>
+	</ng-template>
+</div>

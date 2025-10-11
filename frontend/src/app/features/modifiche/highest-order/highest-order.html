@@ -1,0 +1,16 @@
+<div class="highest-order-container">
+	<h2>Ordine più alto</h2>
+
+	<div *ngIf="incomingMaxOrder; else noData">
+		<p class="amount">Totale ordine: <strong>{{ formatCurrency(incomingMaxOrder.max_order) }}</strong></p>
+		<p class="customer">Cliente: <strong>{{ incomingMaxOrder.first_name }} {{ incomingMaxOrder.last_name }}</strong></p>
+	</div>
+
+	<ng-template #noData>
+		<p>Nessun dato disponibile per l'ordine più alto.</p>
+	</ng-template>
+
+	<div class="actions">
+		<button class="btn-back" (click)="goBack()">Torna a Gestione</button>
+	</div>
+</div>
