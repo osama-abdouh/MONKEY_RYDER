@@ -40,9 +40,26 @@ export class ModificheUtenti {
   loadUsers(): void {
     this.loading = true;
     this.error = null;
-    // load via /api/user/all which uses userDAO.Users(conn)
     this.userService.getUsersAll().subscribe({
-      next: (data) => { this.users = data || []; this.applyFilter(); this.loading = false; },
+      next: (data) => {
+        this.users = data || [];
+        // fetch orders count and merge
+        this.userService.getOrdersCount().subscribe({
+          next: (counts) => {
+            const map = new Map((counts || []).map((c: any) => [String(c.user_id), c.orders_count || 0]));
+            this.users = (this.users || []).map((u: any) => ({ ...u, orders_count: map.get(String(u.user_id)) || 0 }));
+            this.applyFilter();
+            this.loading = false;
+          },
+          error: (ce) => {
+            console.error('Failed to load orders count', ce);
+            // still show users without counts
+            this.users = (this.users || []).map((u: any) => ({ ...u, orders_count: 0 }));
+            this.applyFilter();
+            this.loading = false;
+          }
+        });
+      },
       error: (e) => { console.error('Failed to load users', e); this.error = e?.message || 'Errore caricamento utenti'; this.loading = false; }
     });
   }
