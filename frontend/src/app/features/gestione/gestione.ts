@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { UserService, User } from '../../services/user.service';
 import { ProductService, LeastProduct } from '../../services/product.service';
+import { ModificheUtenti } from '../modifiche/modifiche-utenti/modifiche-utenti';
+import { RouterModule, Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-gestione',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ModificheUtenti],
   templateUrl: './gestione.html',
   styleUrls: ['./gestione.css']
 })
@@ -19,10 +20,12 @@ export class Gestione implements OnInit {
   // recentOrders kept as any[] and normalized before assigning to template
   recentOrders: any[] = [];
   maxOrderResult: { max_order: number, first_name: string, last_name: string } | undefined;
+  isLoadingMaxOrder = false;
   leastProduct: LeastProduct | null = null;
+  showModificheUtenti = false;
   // quick action placeholders (no inputs)
 
-  constructor(private userService: UserService, private productService: ProductService) {}
+  constructor(private userService: UserService, private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -59,6 +62,8 @@ export class Gestione implements OnInit {
       },
       error: (err) => { this.error = err.message || 'Failed to load users'; this.loading = false; console.error('Failed to load users', err); }
     });
+
+    this.loadMaxOrder();
   }
 
   onCardClick(): void {
@@ -66,9 +71,23 @@ export class Gestione implements OnInit {
     console.log('Gestione card clicked, selected=', this.selected);
   }
 
-  // placeholder for future least-product button action
+  openModifiche(): void {
+    this.showModificheUtenti = true;
+    // also navigate to the modifiche route so the page/URL updates
+    this.router.navigate(['/modifiche']);
+  }
+
+  openModificheWithMaxOrder(): void {
+    // navigate to /modifiche and pass the max order data in the navigation state
+    const payload = this.maxOrderResult || null;
+    this.router.navigate(['/modifiche'], { state: { fromGestioneMaxOrder: payload } });
+  }
+
+  
   onLeastProductClick(): void {
-    // intentionally empty for now
+    // navigate to /modifiche and pass the leastProduct payload so Modifiche can render it
+    const payload = this.leastProduct || null;
+    this.router.navigate(['/modifiche'], { state: { fromGestioneLeastProduct: payload } });
   }
 
   // Quick action placeholders
@@ -85,9 +104,10 @@ export class Gestione implements OnInit {
   }
 
   loadMaxOrder(): void {
+    this.isLoadingMaxOrder = true;
     this.userService.getMaxOrder().subscribe({
-      next: (data) => { this.maxOrderResult = data; },
-      error: (err) => { console.error('Failed to load max order', err); this.maxOrderResult = undefined; }
+      next: (data) => { this.maxOrderResult = data; this.isLoadingMaxOrder = false; },
+      error: (err) => { console.error('Failed to load max order', err); this.maxOrderResult = undefined; this.isLoadingMaxOrder = false; }
     });
   }
 }

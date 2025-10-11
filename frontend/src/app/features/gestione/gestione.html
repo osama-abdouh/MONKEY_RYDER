@@ -1,10 +1,13 @@
 <div class="gestione">
-	<button class="card-button customers-card" routerLink="/modifiche" [class.selected]="selected">
+	<button class="card-button customers-card" (click)="openModifiche()" [class.selected]="selected">
 			<div class="card-header" style="width:100%; display:flex; justify-content:space-between; align-items:center; gap:12px;">
 				<div>
 					<h2 style="margin:0">Customers</h2>
 					<div class="muted" style="font-size:13px">Gestisci gli utenti registrati del sistema</div>
 				</div>
+
+				<!-- Show ModificheUtenti only when user clicks the first card -->
+				<app-modifiche-utenti *ngIf="showModificheUtenti"></app-modifiche-utenti>
 					<div style="display:flex; gap:8px; align-items:center">
 						<div class="muted" style="font-size:13px">Totale: <strong>{{ users.length || 0 }}</strong></div>
 					</div>
@@ -36,19 +39,20 @@
 			</div>
 		</button>
 
-	
-	<button class="card-button max-order-card" routerLink="/modifiche">
+
+	<button class="card-button max-order-card" (click)="openModificheWithMaxOrder()">
 		<div class="max-order-header centered">
 			<h2>Highest Order</h2>
 			<div class="muted">Valore massimo registrato</div>
 			<div class="max-order-stat centered-stat">
-				<div class="amount">{{ maxOrderResult?.max_order ? ('€' + (maxOrderResult?.max_order | number:'1.2-2')) : '—' }}</div>
+				<div class="amount">{{ maxOrderResult?.max_order != null ? ('€' + (maxOrderResult?.max_order | number:'1.2-2')) : '—' }}</div>
 				<div class="customer">{{ maxOrderResult?.first_name || '-' }} {{ maxOrderResult?.last_name || '' }}</div>
 			</div>
 		</div>
 
 		<div class="max-order-body">
-			<div *ngIf="!maxOrderResult" class="muted small">Clicca per caricare l'ordine più alto</div>
+			<div *ngIf="isLoadingMaxOrder" class="muted small">Caricamento in corso...</div>
+			<div *ngIf="!isLoadingMaxOrder && !maxOrderResult" class="muted small">Nessun ordine disponibile.</div>
 
 			<div *ngIf="recentOrders && recentOrders.length" class="recent-orders">
 				<div class="section-title">Ordini recenti</div>
@@ -63,17 +67,21 @@
 		</div>
 	</button>
 
-	<button class="card-button least-product-card" routerLink="/modifiche">
+	<button class="card-button least-product-card" (click)="onLeastProductClick()">
 		<div class="least-header">
 			<h2>Lowest stock</h2>
 			<div class="muted">Prodotto con scorte minime</div>
 		</div>
 		<div class="least-body">
 			<ng-container *ngIf="leastProduct; else noLeast">
-				<div class="product-stack">
-					<span class="qty-badge" [class.low]="leastProduct.quantity !== null && leastProduct.quantity <= 5">{{ leastProduct.quantity !== null ? leastProduct.quantity : 'N/A' }}</span>
-					<div class="product-name">{{ leastProduct.name }}</div>
-					<div class="product-category">{{ leastProduct.category }}</div>
+				<div class="product-row">
+					<div class="product-info">
+						<div class="product-name">{{ leastProduct.name }}</div>
+						<div class="product-category">{{ leastProduct.category }}</div>
+					</div>
+					<div class="product-qty">
+						<span class="qty-badge" [class.low]="leastProduct.quantity !== null && leastProduct.quantity <= 5">{{ leastProduct.quantity !== null ? leastProduct.quantity : 'N/A' }}</span>
+					</div>
 				</div>
 			</ng-container>
 			<ng-template #noLeast>
@@ -82,18 +90,13 @@
 		</div>
 	</button>
 
-	<!-- Quick actions box: buttons only (no inputs) -->
-	<div class="card-button quick-actions-card">
-		<div class="quick-actions-header">
-			<h2>Azioni rapide</h2>
-			<div class="muted">Operazioni frequenti per la gestione del sistema</div>
-		</div>
+
+	<div class="card-button quick-actions-card" aria-label="Azioni rapide">
+		<h2>Azioni rapide</h2>
 		<div class="quick-actions">
-			<button class="qa-btn primary" routerLink="/modifiche"><span class="qa-icon">＋</span>Nuovo utente</button>
-			<button class="qa-btn danger" routerLink="/modifiche"><span class="qa-icon">🗑</span>Elimina ordine</button>
-			<button class="qa-btn secondary" routerLink="/modifiche"><span class="qa-icon">🔍</span>Traccia ordine</button>
-			<!-- placeholder examples for future actions -->
-			<button class="qa-btn" disabled><span class="qa-icon">⚙</span>Configura</button>
+			<button class="qa-btn primary" (click)="onNewUser()" aria-label="Crea nuovo utente">Nuovo utente</button>
+			<button class="qa-btn secondary" (click)="onTrackOrder()" aria-label="Traccia un ordine">Traccia ordine</button>
+			<button class="qa-btn danger" (click)="onDeleteOrder()" aria-label="Elimina ordine">Elimina ordine</button>
 		</div>
 	</div>
 </div>

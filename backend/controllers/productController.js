@@ -87,3 +87,16 @@ exports.getPushProducts = async (req, res) => {
         if (conn) conn.done();
     }
 }
+
+exports.countLessProducts = async (req, res) => {
+    let conn = await db.getConnection();
+    try {
+        const product = await productDAO.countLessProducts(conn);
+        res.json(product);
+    } catch (error) {
+        console.error('Error fetching product with least quantity:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        if (conn) conn.done();
+    }
+}

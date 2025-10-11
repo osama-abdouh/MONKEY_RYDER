@@ -75,13 +75,9 @@
 .least-product-card .product-row{ display:flex; align-items:center; justify-content:space-between; gap:12px }
 .least-product-card .product-info{ display:flex; flex-direction:column }
 .least-product-card .product-name{ font-weight:700; font-size:16px; color:#0f172a }
-.least-product-card .product-category{ font-size:14px; color:#6b7280; margin-top:6px }
+.least-product-card .product-category{ font-size:28px; color:#6b7280; margin-top:4px }
 .least-product-card .product-qty{ display:flex; align-items:center }
-.least-product-card .product-stack{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; text-align:center }
-.least-product-card .product-stack .product-name{ font-size:16px; font-weight:700; color:#0f172a }
-.least-product-card .product-stack .product-category{ font-size:13px; color:#6b7280 }
-.qty-badge{ display:inline-block; padding:6px 10px; color:#0f172a; font-weight:800; font-size:36px; line-height:1; font-family: 'Georgia', 'Times New Roman', serif; border-radius:8px; background: #fff }
-.qty-badge.low{ color:#b91c1c }
+.qty-badge{ display:inline-block; padding:10px 14px;   color:#0f172a; font-weight:1000; font-size:50px; font-family: 'Georgia', 'Times New Roman', serif }
 
 
 @media (max-width:520px){
@@ -140,29 +136,6 @@
 
 .gestione > .card-button.quick-actions-card{
 	flex: 0 0 100%;
-}
-
-/* Quick actions professional styling */
-.quick-actions-card{ padding:18px; }
-.quick-actions-header{ text-align:left; margin-bottom:12px }
-.quick-actions-header h2{ margin:0 0 4px 0 }
-.quick-actions{ display:grid; grid-template-columns: repeat(4, 1fr); gap:12px }
-.qa-btn{ display:flex; align-items:center; gap:8px; justify-content:center; padding:10px 12px; border-radius:8px; border:1px solid rgba(15,23,42,0.08); background:#fff; cursor:pointer; font-weight:600; transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease; box-shadow: 0 4px 8px rgba(12,18,32,0.04) }
-.qa-btn .qa-icon{ display:inline-flex; width:20px; height:20px; align-items:center; justify-content:center; font-size:14px }
-.qa-btn:hover{ transform: translateY(-3px); box-shadow: 0 10px 18px rgba(12,18,32,0.08) }
-.qa-btn:focus{ outline: 3px solid rgba(59,130,246,0.18); outline-offset:2px }
-.qa-btn:disabled{ opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none }
-
-.qa-btn.primary{ background: linear-gradient(180deg,#2563eb,#1e40af); color:#fff; border-color: transparent }
-.qa-btn.secondary{ background: linear-gradient(180deg,#f3f4f6,#e5e7eb); color:#0f172a }
-.qa-btn.danger{ background: linear-gradient(180deg,#fee2e2,#fecaca); color:#7f1d1d }
-
-@media (max-width:900px){
-	.quick-actions{ grid-template-columns: repeat(2, 1fr) }
-}
-@media (max-width:520px){
-	.quick-actions{ grid-template-columns: 1fr }
-	.quick-actions-header{ text-align:center }
 }
 
 
@@ -237,5 +210,45 @@
 @media (max-width: 900px){
 	.gestione > .card-button:nth-child(-n+3){ aspect-ratio: auto; }
 	.gestione > .card-button:nth-child(-n+3) img{ width:56%; }
+}
+
+/* ---- Quick actions: professional styling ---- */
+.card-button.quick-actions-card { padding: 20px; }
+.quick-actions {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 12px;
+	margin-top: 12px;
+}
+
+.qa-btn {
+	background: #fff;
+	border: 1px solid rgba(15,23,42,0.06);
+	padding: 10px 14px;
+	font-weight: 600;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: transform .09s ease, box-shadow .12s ease, background .12s ease;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 44px;
+}
+
+.qa-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(12,18,32,0.08); }
+.qa-btn:active { transform: translateY(0); }
+.qa-btn:focus { outline: 3px solid rgba(21,156,228,0.16); outline-offset: 2px; }
+
+.qa-btn.primary { background: linear-gradient(180deg,#1e88e5,#1976d2); color: #fff; border: none; }
+.qa-btn.secondary { background: linear-gradient(180deg,#f8fafc,#f3f4f6); color: #0f172a; }
+.qa-btn.danger { background: linear-gradient(180deg,#fff5f6,#ffecec); color: #b91c1c; border-color: rgba(185,28,28,0.08); }
+
+.qa-btn.primary:hover { box-shadow: 0 10px 28px rgba(25,118,210,0.18); }
+.qa-btn.danger:hover { box-shadow: 0 10px 28px rgba(185,28,28,0.08); }
+
+
+@media (max-width:520px){
+	.quick-actions { grid-template-columns: 1fr; }
 }
 

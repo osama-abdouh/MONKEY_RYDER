@@ -9,7 +9,8 @@ router.get('/products/category/:categoryId', productController.getProductsByCate
 router.get('/products/category/name/:categoryName', productController.getProductsByCategoryName);
 router.get('/categories', productController.getAllCategories);
 router.post('/products/:productId/increment-sales', productController.incrementSales);
-router.get('/products/push', productController.getPushProducts);  
+router.get('/products/push', productController.getPushProducts);
+router.get('/products/count-less', productController.countLessProducts); 
 router.get('/db-structure', async (req, res) => {
   const connection = await db.getConnection();
   try {

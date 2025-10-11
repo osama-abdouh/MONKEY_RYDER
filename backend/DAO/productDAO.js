@@ -98,8 +98,20 @@ const getPushProducts = async function (connection, limit = 9) {
   return result;
 };
 
-
-
+const countLessProducts = async function (connection) {
+  // Return the product with the lowest availability assuming a `quantity` column
+  const query = `
+    SELECT p.id, p.name, p.quantity AS quantity, c.name AS category
+    FROM products p
+    LEFT JOIN categories c ON p.category_id = c.id
+    ORDER BY p.quantity ASC NULLS LAST
+    LIMIT 1
+  `;
+  const result = await db.execute(connection, query);
+  if (!result || result.length === 0) return null;
+  const r = result[0];
+  return { id: r.id, name: r.name, category: r.category, quantity: r.quantity != null ? Number(r.quantity) : null };
+};
 
 module.exports = {
   getAllCategories,
@@ -107,5 +119,6 @@ module.exports = {
   getProductsByCategory,
   getPushProducts,
   incrementSalesCount,
-  getProductsByCategoryName
+  getProductsByCategoryName,
+  countLessProducts
 };
