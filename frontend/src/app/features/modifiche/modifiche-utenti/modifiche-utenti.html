@@ -35,6 +35,7 @@
 									[disabled]="updatingIds.has(u.user_id || u.id)">
 									{{ (u.account_status === 'suspended') ? 'Attiva' : 'Sospendi' }}
 								</button>
+								<button class="qa-btn danger" (click)="onDeleteUser(u)" [disabled]="updatingIds.has(u.user_id || u.id)" style="margin-left: 8px;">Elimina</button>
 							</td>
 						</tr>
 				</tbody>

@@ -100,3 +100,61 @@ exports.countLessProducts = async (req, res) => {
         if (conn) conn.done();
     }
 }
+
+exports.createCategory = async (req, res) => {
+    let conn = await db.getConnection();
+    try {
+        const payload = req.body || {};
+        const created = await productDAO.createCategory(conn, payload);
+        res.status(201).json(created);
+    } catch (error) {
+        console.error('Error creating category:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+exports.deleteCategory = async (req, res) => {
+    let conn = await db.getConnection();
+    try {
+        const id = req.params.id;
+        const deleted = await productDAO.deleteCategory(conn, id);
+        if (deleted) return res.json({ success: true, id: Number(id) });
+        return res.status(404).json({ success: false, message: 'Category not found' });
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+exports.createProduct = async (req, res) => {
+    let conn = await db.getConnection();
+    try {
+        const payload = req.body || {};
+        const created = await productDAO.createProduct(conn, payload);
+        res.status(201).json(created);
+    } catch (error) {
+        console.error('Error creating product:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+exports.deleteProduct = async (req, res) => {
+    let conn = await db.getConnection();
+    try {
+        const id = req.params.id;
+        const deleted = await productDAO.deleteProduct(conn, id);
+        if (deleted) return res.json({ success: true, id: Number(id) });
+        return res.status(404).json({ success: false, message: 'Product not found' });
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        if (conn) conn.done();
+    }
+}

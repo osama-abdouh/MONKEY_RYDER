@@ -83,6 +83,16 @@
 						<span class="qty-badge" [class.low]="leastProduct.quantity !== null && leastProduct.quantity <= 5">{{ leastProduct.quantity !== null ? leastProduct.quantity : 'N/A' }}</span>
 					</div>
 				</div>
+
+				<!-- elenco categorie -->
+				<div class="categories-list" *ngIf="categories && categories.length">
+					<div class="section-title">Categorie</div>
+					<ul class="categories-grid">
+						<li *ngFor="let c of categories" class="category-chip">
+							<span class="cat-name">{{ c.name }}</span>
+						</li>
+					</ul>
+				</div>
 			</ng-container>
 			<ng-template #noLeast>
 				<p>No product data available.</p>

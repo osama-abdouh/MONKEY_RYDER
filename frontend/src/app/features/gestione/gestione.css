@@ -85,6 +85,44 @@
 	.least-product-card .product-qty{ margin-top:8px }
 }
 
+/* --- Polishing: Lowest stock card aesthetics --- */
+.least-product-card{ padding:16px; display:flex; flex-direction:column; gap:12px; height:100% }
+.least-product-card .least-header h2{ font-size:18px; font-weight:800; color:#0f172a }
+.least-product-card .least-header .muted{ font-size:12px; color:#6b7280 }
+
+/* refine typography */
+.least-product-card .product-name{ font-weight:800; font-size:18px; color:#0f172a }
+.least-product-card .product-category{ font-size:14px; color:#64748b; margin-top:2px; letter-spacing:.2px }
+
+/* quantity badge restyle */
+.qty-badge{ 
+	display:inline-flex; align-items:center; justify-content:center;
+	min-width: 48px; min-height: 48px;
+	padding: 8px 12px; border-radius: 12px;
+	background: linear-gradient(180deg,#f8fafc,#eef2f7);
+	border: 1px solid #e5e7eb; box-shadow: 0 4px 10px rgba(15,23,42,.06);
+	color:#0f172a; font-weight:800; font-size:26px; line-height:1
+}
+.qty-badge.low{ background: linear-gradient(180deg,#fff1f2,#ffe4e6); border-color: #fecdd3; color:#be123c }
+
+/* categories list styles */
+.least-product-card .least-body{ flex:1; display:flex; flex-direction:column }
+.least-product-card .categories-list{ flex:1; display:flex; flex-direction:column; width:100% }
+.categories-list .section-title{ font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:.04em; margin: 10px 0 6px 0 }
+.least-product-card .categories-list ul{ flex:1; width:100%; overflow:auto; align-content:start; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) }
+.categories-grid{ list-style:none; padding:0; margin:0; display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:14px; width:100%; height:100% }
+.least-product-card .categories-list{ flex:1; display:flex; flex-direction:column; width:100%; padding-top: 16px }
+.least-product-card .categories-list .section-title{ text-align:center }
+.least-product-card{ align-items: stretch }
+.least-product-card .least-header, .least-product-card .least-body{ width:100% }
+.category-chip{ background:#fff; border:1px solid rgba(15,23,42,0.06); border-radius:14px; box-shadow:0 6px 16px rgba(12,18,32,.08); transition: transform .08s ease, box-shadow .12s ease; padding:14px 18px; display:flex; align-items:center; justify-content:center; min-height:56px }
+.category-chip:hover{ transform: translateY(-2px); box-shadow:0 10px 22px rgba(12,18,32,.10) }
+.category-chip .cat-name{ font-weight:700; color:#0f172a; font-size:16px; letter-spacing:.2px }
+
+/* ensure the whole card area is used even with few categories */
+.least-product-card .least-body{ flex:1; display:flex; flex-direction:column }
+.least-product-card .categories-list .categories-grid{ align-content:start; align-items:stretch }
+
 
 .gestione{
 	display: flex;
@@ -250,5 +288,15 @@
 
 @media (max-width:520px){
 	.quick-actions { grid-template-columns: 1fr; }
+}
+
+/* --- Enlarge all card titles --- */
+.customers-card h2,
+.max-order-card h2,
+.least-product-card h2,
+.quick-actions-card h2 {
+	font-size: 24px !important;
+	line-height: 1.2;
+	font-weight: 800;
 }
 

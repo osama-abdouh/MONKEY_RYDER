@@ -101,6 +101,19 @@ const updateUserRole = async function (connection, userId, role) {
   return rows[0] || null;
 };
 
+// Elimina definitivamente un utente dal DB (hard delete)
+const deleteUser = async function (connection, userId) {
+  const sql = `DELETE FROM users WHERE user_id = $1 RETURNING *`;
+  const rows = await db.execute(connection, sql, [userId]);
+  return rows[0] || null;
+};
+// Elimina tutti gli ordini associati ad un utente
+const deleteOrdersByUser = async function (connection, userId) {
+  const sql = `DELETE FROM ordini WHERE user_id = $1`;
+  await db.execute(connection, sql, [userId]);
+  return true;
+};
+
 const ordersCountPerUser = async function (connection) {
   // Conta il numero di ordini per ogni utente (inclusi utenti senza ordini)
   const sql = `
@@ -114,4 +127,8 @@ const ordersCountPerUser = async function (connection) {
 };
 
 
-module.exports = { findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, RecentOrders, updateAccountStatus, updateUserRole, Users, ordersCountPerUser };
+
+
+
+
+module.exports = { findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, RecentOrders, updateAccountStatus, updateUserRole, Users, ordersCountPerUser, deleteUser, deleteOrdersByUser };

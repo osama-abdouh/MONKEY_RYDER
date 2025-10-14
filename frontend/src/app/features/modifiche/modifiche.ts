@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modifiche',
+  standalone: true,
   imports: [CommonModule, ModificheUtenti, HighestOrder, LowestStock],
   templateUrl: './modifiche.html',
   styleUrl: './modifiche.css'

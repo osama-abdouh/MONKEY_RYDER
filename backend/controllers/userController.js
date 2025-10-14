@@ -165,3 +165,24 @@ exports.ordersCountPerUser = async function (req, res) {
         if (conn) conn.done();
     }
 }
+
+exports.deleteUser = async function (req, res) {
+    let conn;
+    try {
+        conn = await db.getConnection();
+        const userId = req.params.userId;
+        const cascade = String(req.query.cascade || '').toLowerCase() === 'true';
+        if (cascade) {
+            // elimina prima gli ordini collegati, poi l'utente
+            await userDAO.deleteOrdersByUser(conn, userId);
+        }
+        const result = await userDAO.deleteUser(conn, userId);
+        if (!result) return res.status(404).json({ message: 'User not found' });
+        res.json({ deleted: result, cascade });
+    } catch (error) {
+        console.error('controller/userController.js deleteUser', error);
+        res.status(500).json({ message: 'Failed to delete user', error: error.message });
+    } finally {
+        if (conn) conn.done();
+    }
+}

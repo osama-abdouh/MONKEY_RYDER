@@ -65,5 +65,11 @@ export class UserService {
     updateUserRole(userId: number | string, role: string): Observable<any> {
         return this.http.patch<any>(`${this.apiUrl}/user/${userId}/role`, { role });
     }
+
+    // delete a user by ID
+    deleteUser(userId: number | string, cascade: boolean = false): Observable<any> {
+        const qs = cascade ? '?cascade=true' : '';
+        return this.http.delete<any>(`${this.apiUrl}/user/${userId}${qs}`);
+    }
     
 }

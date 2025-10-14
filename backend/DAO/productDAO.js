@@ -113,6 +113,49 @@ const countLessProducts = async function (connection) {
   return { id: r.id, name: r.name, category: r.category, quantity: r.quantity != null ? Number(r.quantity) : null };
 };
 
+const createCategory = async function(connection, payload) {
+  // Build dynamic insert from payload keys (exclude auto/system columns)
+  const deny = new Set(['id', 'created_at', 'updated_at']);
+  const keys = Object.keys(payload || {}).filter(k => !deny.has(String(k).toLowerCase()));
+  if (keys.length === 0) {
+    throw new Error('No valid fields provided for category');
+  }
+  const colsSql = keys.join(', ');
+  const params = keys.map(k => payload[k]);
+  const valuesSql = keys.map((_, i) => `$${i+1}`).join(', ');
+  const query = `INSERT INTO categories (${colsSql}) VALUES (${valuesSql}) RETURNING id, name, image`;
+  const result = await db.execute(connection, query, params);
+  return result && result[0] ? result[0] : null;
+}
+
+const deleteCategory = async function(connection, id) {
+  const query = `DELETE FROM categories WHERE id = $1`;
+  // pg-promise .any returns []; use rowCount via connection.result
+  const result = await connection.result(query, [id]);
+  return result.rowCount > 0;
+}
+
+const createProduct = async function(connection, payload) {
+  // exclude auto/system columns; accept rest from dynamic form
+  const deny = new Set(['id', 'created_at', 'updated_at']);
+  const keys = Object.keys(payload || {}).filter(k => !deny.has(String(k).toLowerCase()));
+  if (keys.length === 0) {
+    throw new Error('No valid fields provided for product');
+  }
+  const colsSql = keys.join(', ');
+  const params = keys.map(k => payload[k]);
+  const valuesSql = keys.map((_, i) => `$${i+1}`).join(', ');
+  const query = `INSERT INTO products (${colsSql}) VALUES (${valuesSql}) RETURNING id, name, description, price, category_id`;
+  const result = await db.execute(connection, query, params);
+  return result && result[0] ? result[0] : null;
+}
+
+const deleteProduct = async function(connection, id) {
+  const query = `DELETE FROM products WHERE id = $1`;
+  const result = await connection.result(query, [id]);
+  return result.rowCount > 0;
+}
+
 
 module.exports = {
   getAllCategories,
@@ -121,5 +164,9 @@ module.exports = {
   getPushProducts,
   incrementSalesCount,
   getProductsByCategoryName,
-  countLessProducts
+  countLessProducts,
+  createCategory,
+  deleteCategory,
+  createProduct,
+  deleteProduct,
 };
