@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-highest-order',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './highest-order.html',
   styleUrl: './highest-order.css'

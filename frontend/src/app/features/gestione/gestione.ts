@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService, User } from '../../services/user.service';
-import { ProductService, LeastProduct } from '../../services/product.service';
+import { ProductService, LeastProduct, Category } from '../../services/product.service';
 import { ModificheUtenti } from '../modifiche/modifiche-utenti/modifiche-utenti';
 import { RouterModule, Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-gestione',
+  standalone: true,
   imports: [CommonModule, RouterModule, ModificheUtenti],
   templateUrl: './gestione.html',
   styleUrls: ['./gestione.css']
@@ -22,6 +23,7 @@ export class Gestione implements OnInit {
   maxOrderResult: { max_order: number, first_name: string, last_name: string } | undefined;
   isLoadingMaxOrder = false;
   leastProduct: LeastProduct | null = null;
+  categories: Category[] = [];
   showModificheUtenti = false;
   // quick action placeholders (no inputs)
 
@@ -58,6 +60,12 @@ export class Gestione implements OnInit {
           this.productService.getLeastStock().subscribe({
             next: (p) => { this.leastProduct = p; },
             error: (e) => { console.error('Failed to load least product', e); }
+          });
+
+          // carica tutte le categorie per la card
+          this.productService.getAllCategories().subscribe({
+            next: (cats) => { this.categories = cats || []; },
+            error: (e) => { console.error('Failed to load categories', e); this.categories = []; }
           });
       },
       error: (err) => { this.error = err.message || 'Failed to load users'; this.loading = false; console.error('Failed to load users', err); }

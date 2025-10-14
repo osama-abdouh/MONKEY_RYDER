@@ -14,6 +14,7 @@ router.get('/user/:userId', userController.getUserById);
 router.patch('/user/:userId/status', userController.updateAccountStatus);
 router.patch('/user/:userId/role', userController.updateUserRole);
 router.get('/user/orders-count', userController.ordersCountPerUser);
+router.delete('/user/:userId', userController.deleteUser);
 
 
 

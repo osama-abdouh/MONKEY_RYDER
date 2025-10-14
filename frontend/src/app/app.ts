@@ -9,6 +9,7 @@ import { SessionService } from "./services/session.service";
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet, HeaderComponent, FooterComponent, ColabComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-modifiche-utenti',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './modifiche-utenti.html',
   styleUrl: './modifiche-utenti.css'
@@ -151,6 +152,29 @@ export class ModificheUtenti {
   getUserStatus(user: any): string {
     // return the DB value directly; template reads u.account_status as source of truth
     return user && user.account_status ? user.account_status : 'active';
+  }
+
+  onDeleteUser(user?: any): void {
+    if (!user) return;
+    const id = user.user_id || user.id;
+    if (this.updatingIds.has(id)) return;
+
+  const confirmDelete = window.confirm(`Eliminare definitivamente l'utente ${user.email}?\nATTENZIONE: verranno eliminati anche tutti gli ordini associati.`);
+    if (!confirmDelete) return;
+
+    this.updatingIds.add(id);
+  this.userService.deleteUser(id, true).subscribe({
+      next: () => {
+        // reload from server to reflect DB state
+        this.updatingIds.delete(id);
+        this.loadUsers();
+      },
+      error: (e) => {
+        console.error('Failed to delete user', e);
+        this.error = e?.error?.message || 'Impossibile eliminare utente';
+        this.updatingIds.delete(id);
+      }
+    });
   }
 
 }
