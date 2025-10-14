@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { CartService } from '../cart/cart.service';
 
 interface ProductItem {
   id: number;
@@ -23,7 +24,7 @@ export class ProductListComponent implements OnInit {
   loading = false;
   error = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cartService: CartService) {}
 
   ngOnInit() {
     this.getAllProducts();
@@ -43,6 +44,15 @@ export class ProductListComponent implements OnInit {
         this.loading = false;
         console.error('Errore:', err);
       }
+    });
+  }
+
+  addToCart(product: ProductItem) {
+    this.cartService.add({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1
     });
   }
 }

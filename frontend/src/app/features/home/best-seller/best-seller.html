@@ -1,0 +1,43 @@
+<div class="bestseller-container">
+  <h2 class="bestseller-title"> I Nostri Bestseller</h2>
+  
+  <div class="carousel-container">
+    <button class="carousel-arrow carousel-arrow-left" (click)="scrollCarousel(-1)" [disabled]="!canScrollLeft">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    
+    <div class="bestseller-carousel" #carouselContainer>
+      <button 
+        class="bestseller-card" 
+        type="button"
+        *ngFor="let product of bestSellerProducts; let i = index"
+        (click)="onProductClick(product)"
+      >
+        <div class="bestseller-rank">#{{i + 1}}</div>
+        
+        <div class="bestseller-content">
+          <h3 class="bestseller-name">{{product.name}}</h3>
+          <p class="bestseller-description">{{product.description}}</p>
+          <div class="bestseller-category">{{product.category_name}}</div>
+        </div>
+        
+        <div class="bestseller-footer">
+          <span class="bestseller-price">{{formatPrice(product.price)}}</span>
+          <span class="bestseller-sales">
+            <span class="sales-icon"></span>
+            {{product.sales_count}} vendite
+          </span>
+        </div>
+      </button>
+    </div>
+    
+    <button class="carousel-arrow carousel-arrow-right" (click)="scrollCarousel(1)" [disabled]="!canScrollRight">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+  
+  <!-- Messaggio se non ci sono bestseller -->
+  <div *ngIf="bestSellerProducts.length === 0" class="no-bestsellers">
+    <p>Nessun bestseller disponibile al momento.</p>
+  </div>
+</div>

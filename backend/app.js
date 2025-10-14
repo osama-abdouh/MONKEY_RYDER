@@ -6,6 +6,8 @@ const productRouter = require('./routes/products');
 const testRouter = require('./routes/test');
 const userRouter = require('./routes/userRoutes');
 
+const staticImagesMiddleware = express.static('assets/Immagini');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,8 +21,7 @@ app.use(express.json()); // necessario per leggere il body JSON
 app.use(contextPath, authRouter);
 app.use(contextPath, productRouter);
 
-app.use('/assets/Immagini', express.static('assets/Immagini'));
-
+app.use('/assets/Immagini', staticImagesMiddleware);
 //rotte ancora da implementare
 app.use(contextPath, userRouter);
 app.use(contextPath, testRouter);
