@@ -129,6 +129,5 @@ const ordersCountPerUser = async function (connection) {
 
 
 
-
-
 module.exports = { findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, RecentOrders, updateAccountStatus, updateUserRole, Users, ordersCountPerUser, deleteUser, deleteOrdersByUser };
+
