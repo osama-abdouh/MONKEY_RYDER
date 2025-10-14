@@ -47,6 +47,4 @@ const findUserByEmail = async function (connection, email) {
 }
 
 
-
-
 module.exports = { findAllUsers, findUserById, createUser, findUserByEmail,};
