@@ -15,6 +15,7 @@ import { RouterModule, Router } from '@angular/router';
 })
 export class Gestione implements OnInit {
   users: User[] = [];
+  totalUsers = 0;
   loading = false;
   error: string | null = null;
   selected = false;
@@ -32,6 +33,11 @@ export class Gestione implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.error = null;
+    // total users across roles for the counter
+    this.userService.getUsersAll().subscribe({
+      next: (all) => { this.totalUsers = (all || []).length; },
+      error: (e) => { console.warn('Failed to load total users', e); this.totalUsers = 0; }
+    });
     // load only users with role 'customer'
     this.userService.getUsersByRole('customer').subscribe({
       next: (data) => { 

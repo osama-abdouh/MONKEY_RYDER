@@ -22,6 +22,20 @@ export class ModificheUtenti {
   query: string = '';
   filteredUsers: any[] = [];
 
+  // new user modal state
+  showCreate = false;
+  creating = false;
+  newUser: any = {
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    birth_date: '',
+    phone_number: '',
+    role: 'customer',
+    account_status: 'active'
+  };
+
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
@@ -79,13 +93,55 @@ export class ModificheUtenti {
   }
 
   onNewUser(): void {
-    console.log('ModificheUtenti: onNewUser clicked');
-    // TODO: open a create user dialog or navigate to user creation form
+    this.error = null;
+    this.showCreate = true;
   }
 
   onEditUser(user?: any): void {
     console.log('ModificheUtenti: onEditUser clicked', user);
     // TODO: open edit UI for the selected user (user may be undefined if top-level button clicked)
+  }
+
+  cancelCreate(): void {
+    if (this.creating) return;
+    this.showCreate = false;
+    this.newUser = { first_name: '', last_name: '', email: '', password: '', birth_date: '', phone_number: '', role: 'customer', account_status: 'active' };
+  }
+
+  submitCreate(): void {
+    if (this.creating) return;
+    const u = this.newUser || {};
+    const first = (u.first_name || '').trim();
+    const last = (u.last_name || '').trim();
+    const email = (u.email || '').trim();
+    const password = (u.password || '').trim();
+    if (!first || !last || !email || !password) {
+      this.error = 'Compila tutti i campi obbligatori';
+      return;
+    }
+    this.creating = true;
+    this.userService.createUser({
+      first_name: first,
+      last_name: last,
+      email,
+      password,
+      birth_date: u.birth_date ? String(u.birth_date) : null,
+      phone_number: u.phone_number ? String(u.phone_number) : null,
+      role: u.role || 'customer',
+      account_status: u.account_status || 'active'
+    }).subscribe({
+      next: () => {
+        this.creating = false;
+        this.showCreate = false;
+        this.cancelCreate();
+        this.loadUsers();
+      },
+      error: (e) => {
+        console.error('Create user failed', e);
+        this.error = e?.error?.message || 'Creazione utente fallita';
+        this.creating = false;
+      }
+    });
   }
 
   onToggleRole(user?: any): void {
@@ -152,6 +208,12 @@ export class ModificheUtenti {
   getUserStatus(user: any): string {
     // return the DB value directly; template reads u.account_status as source of truth
     return user && user.account_status ? user.account_status : 'active';
+  }
+
+  onBackdropClick(ev: MouseEvent): void {
+    if (ev && ev.target === ev.currentTarget) {
+      this.cancelCreate();
+    }
   }
 
   onDeleteUser(user?: any): void {
