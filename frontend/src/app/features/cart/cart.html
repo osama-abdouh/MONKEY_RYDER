@@ -20,8 +20,46 @@
     </ul>
 
     <div *ngIf="cartItems.length > 0" class="summary">
-      Totale: {{ getTotalPrice() | currency:'EUR' }}
-      <button (click)="clear()">Svuota carrello</button>
+      <div class="total">Totale: {{ getTotalPrice() | currency:'EUR' }}</div>
+      <div class="actions">
+        <button (click)="clear()">Svuota carrello</button>
+        <button *ngIf="isLoggedIn" (click)="checkout()">Check out</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showPayment" class="pay-backdrop" (click)="closePayment()">
+  <div class="pay-modal" (click)="$event.stopPropagation()">
+    <h3>Pagamento</h3>
+    <div class="pay-form">
+      <label>
+        Nome sulla carta
+        <input type="text" [(ngModel)]="payment.name" placeholder="Mario Rossi" />
+      </label>
+      <label>
+        Numero carta
+        <input type="text" [(ngModel)]="payment.number" placeholder="1234 5678 9012 3456" />
+      </label>
+      <div class="pay-grid">
+        <label>
+          Mese
+          <input type="number" min="1" max="12" [(ngModel)]="payment.expiryMonth" placeholder="MM" />
+        </label>
+        <label>
+          Anno
+          <input type="number" min="2024" max="2040" [(ngModel)]="payment.expiryYear" placeholder="YYYY" />
+        </label>
+        <label>
+          CVV
+          <input type="password" maxlength="3" [(ngModel)]="payment.cvv" placeholder="123" />
+        </label>
+      </div>
+      <div *ngIf="paymentError" class="pay-error">{{ paymentError }}</div>
+    </div>
+    <div class="pay-actions">
+      <button (click)="closePayment()" [disabled]="paying">Annulla</button>
+      <button (click)="confirmPayment()" [disabled]="paying">Conferma pagamento</button>
     </div>
   </div>
 </div>
