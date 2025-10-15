@@ -11,6 +11,9 @@ export interface OrderDTO {
   last_name?: string;
   email?: string;
   stato?: string;
+  payment_provider?: string;
+  payment_ref?: string;
+  payment_status?: string;
 }
 
 @Injectable({ providedIn: 'root' })

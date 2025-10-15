@@ -3,6 +3,7 @@ const db = require('../services/db');
 // Return all orders with essential fields; join user for names
 const findAll = async function(connection) {
   const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas, o.stato,
+    o.payment_provider, o.payment_ref, o.payment_status,
     u.first_name, u.last_name, u.email
     FROM ordini o
     LEFT JOIN users u ON u.user_id = o.user_id
@@ -49,3 +50,26 @@ const cancelById = async function(connection, id) {
 };
 
 module.exports = { findAll, findPending, cancelById };
+
+// Create a new order with basic payment fields
+const createOrder = async function(connection, { user_id, prezzo, payment_provider, payment_ref, payment_status }) {
+  const sql = `INSERT INTO ordini (user_id, prezzo, stato, payment_provider, payment_ref, payment_status)
+               VALUES ($1, $2, 'pending', $3, $4, COALESCE($5, 'created'))
+               RETURNING *`;
+  const params = [user_id, prezzo, payment_provider || null, payment_ref || null, payment_status || null];
+  const rows = await db.execute(connection, sql, params);
+  return rows && rows[0] ? rows[0] : null;
+};
+
+// Mark order as paid: only update payment_status and payment_ref, do NOT touch stato
+const markOrderPaid = async function(connection, id_ordine, { payment_ref, payment_status = 'succeeded' }) {
+  const sql = `UPDATE ordini
+               SET payment_status = $2, payment_ref = COALESCE($3, payment_ref)
+               WHERE id_ordine = $1
+               RETURNING *`;
+  const rows = await db.execute(connection, sql, [id_ordine, payment_status, payment_ref || null]);
+  return rows && rows[0] ? rows[0] : null;
+};
+
+module.exports.createOrder = createOrder;
+module.exports.markOrderPaid = markOrderPaid;
