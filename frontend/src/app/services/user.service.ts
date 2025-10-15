@@ -72,4 +72,19 @@ export class UserService {
         return this.http.delete<any>(`${this.apiUrl}/user/${userId}${qs}`);
     }
     
+    // create a new user (uses auth register endpoint)
+    createUser(payload: { first_name: string; last_name: string; email: string; password: string; birth_date?: string | null; phone_number?: string | null; role?: 'customer' | 'admin'; account_status?: 'active' | 'suspended' }): Observable<any> {
+        const body: any = {
+            first_name: payload.first_name,
+            last_name: payload.last_name,
+            email: payload.email,
+            password: payload.password,
+            birth_date: payload.birth_date ?? null,
+            phone_number: payload.phone_number ?? null,
+            role: payload.role ?? 'customer',
+            account_status: payload.account_status ?? 'active'
+        };
+        return this.http.post<any>(`${this.apiUrl}/register`, body);
+    }
+    
 }

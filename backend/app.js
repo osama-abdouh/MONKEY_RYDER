@@ -5,6 +5,7 @@ const authRouter = require('./routes/authRoutes');
 const productRouter = require('./routes/products');
 const testRouter = require('./routes/test');
 const userRouter = require('./routes/userRoutes');
+const orderRouter = require('./routes/orderRoutes');
 
 const staticImagesMiddleware = express.static('assets/Immagini');
 
@@ -25,6 +26,7 @@ app.use('/assets/Immagini', staticImagesMiddleware);
 //rotte ancora da implementare
 app.use(contextPath, userRouter);
 app.use(contextPath, testRouter);
+app.use(contextPath, orderRouter);
 
 
 // Endpoint per controllare lo stato del server per il frontend
