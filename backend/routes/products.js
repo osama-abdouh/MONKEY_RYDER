@@ -4,6 +4,7 @@ const db = require('../services/db');
 
 const router = express.Router();
 
+router.get('/search', productController.searchProducts);
 router.get('/products', productController.getAllProducts);
 router.post('/products', productController.createProduct);
 router.get('/products/category/:categoryId', productController.getProductsByCategory);
@@ -16,8 +17,10 @@ router.post('/products/:productId/increment-sales', productController.incrementS
 router.get('/products/push', productController.getPushProducts);
 router.get('/products/count-less', productController.countLessProducts); 
 router.delete('/products/:id', productController.deleteProduct);
-router.get('/db-structure', async (req, res) => {
 
+
+// Query per ottenere la struttura del proprio database
+router.get('/db-structure', async (req, res) => {
   const connection = await db.getConnection();
   try {
     const query = `

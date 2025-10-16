@@ -1,5 +1,5 @@
 # test brands endpoint
-GET http://localhost:3000/api/localhost:3000/products
+GET http://localhost:3000/api/search?search=molle
 
 
 ### Test login per ottenere token

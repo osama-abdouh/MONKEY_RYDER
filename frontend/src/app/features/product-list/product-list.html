@@ -1,76 +1,108 @@
 <div class="product-list-container">
   <h1>I nostri prodotti</h1>
   <div class="filter-bar">
-    <div class="dropdown">
-      <button class="dropbtn" (click)="toggleDropdown('prezzo')">Prezzo ▼</button>
-      <div class="dropdown-content" [class.show]="isDropdownOpen('prezzo')">
-        <div class="price-filter">
-          <div class="price-inputs">
-            <div class="price-input">
-              <label for="minPrice">Prezzo Min:</label>
-              <input
-                type="number"
-                id="minPrice"
-                [(ngModel)]="minPrice"
-                placeholder="Min"
-                min="0"
-              />
+    <div class="filter-left">
+      <div class="dropdown">
+        <button class="dropbtn" (click)="toggleDropdown('prezzo')">Prezzo ▼</button>
+        <div class="dropdown-content" [class.show]="isDropdownOpen('prezzo')">
+          <div class="price-filter">
+            <div class="price-inputs">
+              <div class="price-input">
+                <label for="minPrice">Prezzo Min:</label>
+                <input
+                  type="number"
+                  id="minPrice"
+                  [(ngModel)]="minPrice"
+                  placeholder="Min"
+                  min="0"
+                />
+              </div>
+              <div class="price-input">
+                <label for="maxPrice">Prezzo Max:</label>
+                <input
+                  type="number"
+                  id="maxPrice"
+                  [(ngModel)]="maxPrice"
+                  placeholder="Max"
+                  min="0"
+                />
+              </div>
             </div>
-            <div class="price-input">
-              <label for="maxPrice">Prezzo Max:</label>
-              <input
-                type="number"
-                id="maxPrice"
-                [(ngModel)]="maxPrice"
-                placeholder="Max"
-                min="0"
-              />
+            <div class="price-button">
+              <button (click)="filterByPrice()">Applica</button>
             </div>
-          </div>
-          <div class="price-button">
-            <button (click)="filterByPrice()">Applica</button>
-          </div>
 
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="dropdown">
-      <button class="dropbtn" (click)="toggleDropdown('categoria')">Categoria ▼</button>
-      <div class="dropdown-content" [class.show]="isDropdownOpen('categoria')">
-        <a
-          href="#"
-          [class.active]="selectedCategory.length === 0"
-          (click)="filterByCategory(''); $event.preventDefault()"
-          >Tutti</a>
-        @for(category of categories; track category.name){
-        <a
-          href="#"
-          [class.active]="selectedCategory.includes(category.name)"
-          (click)="filterByCategory(category.name); $event.preventDefault()"
-          >{{ category.name }}</a>
-        }
+      <div class="dropdown">
+        <button class="dropbtn" (click)="toggleDropdown('categoria')">Categoria ▼</button>
+        <div class="dropdown-content" [class.show]="isDropdownOpen('categoria')">
+          <a
+            href="#"
+            [class.active]="selectedCategory.length === 0"
+            (click)="filterByCategory(''); $event.preventDefault()"
+            >Tutti</a>
+          @for(category of categories; track category.name){
+          <a
+            href="#"
+            [class.active]="selectedCategory.includes(category.name)"
+            (click)="filterByCategory(category.name); $event.preventDefault()"
+            >{{ category.name }}</a>
+          }
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <button class="dropbtn" (click)="toggleDropdown('brand')">Brand ▼</button>
+        <div class="dropdown-content" [class.show]="isDropdownOpen('brand')">
+          <a
+            href="#"
+            [class.active]="selectedBrand.length === 0"
+            (click)="filterByBrand('Tutti'); $event.preventDefault()"
+            >Tutti</a>
+          @for(brand of brands; track brand.name){
+          <a
+            href="#"
+            [class.active]="selectedBrand.includes(brand.name)"
+            (click)="filterByBrand(brand.name); $event.preventDefault()"
+            >{{ brand.name }}</a>
+          }
+        </div>
+
       </div>
     </div>
 
-    <div class="dropdown">
-      <button class="dropbtn" (click)="toggleDropdown('brand')">Brand ▼</button>
-      <div class="dropdown-content" [class.show]="isDropdownOpen('brand')">
-        <a
-          href="#"
-          [class.active]="selectedBrand.length === 0"
-          (click)="filterByBrand('Tutti'); $event.preventDefault()"
-          >Tutti</a>
-        @for(brand of brands; track brand.name){
-        <a
-          href="#"
-          [class.active]="selectedBrand.includes(brand.name)"
-          (click)="filterByBrand(brand.name); $event.preventDefault()"
-          >{{ brand.name }}</a>
-        }
-      </div>
-
+    <div class="search-container">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Cerca prodotti..."
+        class="search-input"
+        (keyup.enter)="searchProducts()"
+      />
     </div>
+
+    <div class="filter-right">
+      <div class="dropdown">
+      <button class="dropbtn" (click)="toggleDropdown('ordinamento')">
+        Ordina per ▼
+      </button>
+      <div class="dropdown-content" [class.show]="isDropdownOpen('ordinamento')">
+        @for (option of sortOptions; track option.value) {
+          <a
+            href="#"
+            [class.active]="currentSort === option.value"
+            (click)="applySorting(option.value); $event.preventDefault()"
+          >
+            {{ option.label }}
+          </a>
+        }
+    </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="product-list-grid">

@@ -1,5 +1,6 @@
-const db = require('../services/db');
+const db = require("../services/db");
 
+// GetAll functions
 const getAllProducts = async function (connection) {
   const query = `
     SELECT 
@@ -18,7 +19,6 @@ const getAllProducts = async function (connection) {
   const result = await db.execute(connection, query);
   return result;
 };
-
 const getAllCategories = async function (connection) {
   const query = `
     SELECT 
@@ -29,8 +29,7 @@ const getAllCategories = async function (connection) {
   `;
   const result = await db.execute(connection, query);
   return result;
-}
-
+};
 const getAllBrands = async function (connection) {
   const query = `
     SELECT
@@ -40,8 +39,9 @@ const getAllBrands = async function (connection) {
   `;
   const result = await db.execute(connection, query);
   return result;
-}
+};
 
+// GetBy functions
 const getProductsByCategory = async function (connection, categoryId) {
   const query = `
     SELECT 
@@ -58,7 +58,6 @@ const getProductsByCategory = async function (connection, categoryId) {
   const result = await db.execute(connection, query, [categoryId]);
   return result;
 };
-
 const getProductsByCategoryName = async function (connection, categoryName) {
   const query = `
     SELECT 
@@ -76,9 +75,78 @@ const getProductsByCategoryName = async function (connection, categoryName) {
   return result;
 };
 
+const searchProducts = async function (connection, filter = {}) {
+  const { searchTerm, category, brand, minPrice, maxPrice } = filter;
+
+  const conditions = [];
+  const params = [];
+  let paramCount = 1;
+
+  // Base query
+  let query = `
+    SELECT p.*, c.name as category_name, b.name as brand_name
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    JOIN brand b ON p.brand_id = b.id
+  `;
+
+  // Add search term condition
+  if (searchTerm) {
+    conditions.push(`(LOWER(p.name) LIKE LOWER($${paramCount}))`);
+    params.push(`%${searchTerm}%`);
+    paramCount++;
+  }
+
+  // Add category condition
+  if (category) {
+    conditions.push(`p.category_id = $${paramCount}`);
+    params.push(category);
+    paramCount++;
+  }
+
+  // Add brand condition
+  if (brand) {
+    conditions.push(`p.brand_id = $${paramCount}`);
+    params.push(brand);
+    paramCount++;
+  }
+
+  // Add price range conditions
+  if (minPrice !== undefined && minPrice !== null) {
+    conditions.push(`p.price >= $${paramCount}`);
+    params.push(minPrice);
+    paramCount++;
+  }
+  if (maxPrice !== undefined && maxPrice !== null) {
+    conditions.push(`p.price <= $${paramCount}`);
+    params.push(maxPrice);
+    paramCount++;
+  }
+
+  // Combine all conditions into the query
+  if (conditions.length > 0) {
+    query += ` WHERE ${conditions.join(" AND ")}`;
+  }
+
+  console.log("=== QUERY COSTRUITA ===");
+  console.log("SQL:", query);
+  console.log("PARAMS:", params);
+  console.log("CONDITIONS:", conditions);
+
+  const result = await db.execute(connection, query, params);
+
+  console.log("=== RISULTATO DAO ===");
+  console.log("Numero righe:", result.length);
+
+  return result;
+};
 
 // Funzione per incrementare il contatore vendite
-const incrementSalesCount = async function (connection, productId, quantity = 1) {
+const incrementSalesCount = async function (
+  connection,
+  productId,
+  quantity = 1
+) {
   const query = `
     UPDATE products 
     SET 
@@ -124,52 +192,60 @@ const countLessProducts = async function (connection) {
   const result = await db.execute(connection, query);
   if (!result || result.length === 0) return null;
   const r = result[0];
-  return { id: r.id, name: r.name, category: r.category, quantity: r.quantity != null ? Number(r.quantity) : null };
+  return {
+    id: r.id,
+    name: r.name,
+    category: r.category,
+    quantity: r.quantity != null ? Number(r.quantity) : null,
+  };
 };
 
-const createCategory = async function(connection, payload) {
+const createCategory = async function (connection, payload) {
   // Build dynamic insert from payload keys (exclude auto/system columns)
-  const deny = new Set(['id', 'created_at', 'updated_at']);
-  const keys = Object.keys(payload || {}).filter(k => !deny.has(String(k).toLowerCase()));
+  const deny = new Set(["id", "created_at", "updated_at"]);
+  const keys = Object.keys(payload || {}).filter(
+    (k) => !deny.has(String(k).toLowerCase())
+  );
   if (keys.length === 0) {
-    throw new Error('No valid fields provided for category');
+    throw new Error("No valid fields provided for category");
   }
-  const colsSql = keys.join(', ');
-  const params = keys.map(k => payload[k]);
-  const valuesSql = keys.map((_, i) => `$${i+1}`).join(', ');
+  const colsSql = keys.join(", ");
+  const params = keys.map((k) => payload[k]);
+  const valuesSql = keys.map((_, i) => `$${i + 1}`).join(", ");
   const query = `INSERT INTO categories (${colsSql}) VALUES (${valuesSql}) RETURNING id, name, image`;
   const result = await db.execute(connection, query, params);
   return result && result[0] ? result[0] : null;
-}
+};
 
-const deleteCategory = async function(connection, id) {
+const deleteCategory = async function (connection, id) {
   const query = `DELETE FROM categories WHERE id = $1`;
   // pg-promise .any returns []; use rowCount via connection.result
   const result = await connection.result(query, [id]);
   return result.rowCount > 0;
-}
+};
 
-const createProduct = async function(connection, payload) {
+const createProduct = async function (connection, payload) {
   // exclude auto/system columns; accept rest from dynamic form
-  const deny = new Set(['id', 'created_at', 'updated_at']);
-  const keys = Object.keys(payload || {}).filter(k => !deny.has(String(k).toLowerCase()));
+  const deny = new Set(["id", "created_at", "updated_at"]);
+  const keys = Object.keys(payload || {}).filter(
+    (k) => !deny.has(String(k).toLowerCase())
+  );
   if (keys.length === 0) {
-    throw new Error('No valid fields provided for product');
+    throw new Error("No valid fields provided for product");
   }
-  const colsSql = keys.join(', ');
-  const params = keys.map(k => payload[k]);
-  const valuesSql = keys.map((_, i) => `$${i+1}`).join(', ');
+  const colsSql = keys.join(", ");
+  const params = keys.map((k) => payload[k]);
+  const valuesSql = keys.map((_, i) => `$${i + 1}`).join(", ");
   const query = `INSERT INTO products (${colsSql}) VALUES (${valuesSql}) RETURNING id, name, description, price, category_id`;
   const result = await db.execute(connection, query, params);
   return result && result[0] ? result[0] : null;
-}
+};
 
-const deleteProduct = async function(connection, id) {
+const deleteProduct = async function (connection, id) {
   const query = `DELETE FROM products WHERE id = $1`;
   const result = await connection.result(query, [id]);
   return result.rowCount > 0;
-}
-
+};
 
 module.exports = {
   getAllCategories,
@@ -177,6 +253,7 @@ module.exports = {
   getAllBrands,
   getProductsByCategory,
   getPushProducts,
+  searchProducts,
   incrementSalesCount,
   getProductsByCategoryName,
   countLessProducts,
