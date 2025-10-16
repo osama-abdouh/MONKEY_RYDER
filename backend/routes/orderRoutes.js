@@ -19,4 +19,7 @@ router.post('/orders', authenticateToken, orderController.createOrder);
 // POST /api/orders/confirm-payment -> mark order as paid
 router.post('/orders/confirm-payment', authenticateToken, orderController.confirmPayment);
 
+// PATCH /api/orders/:id/delivery -> update delivery data for an order
+router.patch('/orders/:id/delivery', orderController.updateDeliveryData);
+
 module.exports = router;

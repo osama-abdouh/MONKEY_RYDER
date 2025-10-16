@@ -31,6 +31,29 @@
 
 <div *ngIf="showPayment" class="pay-backdrop" (click)="closePayment()">
   <div class="pay-modal" (click)="$event.stopPropagation()">
+    <div class="pay-form">
+      <h3>Dati di Consegna</h3>
+      <label>
+        Nome Completo
+        <input type="text" [(ngModel)]="delivery.fullName" placeholder="Mario Rossi" />
+      </label>
+      <label>
+        Indirizzo
+        <input type="text" [(ngModel)]="delivery.address" placeholder="Via Roma, 123" />
+      </label>
+      <label>
+        Città
+        <input type="text" [(ngModel)]="delivery.city" placeholder="Roma" />
+      </label>
+      <label>
+        CAP
+        <input type="text" [(ngModel)]="delivery.postalCode" placeholder="00100" />
+      </label>
+      <label>
+        Telefono
+        <input type="text" [(ngModel)]="delivery.phone" placeholder="+39 123 456 7890" />
+      </label>
+    </div>
     <h3>Pagamento</h3>
     <div class="pay-form">
       <label>

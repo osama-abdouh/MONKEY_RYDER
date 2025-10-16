@@ -82,3 +82,26 @@ exports.cancelOrder = async function(req, res) {
     if (conn) conn.done();
   }
 }
+
+exports.updateDeliveryData = async function(req, res) {
+  let conn;
+  try {
+    conn = await db.getConnection();
+    const orderId = req.params.id;
+    const { deliveryData } = req.body || {};
+    // Diagnostic log to help debugging frontend payloads
+    console.log('[DEBUG] updateDeliveryData controller received orderId=%s deliveryData=%o', orderId, deliveryData);
+    if (!deliveryData || Object.keys(deliveryData).length === 0) {
+      return res.status(400).json({ message: 'deliveryData mancante o vuoto' });
+    }
+
+    const updated = await orderDAO.updateDeliveryData(conn, orderId, deliveryData);
+    if (!updated) return res.status(404).json({ message: 'Ordine non trovato' });
+    res.json(updated);
+  } catch (error) {
+    console.error('controller/orderController.js updateDeliveryData', error);
+    res.status(500).json({ message: 'Update delivery data failed', error: error.message });
+  } finally {
+    if (conn) conn.done();
+  }
+};
