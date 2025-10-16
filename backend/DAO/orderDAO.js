@@ -49,8 +49,6 @@ const cancelById = async function(connection, id) {
   }
 };
 
-module.exports = { findAll, findPending, cancelById };
-
 // Create a new order with basic payment fields
 const createOrder = async function(connection, { user_id, prezzo, payment_provider, payment_ref, payment_status }) {
   const sql = `INSERT INTO ordini (user_id, prezzo, stato, payment_provider, payment_ref, payment_status)
@@ -71,5 +69,24 @@ const markOrderPaid = async function(connection, id_ordine, { payment_ref, payme
   return rows && rows[0] ? rows[0] : null;
 };
 
-module.exports.createOrder = createOrder;
-module.exports.markOrderPaid = markOrderPaid;
+// Update delivery details for an order
+const updateDeliveryData = async function(connection, orderId, deliveryData) {
+  const sql = `UPDATE ordini 
+               SET delivery_address = $1, 
+                   delivery_city = $2, 
+                   delivery_postal_code = $3, 
+                   delivery_phone = $4
+               WHERE id_ordine = $5 RETURNING *`;
+  // Support different payload shapes from frontend or other clients
+  const address = deliveryData && (deliveryData.delivery_address || deliveryData.address) || null;
+  const city = deliveryData && (deliveryData.delivery_city || deliveryData.city) || null;
+  const postalCode = deliveryData && (deliveryData.delivery_postal_code || deliveryData.postalCode || deliveryData.postal_code) || null;
+  const phone = deliveryData && (deliveryData.delivery_phone || deliveryData.phone) || null;
+
+  const params = [address, city, postalCode, phone, orderId];
+  console.log('[DEBUG] orderDAO.updateDeliveryData params=%o', params);
+  const result = await db.execute(connection, sql, params);
+  return result && result[0] ? result[0] : null;
+};
+
+module.exports = { findAll, findPending, cancelById, createOrder, markOrderPaid, updateDeliveryData };

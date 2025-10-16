@@ -76,6 +76,14 @@ export class CartComponent implements OnInit, OnDestroy {
     cvv: ''
   };
 
+  delivery = {
+    fullName: '',
+    address: '',
+    city: '',
+    postalCode: '',
+    phone: ''
+  };
+
   closePayment(): void {
     if (this.paying) return;
     this.showPayment = false;
@@ -129,6 +137,12 @@ export class CartComponent implements OnInit, OnDestroy {
           payment_ref: 'MOCK-' + Date.now()
         }, { headers }).subscribe({
           next: () => {
+            // After confirming payment, send delivery data for this order
+            try {
+              this.submitDeliveryData(id_ordine);
+            } catch (e) {
+              console.error('Error submitting delivery data', e);
+            }
             this.paying = false;
             this.showPayment = false;
             alert('Pagamento confermato');
@@ -145,6 +159,26 @@ export class CartComponent implements OnInit, OnDestroy {
         console.error('Create order failed', e);
         this.paymentError = 'Errore creazione ordine';
         this.paying = false;
+      }
+    });
+  }
+
+  submitDeliveryData(orderId: number) {
+    const deliveryData = {
+      delivery_address: this.delivery.address,
+      delivery_city: this.delivery.city,
+      delivery_postal_code: this.delivery.postalCode,
+      delivery_phone: this.delivery.phone
+    };
+    const api = 'http://localhost:3000/api';
+    const token = this.session.getToken();
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    this.cartService.updateDeliveryData(orderId, deliveryData, { headers }).subscribe({
+      next: (response) => {
+        console.log('Delivery data updated successfully:', response);
+      },
+      error: (err) => {
+        console.error('Failed to update delivery data:', err);
       }
     });
   }
