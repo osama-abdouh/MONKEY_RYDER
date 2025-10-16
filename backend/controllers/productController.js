@@ -13,6 +13,18 @@ exports.getAllProducts = async (req, res) => {
     if (conn) conn.done();
     }
 }
+exports.getAllBrands = async (req, res) => {
+    let conn = await db.getConnection();
+    try {
+        const brands = await productDAO.getAllBrands(conn);
+        res.json(brands);
+    } catch (error) {
+        console.error('Error fetching brands:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    } finally {
+        if (conn) conn.done();
+    }
+}
 
 exports.getProductsByCategory = async (req, res) => {
     let conn = await db.getConnection();

@@ -8,13 +8,39 @@ const getAllProducts = async function (connection) {
       products.description,
       products.price,
       products.category_id,
-      categories.name as category_name
+      categories.name as category_name,
+      products.brand_id,
+      brand.name as brand_name
     FROM products 
     JOIN categories ON products.category_id = categories.id
+    JOIN brand ON products.brand_id = brand.id
   `;
   const result = await db.execute(connection, query);
   return result;
 };
+
+const getAllCategories = async function (connection) {
+  const query = `
+    SELECT 
+      categories.id,
+      categories.name,
+      categories.image
+    FROM categories
+  `;
+  const result = await db.execute(connection, query);
+  return result;
+}
+
+const getAllBrands = async function (connection) {
+  const query = `
+    SELECT
+      brand.id,
+      brand.name    
+    FROM brand
+  `;
+  const result = await db.execute(connection, query);
+  return result;
+}
 
 const getProductsByCategory = async function (connection, categoryId) {
   const query = `
@@ -50,18 +76,6 @@ const getProductsByCategoryName = async function (connection, categoryName) {
   return result;
 };
 
-
-const getAllCategories = async function (connection) {
-  const query = `
-    SELECT 
-      categories.id,
-      categories.name,
-      categories.image
-    FROM categories
-  `;
-  const result = await db.execute(connection, query);
-  return result;
-}
 
 // Funzione per incrementare il contatore vendite
 const incrementSalesCount = async function (connection, productId, quantity = 1) {
@@ -160,6 +174,7 @@ const deleteProduct = async function(connection, id) {
 module.exports = {
   getAllCategories,
   getAllProducts,
+  getAllBrands,
   getProductsByCategory,
   getPushProducts,
   incrementSalesCount,

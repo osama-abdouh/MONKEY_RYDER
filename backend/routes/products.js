@@ -11,11 +11,13 @@ router.get('/products/category/name/:categoryName', productController.getProduct
 router.get('/categories', productController.getAllCategories);
 router.post('/categories', productController.createCategory);
 router.delete('/categories/:id', productController.deleteCategory);
+router.get('/brands', productController.getAllBrands);
 router.post('/products/:productId/increment-sales', productController.incrementSales);
 router.get('/products/push', productController.getPushProducts);
 router.get('/products/count-less', productController.countLessProducts); 
 router.delete('/products/:id', productController.deleteProduct);
 router.get('/db-structure', async (req, res) => {
+
   const connection = await db.getConnection();
   try {
     const query = `

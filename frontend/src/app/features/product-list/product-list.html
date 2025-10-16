@@ -1,39 +1,112 @@
 <div class="product-list-container">
-  <h2>Lista Prodotti</h2>
-  
-  <!-- Loading state -->
-  <div *ngIf="loading" class="loading">
-    Caricamento prodotti...
-  </div>
-  
-  <!-- Error state -->
-  <div *ngIf="error" class="error">
-    {{ error }}
-    <button (click)="getAllProducts()">Riprova</button>
-  </div>
-  
-  <!-- Products grid -->
-  <div *ngIf="!loading && !error" class="products-grid">
-    <div *ngFor="let product of products" class="product-box">
-      <div class="product-info">
-        <h3>{{ product.name }}</h3>
-        <p class="product-description" *ngIf="product.description">
-          {{ product.description }}
-        </p>
-        <p class="product-category">Categoria: {{ product.category_name }}</p>
-        <p class="product-price">€{{ product.price }}</p>
-        <p class="product-altreinfo" *ngIf="product.altreInfo">
-          {{ product.altreInfo }}
-        </p>
-        <div class="product-actions">
-          <button class="add-to-cart" (click)="addToCart(product)">Aggiungi al carrello</button>
+  <h1>I nostri prodotti</h1>
+  <div class="filter-bar">
+    <div class="dropdown">
+      <button class="dropbtn" (click)="toggleDropdown('prezzo')">Prezzo ▼</button>
+      <div class="dropdown-content" [class.show]="isDropdownOpen('prezzo')">
+        <div class="price-filter">
+          <div class="price-inputs">
+            <div class="price-input">
+              <label for="minPrice">Prezzo Min:</label>
+              <input
+                type="number"
+                id="minPrice"
+                [(ngModel)]="minPrice"
+                placeholder="Min"
+                min="0"
+              />
+            </div>
+            <div class="price-input">
+              <label for="maxPrice">Prezzo Max:</label>
+              <input
+                type="number"
+                id="maxPrice"
+                [(ngModel)]="maxPrice"
+                placeholder="Max"
+                min="0"
+              />
+            </div>
+          </div>
+          <div class="price-button">
+            <button (click)="filterByPrice()">Applica</button>
+          </div>
+
         </div>
       </div>
     </div>
+
+    <div class="dropdown">
+      <button class="dropbtn" (click)="toggleDropdown('categoria')">Categoria ▼</button>
+      <div class="dropdown-content" [class.show]="isDropdownOpen('categoria')">
+        <a
+          href="#"
+          [class.active]="selectedCategory.length === 0"
+          (click)="filterByCategory(''); $event.preventDefault()"
+          >Tutti</a>
+        @for(category of categories; track category.name){
+        <a
+          href="#"
+          [class.active]="selectedCategory.includes(category.name)"
+          (click)="filterByCategory(category.name); $event.preventDefault()"
+          >{{ category.name }}</a>
+        }
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button class="dropbtn" (click)="toggleDropdown('brand')">Brand ▼</button>
+      <div class="dropdown-content" [class.show]="isDropdownOpen('brand')">
+        <a
+          href="#"
+          [class.active]="selectedBrand.length === 0"
+          (click)="filterByBrand('Tutti'); $event.preventDefault()"
+          >Tutti</a>
+        @for(brand of brands; track brand.name){
+        <a
+          href="#"
+          [class.active]="selectedBrand.includes(brand.name)"
+          (click)="filterByBrand(brand.name); $event.preventDefault()"
+          >{{ brand.name }}</a>
+        }
+      </div>
+
+    </div>
   </div>
-  
-  <!-- Empty state -->
-  <div *ngIf="!loading && !error && products.length === 0" class="empty-state">
-    Nessun prodotto disponibile
+
+  <div class="product-list-grid">
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading">Caricamento prodotti...</div>
+
+    <!-- Error state -->
+    <div *ngIf="error" class="error">
+      {{ error }}
+      <button (click)="getAllProducts()">Riprova</button>
+    </div>
+
+    <!-- Products grid -->
+    <div *ngIf="!loading && !error" class="products-grid">
+      <div *ngFor="let product of filteredProducts" class="product-box">
+        <div class="product-info">
+          <h3>{{ product.name }}</h3>
+          <p class="product-description" *ngIf="product.description">
+            {{ product.description }}
+          </p>
+          <p class="product-brand" *ngIf="product.brand_name">Brand: {{ product.brand_name }}</p>
+          <p class="product-category">Categoria: {{ product.category_name }}</p>
+          <p class="product-price">€{{ product.price }}</p>
+          <p class="product-altreinfo" *ngIf="product.altreInfo">
+            {{ product.altreInfo }}
+          </p>
+          <div class="product-actions">
+            <button class="add-to-cart" (click)="addToCart(product)">Aggiungi al carrello</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!loading && !error && filteredProducts.length === 0" class="empty-state">
+      Nessun prodotto disponibile
+    </div>
   </div>
 </div>
