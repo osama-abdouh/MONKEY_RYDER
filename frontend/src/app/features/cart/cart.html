@@ -57,6 +57,18 @@
     <h3>Pagamento</h3>
     <div class="pay-form">
       <label>
+        Coupon sconto
+        <div class="coupon-block">
+          <input type="text" [(ngModel)]="couponCode" placeholder="Inserisci coupon (es. PROMO10)" />
+          <button (click)="applyCoupon()">Applica</button>
+          <button *ngIf="couponApplied" (click)="removeCoupon()" style="background:#ef4444;">Rimuovi</button>
+        </div>
+        <div *ngIf="couponMessage" class="coupon-message" [ngClass]="{'invalid': !couponApplied}">{{ couponMessage }}</div>
+      </label>
+
+      <div class="total">Totale scontato: {{ getTotalPrice() | currency:'EUR' }}</div>
+
+      <label>
         Nome sulla carta
         <input type="text" [(ngModel)]="payment.name" placeholder="Mario Rossi" />
       </label>
@@ -80,9 +92,10 @@
       </div>
       <div *ngIf="paymentError" class="pay-error">{{ paymentError }}</div>
     </div>
-    <div class="pay-actions">
+      <div class="pay-actions">
+      <div class="payment-amount">Importo da pagare: <strong>{{ getTotalPrice() | currency:'EUR' }}</strong></div>
       <button (click)="closePayment()" [disabled]="paying">Annulla</button>
-      <button (click)="confirmPayment()" [disabled]="paying">Conferma pagamento</button>
+      <button (click)="confirmPayment()" [disabled]="paying">Conferma pagamento — Paga {{ getTotalPrice() | currency:'EUR' }}</button>
     </div>
   </div>
 </div>

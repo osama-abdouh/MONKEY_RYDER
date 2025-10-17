@@ -51,7 +51,11 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   getTotalPrice(): number {
-    return this.cartService.getTotalPrice();
+    const total = this.cartService.getTotalPrice();
+    if (this.couponApplied && this.appliedDiscountPercent > 0) {
+      return +(total * (1 - this.appliedDiscountPercent / 100)).toFixed(2);
+    }
+    return total;
   }
 
   get isLoggedIn(): boolean {
@@ -83,6 +87,17 @@ export class CartComponent implements OnInit, OnDestroy {
     postalCode: '',
     phone: ''
   };
+
+  // coupon state
+  couponCode = '';
+  couponApplied = false;
+  couponMessage: string | null = null;
+  // mock coupons map (code -> percent)
+  coupons: Record<string, number> = {
+    PROMO10: 10,
+    PROMO20: 20
+  };
+  appliedDiscountPercent = 0;
 
   closePayment(): void {
     if (this.paying) return;
@@ -181,5 +196,47 @@ export class CartComponent implements OnInit, OnDestroy {
         console.error('Failed to update delivery data:', err);
       }
     });
+  }
+
+  applyCoupon() {
+    const code = String(this.couponCode || '').trim().toUpperCase();
+    if (!code) {
+      this.couponMessage = 'Inserisci un codice coupon';
+      return;
+    }
+    const api = 'http://localhost:3000/api';
+    const orderTotal = this.cartService.getTotalPrice();
+    this.http.post<any>(`${api}/coupons/validate`, { code, orderTotal }).subscribe({
+      next: (res) => {
+        if (res && res.valid) {
+          // compute local representation of the discount
+          const discount = Number(res.discount || 0);
+          if (res.coupon && res.coupon.discountType === 'percent') {
+            this.appliedDiscountPercent = Number(res.coupon.discountValue || 0);
+          } else {
+            // fixed amount -> convert to percent to show reduction on total
+            const total = this.cartService.getTotalPrice();
+            this.appliedDiscountPercent = total > 0 ? Math.round((discount / total) * 100) : 0;
+          }
+          this.couponApplied = true;
+          this.couponMessage = 'Coupon applicato';
+        } else {
+          this.couponApplied = false;
+          this.couponMessage = res && res.message ? res.message : 'Coupon non valido';
+        }
+      },
+      error: (err) => {
+        console.error('validate coupon error', err);
+        this.couponApplied = false;
+        this.couponMessage = err?.error?.message || 'Errore validazione coupon';
+      }
+    });
+  }
+
+  removeCoupon() {
+    this.couponApplied = false;
+    this.appliedDiscountPercent = 0;
+    this.couponCode = '';
+    this.couponMessage = null;
   }
 }
