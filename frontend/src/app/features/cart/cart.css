@@ -132,6 +132,41 @@
   border: 1px solid #d1d5db;
   border-radius: 8px;
 }
+
+/* Coupon block styling */
+.coupon-block {
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.coupon-block input[type="text"]{
+  flex:1 1 auto;
+  min-width:0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+.coupon-block button{
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background:#0ea5a0;
+  color: white;
+  font-weight:700;
+  cursor:pointer;
+}
+.coupon-block button[disabled]{
+  opacity:0.6; cursor:not-allowed;
+}
+.coupon-message{
+  margin-top:6px;
+  font-size:0.95rem;
+  color:#065f46; /* green */
+}
+.coupon-message.invalid{ color:#b91c1c; }
+
+/* Payment amount styling */
+.payment-amount{ margin-right:auto; font-weight:700; align-self:center; }
 .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .pay-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; }
 .pay-actions button { padding: 10px 14px; border-radius: 8px; border: 1px solid #d1d5db; background:#111827; color:#fff; font-weight:700; }
