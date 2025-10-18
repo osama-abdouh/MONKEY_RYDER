@@ -137,6 +137,16 @@ export class ProductListComponent implements OnInit {
       },
     });
   }
+  getProductImageUrl(product: ProductItem): string {
+    console.log('Product:', product.name, 'Image path:', product.image_path); // Debug
+    if (product.image_path) {
+      return `http://localhost:3000/${product.image_path}`;
+    }
+    return 'assets/images/no-image.png'; // Percorso dell'immagine di default
+  }
+  onImageError(event: Event): void {
+    (event.target as HTMLImageElement).src = 'assets/images/no-image.png';
+  }
 
   toggleDropdown(dropdownName: string) {
     this.openDropdown = this.openDropdown === dropdownName ? null : dropdownName;
@@ -212,6 +222,7 @@ export class ProductListComponent implements OnInit {
     }
     this.applyFilters();
   }
+  
 
   addToCart(product: ProductItem) {
     this.cartService.add({

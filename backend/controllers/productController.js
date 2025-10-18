@@ -1,5 +1,6 @@
 const db = require("../services/db");
 const productDAO = require("../DAO/productDAO");
+const path = require("path");
 
 exports.getAllProducts = async (req, res) => {
   let conn = await db.getConnection();
@@ -51,7 +52,6 @@ exports.getProductsByCategory = async (req, res) => {
     if (conn) conn.done();
   }
 };
-
 exports.getProductsByCategoryName = async (req, res) => {
   let conn = await db.getConnection();
   try {
@@ -75,13 +75,6 @@ exports.searchProducts = async (req, res) => {
 
     const { search, category, brand, minPrice, maxPrice } = req.query;
 
-    console.log("=== SEARCH PARAMS RICEVUTI ===");
-    console.log("search:", search);
-    console.log("category:", category);
-    console.log("brand:", brand);
-    console.log("minPrice:", minPrice);
-    console.log("maxPrice:", maxPrice);
-
     // Prepara i filtri
     const filters = {
       searchTerm: search || null,
@@ -91,15 +84,8 @@ exports.searchProducts = async (req, res) => {
       maxPrice: maxPrice ? parseFloat(maxPrice) : null,
     };
 
-    console.log("=== FILTERS PREPARATI ===", filters);
-
     // Chiama il DAO per la ricerca
     const results = await productDAO.searchProducts(conn, filters);
-
-    console.log("=== RISULTATI ===");
-    console.log("Numero prodotti trovati:", results.length);
-    console.log("Primi 2 risultati:", results.slice(0, 2));
-
     res.status(200).json(results);
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -108,6 +94,44 @@ exports.searchProducts = async (req, res) => {
     if (conn) conn.done();
   }
 };
+
+// gestione immagini prodotti
+exports.uploadProductImage = async (req, res) => {
+  let conn = await db.getConnection();
+
+  try {
+    const productId = req.params.id;
+
+    if (!req.files || !req.files.image) {
+      return res.status(400).json({ error: "No image file uploaded" });
+    }
+
+    const imageFile = req.files.image;
+    const imageName = `product_${Date.now()}${path.extname(imageFile.name)}`;
+    const uploadPath = path.join(__dirname, '..', 'public', 'images', imageName);
+
+    // Sposta file nella cartella immagini
+    await imageFile.mv(uploadPath);
+
+    // Aggiorna DB con il percorso immagine
+    await productDAO.updateImagePath(conn, productId, 'images/' + imageName);
+
+    return res.json({ message: 'Immagine caricata', path: 'images/' + imageName });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Errore nel caricamento' });
+  } finally {
+    if (conn) conn.done();
+  }
+};
+
+
+
+
+
+
+
+
 
 exports.incrementSales = async (req, res) => {
   let conn = await db.getConnection();

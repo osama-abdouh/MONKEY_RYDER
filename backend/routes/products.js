@@ -1,6 +1,7 @@
 const express =require('express');
 const productController = require('../controllers/productController');
 const db = require('../services/db');
+const fileUploadMiddleware = require('../middleware/fileUploadMiddleware');
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.get('/products/push', productController.getPushProducts);
 router.get('/products/count-less', productController.countLessProducts); 
 router.delete('/products/:id', productController.deleteProduct);
 
+router.post('/products/:id/image', fileUploadMiddleware, productController.uploadProductImage);
 
 // Query per ottenere la struttura del proprio database
 router.get('/db-structure', async (req, res) => {

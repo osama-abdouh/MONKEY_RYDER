@@ -9,6 +9,7 @@ const getAllProducts = async function (connection) {
       products.description,
       products.price,
       products.category_id,
+      products.image_path,
       categories.name as category_name,
       products.brand_id,
       brand.name as brand_name
@@ -50,7 +51,10 @@ const getProductsByCategory = async function (connection, categoryId) {
       products.description,
       products.price,
       products.category_id,
-      categories.name as category_name
+      products.image_path,
+      categories.name as category_name,
+      products.brand_id,
+      brand.name as brand_name
     FROM products 
     JOIN categories ON products.category_id = categories.id
     WHERE products.category_id = $1
@@ -66,7 +70,10 @@ const getProductsByCategoryName = async function (connection, categoryName) {
       products.description,
       products.price,
       products.category_id,
-      categories.name as category_name
+      products.image_path,
+      categories.name as category_name,
+      products.brand_id,
+      brand.name as brand_name
     FROM products 
     JOIN categories ON products.category_id = categories.id
     WHERE LOWER(categories.name) = LOWER($1)
@@ -74,7 +81,7 @@ const getProductsByCategoryName = async function (connection, categoryName) {
   const result = await db.execute(connection, query, [categoryName]);
   return result;
 };
-
+//search function with multiple filters(prezzo minimo, prezzo massimo, categoria, marca, termine di ricerca)
 const searchProducts = async function (connection, filter = {}) {
   const { searchTerm, category, brand, minPrice, maxPrice } = filter;
 
@@ -140,6 +147,13 @@ const searchProducts = async function (connection, filter = {}) {
 
   return result;
 };
+
+const updateImagePath = async (connection, productId, imagePath) => {
+  const query = 'UPDATE products SET image_path = $1 WHERE id = $2';
+  await db.execute(connection, query, [imagePath, productId]);
+};
+
+
 
 // Funzione per incrementare il contatore vendite
 const incrementSalesCount = async function (
@@ -254,6 +268,7 @@ module.exports = {
   getProductsByCategory,
   getPushProducts,
   searchProducts,
+  updateImagePath,
   incrementSalesCount,
   getProductsByCategoryName,
   countLessProducts,
