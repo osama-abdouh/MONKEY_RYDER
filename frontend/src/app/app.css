@@ -2,4 +2,5 @@
 .main {
     min-height: 100vh; /* Garantisce altezza per testare lo scroll */
     padding-top: 0; /* Rimuove padding se non necessario con sticky */
+    width: 100%;
 }

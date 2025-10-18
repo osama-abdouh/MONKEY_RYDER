@@ -1,11 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterOutlet, RouterLink, Router } from '@angular/router';
+import { RouterOutlet, NavigationEnd, Router } from '@angular/router';
 import { Api } from './services/api';
 import { SplashService } from './services/splash.service';
-import { HeaderComponent } from "./layuot/header/header";
-import { FooterComponent } from "./layuot/footer/footer";
-import { ColabComponent } from "./layuot/colab/colab";
-import { SessionService } from "./services/session.service";
+import { HeaderComponent } from './layuot/header/header';
+import { FooterComponent } from './layuot/footer/footer';
+import { ColabComponent } from './layuot/colab/colab';
+import { SessionService } from './services/session.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -15,18 +16,32 @@ import { SessionService } from "./services/session.service";
   styleUrls: ['./app.css'],
 })
 export class App implements OnInit {
-
   protected readonly title = signal('frontend');
   protected readonly serverStatus = signal(''); // Segnale per lo stato del server
 
   constructor(
     private session: SessionService,
-    private api: Api, 
-    public splashService: SplashService, 
-    private router: Router
+    private api: Api,
+    public splashService: SplashService,
+    private router: Router,
   ) {} // Servizio semplice per splash
 
   ngOnInit(): void {
+    // Soluzione aggressiva con doppio metodo di scroll
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      // Metodo immediato
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Backup con timer (per sicurezza)
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }, 100);
+    });
+
     // Recupera lo stato del server al caricamento del componente
     this.api.getHealth().subscribe({
       next: (response) => {
@@ -35,12 +50,12 @@ export class App implements OnInit {
       error: (error) => {
         console.error('Error fetching health status:', error);
         this.serverStatus.set('Server not reachable');
-      }
+      },
     });
   }
 
   logout() {
-    this.session.clearToken();  // Rimuove il token
+    this.session.clearToken(); // Rimuove il token
     this.router.navigate(['/login']);
   }
 }

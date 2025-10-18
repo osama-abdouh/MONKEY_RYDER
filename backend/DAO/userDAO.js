@@ -129,8 +129,6 @@ const ordersCountPerUser = async function (connection) {
 
 
 
-
-
 module.exports = { findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, RecentOrders, updateAccountStatus, updateUserRole, Users, ordersCountPerUser, deleteUser, deleteOrdersByUser };
 
 // Return addresses for a specific user (attempt common Italian table 'indirizzi')
