@@ -3,14 +3,14 @@
 
 	<form [formGroup]="registerForm" (ngSubmit)="onRegister()">
 		<div class="name-surname-container">
-			<input type="text" formControlName="nome" placeholder="Nome">
-			@if(registerForm.get('nome')?.invalid && registerForm.get('nome')?.touched) {
+			<input type="text" formControlName="first_name" placeholder="Nome">
+			@if(registerForm.get('first_name')?.invalid && registerForm.get('first_name')?.touched) {
 				<div class="error">
 					Il nome è obbligatorio.
 				</div>
 			}
-			<input type="text" formControlName="cognome" placeholder="Cognome">
-			@if(registerForm.get('cognome')?.invalid && registerForm.get('cognome')?.touched) {
+			<input type="text" formControlName="last_name" placeholder="Cognome">
+			@if(registerForm.get('last_name')?.invalid && registerForm.get('last_name')?.touched) {
 				<div class="error">
 					Il cognome è obbligatorio.
 				</div>

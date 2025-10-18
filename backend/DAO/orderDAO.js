@@ -90,3 +90,20 @@ const updateDeliveryData = async function(connection, orderId, deliveryData) {
 };
 
 module.exports = { findAll, findPending, cancelById, createOrder, markOrderPaid, updateDeliveryData };
+// Return orders for a specific user
+const findByUser = async function(connection, userId) {
+  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas, o.stato,
+    o.payment_provider, o.payment_ref, o.payment_status
+    FROM ordini o
+    WHERE o.user_id = $1
+    ORDER BY o.datas DESC`;
+  try {
+    const rows = await db.execute(connection, sql, [userId]);
+    return rows || [];
+  } catch (err) {
+    console.error('orderDAO.findByUser error', err);
+    return [];
+  }
+};
+
+module.exports = { findAll, findPending, cancelById, createOrder, markOrderPaid, updateDeliveryData, findByUser };

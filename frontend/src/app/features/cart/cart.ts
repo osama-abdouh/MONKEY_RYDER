@@ -3,14 +3,13 @@ import { Subscription } from 'rxjs';
 import { CartService, CartItem } from './cart.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, FormsModule],
+  imports: [CommonModule, CurrencyPipe, FormsModule, RouterLink, RouterLinkActive],
   templateUrl: './cart.html',
   styleUrls: ['./cart.css']
 })
@@ -18,7 +17,7 @@ export class CartComponent implements OnInit, OnDestroy {
   cartItems: CartItem[] = [];
   private sub?: Subscription;
 
-  constructor(private cartService: CartService, private auth: AuthService, private http: HttpClient, private session: SessionService) {}
+  constructor(private cartService: CartService, private auth: AuthService) {}
 
   ngOnInit(): void {
     this.sub = this.cartService.cart$.subscribe((items: CartItem[]) => this.cartItems = items);
@@ -51,11 +50,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   getTotalPrice(): number {
-    const total = this.cartService.getTotalPrice();
-    if (this.couponApplied && this.appliedDiscountPercent > 0) {
-      return +(total * (1 - this.appliedDiscountPercent / 100)).toFixed(2);
-    }
-    return total;
+    return this.cartService.getTotalPrice();
   }
 
   get isLoggedIn(): boolean {
@@ -64,179 +59,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   checkout(): void {
     if (!this.isLoggedIn) return;
-    this.paymentError = null;
-    this.showPayment = true;
-  }
-
-  // Payment modal state
-  showPayment = false;
-  paying = false;
-  paymentError: string | null = null;
-  payment = {
-    name: '',
-    number: '',
-    expiryMonth: '',
-    expiryYear: '',
-    cvv: ''
-  };
-
-  delivery = {
-    fullName: '',
-    address: '',
-    city: '',
-    postalCode: '',
-    phone: ''
-  };
-
-  // coupon state
-  couponCode = '';
-  couponApplied = false;
-  couponMessage: string | null = null;
-  // mock coupons map (code -> percent)
-  coupons: Record<string, number> = {
-    PROMO10: 10,
-    PROMO20: 20
-  };
-  appliedDiscountPercent = 0;
-
-  closePayment(): void {
-    if (this.paying) return;
-    this.showPayment = false;
-    this.paymentError = null;
-    this.payment = { name: '', number: '', expiryMonth: '', expiryYear: '', cvv: '' };
-  }
-
-  confirmPayment(): void {
-    if (this.paying) return;
-    const { name, number, expiryMonth, expiryYear, cvv } = this.payment;
-    if (!name || !number || !expiryMonth || !expiryYear || !cvv) {
-      this.paymentError = 'Compila tutti i campi';
-      return;
-    }
-    const digitsOnly = (s: string) => String(s || '').replace(/\s|-/g, '');
-    const num = digitsOnly(number);
-    if (!/^\d{16}$/.test(num)) {
-      this.paymentError = 'Numero carta non valido';
-      return;
-    }
-    const mm = Number(expiryMonth);
-    if (!(mm >= 1 && mm <= 12)) {
-      this.paymentError = 'Mese scadenza non valido';
-      return;
-    }
-    const yy = String(expiryYear).length === 2 ? Number('20' + expiryYear) : Number(expiryYear);
-    const currentYear = new Date().getFullYear();
-    if (!(yy >= currentYear && yy <= currentYear + 15)) {
-      this.paymentError = 'Anno scadenza non valido';
-      return;
-    }
-    if (!/^\d{3}$/.test(cvv)) {
-      this.paymentError = 'CVV non valido';
-      return;
-    }
-    this.paymentError = null;
-    this.paying = true;
-    const api = 'http://localhost:3000/api';
-    const token = this.session.getToken();
-    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
-    const prezzo = this.getTotalPrice();
-    this.http.post<any>(`${api}/orders`, {
-      prezzo,
-      payment_provider: 'mock',
-      payment_ref: null
-    }, { headers }).subscribe({
-      next: (created) => {
-        const id_ordine = created?.id_ordine;
-        this.http.post<any>(`${api}/orders/confirm-payment`, {
-          id_ordine,
-          payment_ref: 'MOCK-' + Date.now()
-        }, { headers }).subscribe({
-          next: () => {
-            // After confirming payment, send delivery data for this order
-            try {
-              this.submitDeliveryData(id_ordine);
-            } catch (e) {
-              console.error('Error submitting delivery data', e);
-            }
-            this.paying = false;
-            this.showPayment = false;
-            alert('Pagamento confermato');
-            this.clear();
-          },
-          error: (e2) => {
-            console.error('Confirm payment failed', e2);
-            this.paymentError = 'Errore conferma pagamento';
-            this.paying = false;
-          }
-        });
-      },
-      error: (e) => {
-        console.error('Create order failed', e);
-        this.paymentError = 'Errore creazione ordine';
-        this.paying = false;
-      }
-    });
-  }
-
-  submitDeliveryData(orderId: number) {
-    const deliveryData = {
-      delivery_address: this.delivery.address,
-      delivery_city: this.delivery.city,
-      delivery_postal_code: this.delivery.postalCode,
-      delivery_phone: this.delivery.phone
-    };
-    const api = 'http://localhost:3000/api';
-    const token = this.session.getToken();
-    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
-    this.cartService.updateDeliveryData(orderId, deliveryData, { headers }).subscribe({
-      next: (response) => {
-        console.log('Delivery data updated successfully:', response);
-      },
-      error: (err) => {
-        console.error('Failed to update delivery data:', err);
-      }
-    });
-  }
-
-  applyCoupon() {
-    const code = String(this.couponCode || '').trim().toUpperCase();
-    if (!code) {
-      this.couponMessage = 'Inserisci un codice coupon';
-      return;
-    }
-    const api = 'http://localhost:3000/api';
-    const orderTotal = this.cartService.getTotalPrice();
-    this.http.post<any>(`${api}/coupons/validate`, { code, orderTotal }).subscribe({
-      next: (res) => {
-        if (res && res.valid) {
-          // compute local representation of the discount
-          const discount = Number(res.discount || 0);
-          if (res.coupon && res.coupon.discountType === 'percent') {
-            this.appliedDiscountPercent = Number(res.coupon.discountValue || 0);
-          } else {
-            // fixed amount -> convert to percent to show reduction on total
-            const total = this.cartService.getTotalPrice();
-            this.appliedDiscountPercent = total > 0 ? Math.round((discount / total) * 100) : 0;
-          }
-          this.couponApplied = true;
-          this.couponMessage = 'Coupon applicato';
-        } else {
-          this.couponApplied = false;
-          this.couponMessage = res && res.message ? res.message : 'Coupon non valido';
-        }
-      },
-      error: (err) => {
-        console.error('validate coupon error', err);
-        this.couponApplied = false;
-        this.couponMessage = err?.error?.message || 'Errore validazione coupon';
-      }
-    });
-  }
-
-  removeCoupon() {
-    this.couponApplied = false;
-    this.appliedDiscountPercent = 0;
-    this.couponCode = '';
-    this.couponMessage = null;
+    // navigate to /checkout page instead of opening inline payment modal
+    // navigation handled via routerLink on the template
   }
 }

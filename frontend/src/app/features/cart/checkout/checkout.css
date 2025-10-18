@@ -1,0 +1,123 @@
+
+
+.checkout-page{min-height:80vh;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:var(--text);display:flex;flex-direction:column;align-items:center}
+.checkout-page h1{margin:0 0 18px;font-size:26px;color: rgb(255, 0, 0);}
+
+.cart-list{width:100%;max-width:840px;padding:0;margin:8px 0 16px;list-style:none;color: rgb(255, 255, 255);}
+.cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px;border-radius:8px;margin-bottom:10px;border:1px solid #eee}
+.cart-item .name{font-weight:600}
+.cart-item .price{color:rgb(255, 255, 255)}
+
+.summary{width:100%;max-width:840px;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.summary .total{font-weight:800;color: rgb(255, 255, 255);}
+.summary .actions button{background:#717171;color:white;border:0;padding:10px 14px;border-radius:6px;cursor:pointer}
+
+/* Modal */
+.pay-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;padding:20px}
+.pay-modal{width:100%;max-width:900px;background:var(--card);padding:18px;border-radius:10px;box-shadow:0 8px 24px rgba(255, 255, 255, 0.15)}
+.pay-modal h3{margin:8px 0; color: rgb(255, 254, 254);}
+.pay-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pay-form label{display:flex;flex-direction:column;font-size:14px;color:var(--muted)}
+.pay-form label.etichetta{color: rgb(255, 254, 254);}
+.pay-form input{margin-top:6px;padding:10px;border-radius:6px;border:1px solid #ddd}
+.coupon-block{display:flex;gap:8px;align-items:center;color: rgb(255, 254, 254);}
+.coupon-block input{flex:1}
+.coupon-block button{padding:8px 10px;border-radius:6px;border:0;background:var(--accent);color:#fff}
+.coupon-message{font-size:13px;margin-top:6px}
+.coupon-message.invalid{color:var(--danger)}
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pay-actions{display:flex;justify-content:space-between;align-items:center;margin-top:12px;color: rgb(255, 254, 254);}
+.pay-actions button{padding:8px 12px;border-radius:6px;border:0}
+.pay-actions button:first-child{background:#f3f4f6}
+.pay-actions button:last-child{background:var(--accent);color:#fff}
+
+@media (max-width:700px){.pay-form{grid-template-columns:1fr}.pay-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* Inline payment section */
+.payment-section{width:100%;max-width:920px;margin-top:20px}
+.payment-card{background:var(--card);padding:18px;border-radius:10px;border:1px solid #ececec}
+.payment-card h3{margin-top:0;color: rgb(255, 254, 254);}
+.btn-primary{background:var(--accent);color:#fff;border:0;padding:10px 14px;border-radius:6px;cursor:pointer}
+.btn-light{background:#f3f4f6;border:0;padding:10px 12px;border-radius:6px;cursor:pointer}
+.btn-danger{background:var(--danger);color:#fff;border:0;padding:8px 10px;border-radius:6px}
+.action-buttons{display:flex;gap:8px}
+
+/* collapsible behavior */
+.payment-section{overflow:hidden;max-height:0;transition:max-height .28s ease,opacity .2s ease;opacity:0}
+.payment-section.open{max-height:1200px;opacity:1}
+
+
+
+/* saved addresses */
+.addresses-list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.address-btn{display:block;text-align:left;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--card);width:100%;cursor:pointer}
+.address-btn div:first-child{font-weight:600}
+.address-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+
+
+.addresses-success{color: #16a34a; margin-top:8px}
+.addresses-error{color: var(--danger); margin-top:8px}
+
+
+.gestione-indirizzi{
+	display:flex;
+	gap:12px;
+	align-items:center;
+	grid-column:1/3;
+}
+
+
+.indirizzi.salvati,
+.salva.indirizzo,
+.summary .actions button {
+	color: #ffffff !important;
+	border: 1px solid rgba(255,255,255,0.95) !important;
+	background: transparent !important;
+	display: inline-block !important;
+	padding: 8px 14px !important;
+	border-radius: 6px !important;
+	cursor: pointer !important;
+	font-weight: 600 !important;
+	text-align: center !important;
+	transition: background .15s ease, transform .06s ease !important;
+}
+
+.indirizzi.salvati:hover,
+.salva.indirizzo:hover,
+.summary .actions button:hover {
+	background: rgba(255,255,255,0.04) !important;
+}
+
+.indirizzi.salvati:focus,
+.salva.indirizzo:focus,
+.summary .actions button:focus {
+	outline: 2px solid rgba(255,255,255,0.12) !important;
+	outline-offset: 2px !important;
+}
+
+.salva.indirizzo[disabled],
+.summary .actions button[disabled] {
+	opacity: 0.6 !important;
+	cursor: not-allowed !important;
+}
+
+/* Saved address list buttons */
+.address-btn{
+	display:block;
+	width:100%;
+	text-align:left;
+	padding:10px 12px;
+	margin:6px 0;
+	color:#ffffff !important;
+	border:1px solid rgba(255,255,255,0.12) !important;
+	background: rgba(255,255,255,0.02) !important;
+	border-radius:4px !important;
+	cursor:pointer !important;
+}
+.address-btn:hover{ background: rgba(255,255,255,0.04) !important; }
+
+
+
+
+
+

@@ -1,0 +1,122 @@
+<div class="checkout-page">
+	<h1>Checkout</h1>
+
+	<div *ngIf="cartItems.length === 0">Il carrello è vuoto.</div>
+
+	<ul *ngIf="cartItems.length > 0" class="cart-list">
+		<li *ngFor="let it of cartItems" class="cart-item">
+			<div class="info">
+				<div class="name">{{ it.name }}</div>
+				<div class="price">{{ it.price | currency:'EUR' }}</div>
+			</div>
+			<div class="controls">
+				<span>Quantità: {{ it.quantity }}</span>
+			</div>
+		</li>
+	</ul>
+
+		<div class="summary" *ngIf="cartItems.length > 0">
+			<div class="total">Totale: {{ getTotalPrice() | currency:'EUR' }}</div>
+			<div class="actions">
+				<button (click)="showPayment = !showPayment">{{ showPayment ? 'Chiudi pagamento' : 'Apri pagamento' }}</button>
+			</div>
+		</div>
+
+	<section class="payment-section" [class.open]="showPayment" [attr.aria-hidden]="showPayment ? 'false' : 'true'">
+		<div class="payment-card">
+			<h3>Dati di Consegna</h3>
+			<div class="pay-form">
+				<label class="etichetta">
+					Nome Completo
+					<input type="text" [(ngModel)]="delivery.fullName" placeholder="Mario Rossi" />
+				</label>
+				<label class="etichetta">
+					Indirizzo
+					<input type="text" [(ngModel)]="delivery.address" placeholder="Via Roma, 123" />
+				</label>
+				<label class="etichetta">
+					Città
+					<input type="text" [(ngModel)]="delivery.city" placeholder="Roma" />
+				</label>
+				<label class="etichetta">
+					CAP
+					<input type="text" [(ngModel)]="delivery.postalCode" placeholder="00100" />
+				</label>
+				<label class="etichetta">
+					Telefono
+					<input type="text" [(ngModel)]="delivery.phone" placeholder="+39 123 456 7890" />
+				</label>
+                <div class ="gestione-indirizzi">
+                <button class="indirizzi salvati" type="button" (click)="toggleAddresses()">scegli un indirizzo salvato</button>
+				<button class="salva indirizzo" type="button" (click)="saveAddress()" [disabled]="savingAddress">salva indirizzo</button>
+                </div>
+
+				<!-- saved addresses list -->
+				<div *ngIf="showAddresses" class="addresses-list" style="grid-column:1/3">
+					<div *ngIf="loadingAddresses">Caricamento indirizzi...</div>
+					<div *ngIf="addressesError" style="color:var(--danger)">{{ addressesError }}</div>
+					<div *ngIf="addressesSuccess" class="addresses-success">{{ addressesSuccess }}</div>
+					<div *ngIf="addresses.length === 0 && !loadingAddresses">Nessun indirizzo salvato.</div>
+					<div *ngFor="let a of addresses">
+						<button type="button" class="address-btn" (click)="selectAddress(a)">
+							<div>{{ a.fullName || a.name }}</div>
+							<div style="font-size:12px;opacity:0.9">{{ a.address }}, {{ a.city }} {{ a.postalCode }}</div>
+						</button>
+					</div>
+				</div>
+			</div><br>  
+
+            <hr> <br>
+			<h3>Pagamento</h3>
+			<div class="pay-form">
+				<label class="etichetta">
+					Coupon sconto
+					<div class="coupon-block">
+						<input type="text" [(ngModel)]="couponCode" placeholder="Inserisci coupon (es. PROMO10)" />
+						<button (click)="applyCoupon()">Applica</button>
+						<button *ngIf="couponApplied" (click)="removeCoupon()" class="btn-danger">Rimuovi</button>
+					</div>
+					<div *ngIf="couponMessage" class="coupon-message" [ngClass]="{'invalid': !couponApplied}">{{ couponMessage }}</div>
+				</label>
+
+				<label class="etichetta">
+					Nome sulla carta
+					<input type="text" [(ngModel)]="payment.name" placeholder="Mario Rossi" />
+				</label>
+				<label class="etichetta">
+					Numero carta
+					<input type="text" [(ngModel)]="payment.number" placeholder="1234 5678 9012 3456" />
+				</label>
+				<div class="pay-grid">
+					<label class="etichetta">
+						Mese
+						<input type="number" min="1" max="12" [(ngModel)]="payment.expiryMonth" placeholder="MM" />
+					</label>
+					<label class="etichetta">
+						Anno
+						<input type="number" min="2024" max="2040" [(ngModel)]="payment.expiryYear" placeholder="YYYY" />
+					</label>
+					<label class="etichetta">
+						CVV
+						<input type="password" maxlength="3" [(ngModel)]="payment.cvv" placeholder="123" />
+					</label>
+				</div>
+				<div *ngIf="paymentError" class="pay-error">{{ paymentError }}</div>
+			</div> <br>
+
+			<hr> <br>
+			<div class="pay-actions">
+				<div class="etichetta">
+					<div *ngIf="couponApplied && couponDiscountType==='percent'">Sconto del: <strong>{{ couponDiscountValue }}%</strong></div>
+					<div *ngIf="couponApplied && couponDiscountType==='fixed'">Sconto del: <strong>{{ couponDiscountValue | currency:'EUR' }}</strong></div>
+					Importo da pagare: <strong>{{ getTotalPrice() | currency:'EUR' }}</strong>
+				</div>
+				<div class="action-buttons">
+					<button (click)="closePayment()" [disabled]="paying" class="btn-light">Annulla</button>
+					<button (click)="confirmPayment()" [disabled]="paying" class="btn-primary">Conferma pagamento — Paga {{ getTotalPrice() | currency:'EUR' }}</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</div>
