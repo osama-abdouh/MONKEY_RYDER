@@ -44,4 +44,57 @@
 	</div>
 </section>
 
+<div *ngIf="showCreate" class="modal-backdrop" aria-modal="true" role="dialog" (click)="onBackdropClick($event)">
+	<div class="modal">
+		<header class="modal-header">
+			<h3>Nuovo utente</h3>
+		</header>
+		<div class="modal-body">
+			<div class="form-row">
+				<label>Nome</label>
+				<input type="text" [(ngModel)]="newUser.first_name" placeholder="Mario" />
+			</div>
+			<div class="form-row">
+				<label>Cognome</label>
+				<input type="text" [(ngModel)]="newUser.last_name" placeholder="Rossi" />
+			</div>
+			<div class="form-row">
+				<label>Email</label>
+				<input type="email" [(ngModel)]="newUser.email" placeholder="mario.rossi@example.com" />
+			</div>
+			<div class="form-row">
+				<label>Password</label>
+				<input type="password" [(ngModel)]="newUser.password" placeholder="••••••••" />
+			</div>
+			<div class="form-row">
+				<label>Data di nascita</label>
+				<input type="date" [(ngModel)]="newUser.birth_date" />
+			</div>
+			<div class="form-row">
+				<label>Telefono</label>
+				<input type="tel" [(ngModel)]="newUser.phone_number" placeholder="3331234567" />
+			</div>
+			<div class="form-row">
+				<label>Ruolo</label>
+				<select [(ngModel)]="newUser.role">
+					<option value="customer">customer</option>
+					<option value="admin">admin</option>
+				</select>
+			</div>
+			<div class="form-row">
+				<label>Stato account</label>
+				<select [(ngModel)]="newUser.account_status">
+					<option value="active">active</option>
+					<option value="suspended">suspended</option>
+				</select>
+			</div>
+			<div class="error muted" *ngIf="error">{{ error }}</div>
+		</div>
+		<footer class="modal-footer">
+			<button class="qa-btn secondary" (click)="cancelCreate()" [disabled]="creating">Annulla</button>
+			<button class="qa-btn primary" (click)="submitCreate()" [disabled]="creating">Crea</button>
+		</footer>
+	</div>
+		</div>
+
 

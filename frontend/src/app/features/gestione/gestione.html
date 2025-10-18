@@ -8,8 +8,9 @@
 
 				<!-- Show ModificheUtenti only when user clicks the first card -->
 				<app-modifiche-utenti *ngIf="showModificheUtenti"></app-modifiche-utenti>
-					<div style="display:flex; gap:8px; align-items:center">
-						<div class="muted" style="font-size:13px">Totale: <strong>{{ users.length || 0 }}</strong></div>
+					<div style="display:flex; gap:12px; align-items:center">
+						<div class="muted" style="font-size:13px">Clienti: <strong>{{ users.length || 0 }}</strong></div>
+						<div class="muted" style="font-size:13px">Totale: <strong>{{ totalUsers || 0 }}</strong></div>
 					</div>
 			</div>
 

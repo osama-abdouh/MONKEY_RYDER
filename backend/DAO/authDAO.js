@@ -1,15 +1,14 @@
 const db = require('../services/db');
 
 const createUser = async function (connection, user) {
-  sql = `INSERT INTO users 
+  const sql = `INSERT INTO users 
          (first_name, last_name, email, password_hash, birth_date, phone_number, role, account_status) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
-  params = [user.first_name, user.last_name, user.email, user.password_hash, user.birth_date, user.phone_number, user.role, user.account_status];
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING *`;
+  const params = [user.first_name, user.last_name, user.email, user.password_hash, user.birth_date, user.phone_number, user.role, user.account_status];
 
-  const result = await db.execute(connection, sql, params);
-
-  if (result.affectedRows == 0) return null
-  else return user;
+  const rows = await db.execute(connection, sql, params);
+  return rows && rows[0] ? rows[0] : null;
 };
 
 const findUserByEmail = async function (connection, email) {

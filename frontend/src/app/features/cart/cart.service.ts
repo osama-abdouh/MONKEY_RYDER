@@ -72,4 +72,10 @@ export class CartService {
     const payload = { userId, items: this.getItems() };
     return this.http.post('/api/cart/sync', payload);
   }
+
+  // allow passing http options (eg. headers) from caller
+  updateDeliveryData(orderId: number, deliveryData: any, options?: any): Observable<any> {
+    const api = 'http://localhost:3000/api';
+    return this.http.patch(`${api}/orders/${orderId}/delivery`, { deliveryData }, options || {});
+  }
 }
