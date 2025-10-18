@@ -12,8 +12,8 @@ import { Router } from '@angular/router';
   styleUrl: './register.css'
 })
 export class RegisterComponent {
-  nome: string = '';
-  cognome: string = '';
+  first_name: string = '';
+  last_name: string = '';
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
@@ -22,8 +22,8 @@ export class RegisterComponent {
 
   constructor(private http: HttpClient, private router: Router, private fb: FormBuilder) {
     this.registerForm = this.fb.group({
-      nome: ['', Validators.required],
-      cognome: ['', Validators.required],
+      first_name: ['', Validators.required],
+      last_name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required]
@@ -38,8 +38,8 @@ export class RegisterComponent {
 
   onRegister() {
     this.http.post('http://localhost:3000/api/register', {
-      nome: this.registerForm.get('nome')?.value,
-      cognome: this.registerForm.get('cognome')?.value,
+      first_name: this.registerForm.get('first_name')?.value,
+      last_name: this.registerForm.get('last_name')?.value,
       email: this.registerForm.get('email')?.value,
       password: this.registerForm.get('password')?.value,
     }).subscribe({

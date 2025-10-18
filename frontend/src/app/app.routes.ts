@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './features/home/home';
 import { CartComponent } from './features/cart/cart';
+import { Checkout } from './features/cart/checkout/checkout';
 import { RegisterComponent } from './features/auth/register/register';
 import { WishlistComponent } from './features/wishlist/wishlist';
 import { ContactUsComponent } from './features/contact-us/contact-us';
@@ -16,6 +17,7 @@ export const routes: Routes = [
     { path: '', component: SplashComponent }, // Splash page come pagina principale
     { path: 'home', component: HomeComponent }, // Home accessibile dopo la splash
     { path: 'cart', component: CartComponent },
+    { path: 'checkout', component: Checkout },
     { path: 'register', component: RegisterComponent },
     { path: 'login', component: LoginComponent },
     { path: 'wishlist', component: WishlistComponent },

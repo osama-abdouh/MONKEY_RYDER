@@ -131,3 +131,78 @@ const ordersCountPerUser = async function (connection) {
 
 module.exports = { findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, RecentOrders, updateAccountStatus, updateUserRole, Users, ordersCountPerUser, deleteUser, deleteOrdersByUser };
 
+// Return addresses for a specific user (attempt common Italian table 'indirizzi')
+const findAddressesByUser = async function(connection, userId) {
+  // Try common Italian schema first
+  const sqlIt = `SELECT id, user_id, nome_campanello AS fullName, indirizzo AS address, citta AS city, cap AS postalCode, telefono AS phone FROM indirizzi WHERE user_id = $1 ORDER BY id DESC`;
+  try {
+    const rows = await db.execute(connection, sqlIt, [userId]);
+    if (rows && rows.length) return rows.map(r => ({ id: r.id, fullName: r.fullname || r.fullName || r.nome_campanello, address: r.address || r.indirizzo, city: r.city || r.citta, postalCode: r.postalcode || r.postalCode || r.cap, phone: r.phone || r.telefono }));
+  } catch (err) {
+    // ignore and try english-style table
+    console.warn('userDAO.findAddressesByUser: indirizzi table not found or query failed, trying addresses table', err.message);
+  }
+
+  // Fallback to a generic 'addresses' table if present
+  const sqlEn = `SELECT id, user_id, label AS fullName, address, city, postal_code AS postalCode, phone FROM addresses WHERE user_id = $1 ORDER BY id DESC`;
+  try {
+    const rows2 = await db.execute(connection, sqlEn, [userId]);
+    if (rows2 && rows2.length) return rows2.map(r => ({ id: r.id, fullName: r.fullname || r.fullName || r.label, address: r.address, city: r.city, postalCode: r.postalcode || r.postalCode || r.postal_code, phone: r.phone }));
+  } catch (err2) {
+    console.error('userDAO.findAddressesByUser: no addresses table found or query failed', err2.message);
+  }
+
+  return [];
+};
+
+module.exports.findAddressesByUser = findAddressesByUser;
+
+// Create a new address for a user. Try italian 'indirizzi' table first, fallback to 'addresses'.
+const createAddress = async function(connection, userId, addr) {
+  // normalize incoming fields
+  const fullName = addr.fullName || addr.name || addr.label || null;
+  const address = addr.address || addr.street || null;
+  const city = addr.city || null;
+  const postalCode = addr.postalCode || addr.zip || addr.cap || null;
+  const phone = addr.phone || null;
+
+  // Try to find existing in italian table
+  try {
+    const checkIt = `SELECT * FROM indirizzi WHERE user_id = $1 AND LOWER(COALESCE(indirizzo,'')) = LOWER(COALESCE($2,'')) AND LOWER(COALESCE(citta,'')) = LOWER(COALESCE($3,'')) AND COALESCE(cap,'') = COALESCE($4,'') LIMIT 1`;
+    const exists = await db.execute(connection, checkIt, [userId, address || '', city || '', postalCode || '']);
+    if (exists && exists[0]) return { existed: true, row: exists[0] };
+  } catch (err) {
+    // ignore and continue to try insert/fallback
+  }
+
+  // Try insert into italian table
+  const sqlIt = `INSERT INTO indirizzi (user_id, nome_campanello, indirizzo, citta, cap, telefono) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`;
+  try {
+    const rows = await db.execute(connection, sqlIt, [userId, fullName, address, city, postalCode, phone]);
+    if (rows && rows[0]) return { created: true, row: rows[0] };
+  } catch (err) {
+    console.warn('userDAO.createAddress: inserimento indirizzi fallito, provando fallback addresses table', err.message);
+  }
+
+  // Fallback to english-style table
+  const sqlEn = `INSERT INTO addresses (user_id, label, address, city, postal_code, phone) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`;
+  // Fallback: check existing in english-style table
+  try {
+    const checkEn = `SELECT * FROM addresses WHERE user_id = $1 AND LOWER(COALESCE(address,'')) = LOWER(COALESCE($2,'')) AND LOWER(COALESCE(city,'')) = LOWER(COALESCE($3,'')) AND COALESCE(postal_code,'') = COALESCE($4,'') LIMIT 1`;
+    const exists2 = await db.execute(connection, checkEn, [userId, address || '', city || '', postalCode || '']);
+    if (exists2 && exists2[0]) return { existed: true, row: exists2[0] };
+  } catch (err) {
+    // ignore
+  }
+
+  try {
+    const rows2 = await db.execute(connection, sqlEn, [userId, fullName, address, city, postalCode, phone]);
+    if (rows2 && rows2[0]) return { created: true, row: rows2[0] };
+  } catch (err2) {
+    console.error('userDAO.createAddress: fallback insert failed', err2.message);
+  }
+
+  return null;
+};
+
+module.exports.createAddress = createAddress;
