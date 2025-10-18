@@ -8,6 +8,7 @@ const userRouter = require('./routes/userRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const couponRouter = require('./routes/couponRoutes');
 const fileUploadMiddleware = require('./middleware/fileUploadMiddleware');
+const showcaseRoutes = require('./routes/showcaseRoutes');
 
 const staticImagesMiddleware = express.static('assets/Immagini');
 
@@ -31,6 +32,10 @@ app.use(contextPath, userRouter);
 app.use(contextPath, testRouter);
 app.use(contextPath, orderRouter);
 app.use(contextPath, couponRouter);
+app.use(contextPath, showcaseRoutes);
+
+// middleware per la gestione del caricamento file
+app.use(fileUploadMiddleware);
 
 
 // Endpoint per controllare lo stato del server per il frontend

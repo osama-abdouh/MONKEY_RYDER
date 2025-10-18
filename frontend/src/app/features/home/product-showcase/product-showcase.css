@@ -1,0 +1,178 @@
+.showcase-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.showcase-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+  font-weight: 200;
+}
+
+.showcase-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.products-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+.product-box {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1px;
+  background-color: grey;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+.product-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.product-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-info p {
+  margin: 0 0 0 0;
+  color: white;
+  font-size: 20px;
+  text-align: start;
+  font-weight: 200;
+}
+
+.product-info .product-price {
+  font-size: 20px;
+  font-weight: 100;
+  color: white;
+  margin: 10px 0;
+}
+.product-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.product-actions .add-to-cart {
+  width: 100%;
+  margin-top: auto;
+  padding: 10px;
+  background-color: #d64933;
+  color: white;
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+.product-actions .add-to-cart:hover {
+  background-color: #c0392b;
+}
+
+.product-actions .whishlist-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, border-color 0.2s;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.whishlist-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+.nav-button {
+  background: #d64933;
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem; /* leggermente più piccolo per bilanciare */
+  line-height: 1; /* evita offset dovuti alla baseline del font */
+  padding: 0; /* rimuove padding che sposta il contenuto */
+  display: inline-flex; /* usa inline-flex per miglior allineamento */
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.nav-button:hover:not(.disabled) {
+  background: #bf3520;
+  transform: scale(1.1);
+}
+
+.nav-button.disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media (max-width: 1200px) {
+  .products-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .products-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .products-container {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
