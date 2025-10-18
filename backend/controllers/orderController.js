@@ -105,3 +105,19 @@ exports.updateDeliveryData = async function(req, res) {
     if (conn) conn.done();
   }
 };
+
+exports.getOrdersByUser = async function(req, res) {
+  let conn;
+  try {
+    const user_id = req.user && req.user.userId;
+    if (!user_id) return res.status(401).json({ message: 'Utente non autenticato' });
+    conn = await db.getConnection();
+    const orders = await orderDAO.findByUser(conn, user_id);
+    res.json(orders);
+  } catch (error) {
+    console.error('controller/orderController.js getOrdersByUser', error);
+    res.status(500).json({ message: 'Get user orders failed', error: error.message });
+  } finally {
+    if (conn) conn.done();
+  }
+}

@@ -66,13 +66,6 @@ export class CartService {
   getTotalPrice(): number {
     return this.getItems().reduce((s, i) => s + (i.price || 0) * i.quantity, 0);
   }
-
-  // se vogliamo sincronizare il carrello locale con il carrello dopo il login
-  syncToServer(userId: number): Observable<any> {
-    const payload = { userId, items: this.getItems() };
-    return this.http.post('/api/cart/sync', payload);
-  }
-
   // allow passing http options (eg. headers) from caller
   updateDeliveryData(orderId: number, deliveryData: any, options?: any): Observable<any> {
     const api = 'http://localhost:3000/api';

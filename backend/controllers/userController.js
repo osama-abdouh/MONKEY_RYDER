@@ -186,3 +186,46 @@ exports.deleteUser = async function (req, res) {
         if (conn) conn.done();
     }
 }
+
+exports.getSavedAddresses = async function(req, res) {
+    let conn;
+    try {
+        const userId = req.user && req.user.userId;
+        if (!userId) return res.status(401).json({ message: 'Utente non autenticato' });
+        conn = await db.getConnection();
+        const addresses = await userDAO.findAddressesByUser(conn, userId);
+        res.json(addresses || []);
+    } catch (error) {
+        console.error('controller/userController.js getSavedAddresses', error);
+        res.status(500).json({ message: 'Failed to get saved addresses', error: error.message });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+exports.saveAddress = async function(req, res) {
+    let conn;
+    try {
+        const userId = req.user && req.user.userId;
+        if (!userId) return res.status(401).json({ message: 'Utente non autenticato' });
+        const payload = req.body || {};
+        // basic validation
+        if (!payload.address || !payload.city) return res.status(400).json({ message: 'address e city sono obbligatori' });
+        conn = await db.getConnection();
+        const result = await userDAO.createAddress(conn, userId, payload);
+        if (!result) return res.status(500).json({ message: 'Creazione indirizzo fallita' });
+        if (result.existed) {
+            return res.status(200).json({ message: 'Indirizzo già presente', address: result.row });
+        }
+        if (result.created) {
+            return res.status(201).json(result.row);
+        }
+        // fallback
+        return res.status(200).json(result.row || {});
+    } catch (error) {
+        console.error('controller/userController.js saveAddress', error);
+        res.status(500).json({ message: 'Save address failed', error: error.message });
+    } finally {
+        if (conn) conn.done();
+    }
+}
