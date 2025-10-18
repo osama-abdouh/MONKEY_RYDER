@@ -7,6 +7,7 @@ const testRouter = require('./routes/test');
 const userRouter = require('./routes/userRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const couponRouter = require('./routes/couponRoutes');
+const fileUploadMiddleware = require('./middleware/fileUploadMiddleware');
 
 const staticImagesMiddleware = express.static('assets/Immagini');
 
@@ -24,6 +25,7 @@ app.use(contextPath, authRouter);
 app.use(contextPath, productRouter);
 
 app.use('/assets/Immagini', staticImagesMiddleware);
+app.use('/images', express.static('public/images'));
 //rotte ancora da implementare
 app.use(contextPath, userRouter);
 app.use(contextPath, testRouter);

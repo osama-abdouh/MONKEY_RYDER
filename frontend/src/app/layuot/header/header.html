@@ -17,10 +17,14 @@
             </a>
           </div>
           <div class="search search-center">
-            <input 
-              type="text" 
-              placeholder="Cerca"
-              class="search-input">
+            <form (submit)="onSearch($event)">
+              <input 
+                type="text" 
+                placeholder="Cerca"
+                [(ngModel)]="searchQuery"
+                name="searchQuery"
+                class="search-input">
+            </form>
           </div>
           <div class="navUser-actions">
             <!-- Temporary button to navigate to gestione page -->
