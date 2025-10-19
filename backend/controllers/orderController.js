@@ -43,11 +43,21 @@ exports.confirmPayment = async function(req, res) {
     // Only update payment_status and payment_ref, do NOT touch stato
     const updated = await orderDAO.markOrderPaid(conn, id_ordine, { payment_ref, payment_status: 'succeeded' });
     if (!updated) return res.status(404).json({ message: 'Ordine non trovato' });
-    // If items were provided (from frontend cart), persist them into ordine_prodotti
-    if (items && Array.isArray(items) && items.length > 0) {
-      const ok = await orderDAO.insertOrderItems(conn, id_ordine, items);
-      if (!ok) {
-        console.warn('Some order items could not be saved for order', id_ordine);
+  console.log('[DEBUG] confirmPayment called for order=%s itemsProvided=%s', id_ordine, Array.isArray(items) ? items.length : 0);
+    // Process items and update products: uses a consolidated DAO function that
+    // inserts provided items (if any) and updates products.quantity and products.sales_count
+    if (typeof orderDAO.processOrderItemsAndUpdateProducts === 'function') {
+      const ok = await orderDAO.processOrderItemsAndUpdateProducts(conn, id_ordine, items);
+      console.log('[DEBUG] processOrderItemsAndUpdateProducts result for order=%s => %o', id_ordine, ok);
+      if (!ok) console.warn('Failed processing order items for order', id_ordine);
+    } else {
+      // fallback: original behaviour
+      if (items && Array.isArray(items) && items.length > 0) {
+        const ok = await orderDAO.insertOrderItems(conn, id_ordine, items);
+        console.log('[DEBUG] insertOrderItems fallback result for order=%s => %o', id_ordine, ok);
+      } else {
+        const ok = await orderDAO.updateProductsFromOrderItems(conn, id_ordine);
+        console.log('[DEBUG] updateProductsFromOrderItems fallback result for order=%s => %o', id_ordine, ok);
       }
     }
     res.json(updated);
@@ -79,9 +89,15 @@ exports.cancelOrder = async function(req, res) {
   if (!id) return res.status(400).json({ message: 'Invalid order id' });
   try {
     conn = await db.getConnection();
-    const updated = await orderDAO.cancelById(conn, id);
-    if (!updated) return res.status(404).json({ message: 'Order not found or not pending' });
-    res.json({ message: 'Order cancelled', order: updated });
+    // verify order exists and is pending
+    const found = await orderDAO.findById(conn, id);
+    if (!found || !found.order) return res.status(404).json({ message: 'Order not found' });
+    const stato = (found.order.stato || '').toString().toLowerCase();
+    if (!['pending','in attesa'].includes(stato)) return res.status(400).json({ message: 'Order not pending, cannot delete' });
+
+    const ok = await orderDAO.deleteOrderAndRestoreStock(conn, id);
+    if (!ok) return res.status(500).json({ message: 'Failed to delete order' });
+    res.json({ message: 'Order deleted and stock restored' });
   } catch (error) {
     console.error('controller/orderController.js cancelOrder', error);
     res.status(500).json({ message: 'Cancel order failed', error: error.message });

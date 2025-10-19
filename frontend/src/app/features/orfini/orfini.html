@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let o of orders" class="clickable-row" (click)="openOrderDetails(o.id_ordine)">
+  <tr *ngFor="let o of orders; trackBy: trackByOrderId" class="clickable-row" (click)="openOrderDetails(o.id_ordine)">
         <td>{{ o.id_ordine }}</td>
         <td>{{ o.datas | date:'short' }}</td>
         <td>{{ formatCurrency(o.prezzo) }}</td>
@@ -33,11 +33,15 @@
   <!-- Modal dettagli ordine -->
   <div class="modal-backdrop" *ngIf="selectedOrderDetails">
     <div class="modal">
+      <br>
+      <hr>
+      <hr>
+      <br>
       <button class="close" (click)="closeDetails()">×</button>
-      <h3>Dettagli Ordine #{{ selectedOrderDetails.order.id_ordine }}</h3>
+      <h3>Dettagli Ordine #{{ selectedOrderDetails.order.id_ordine }}</h3> <br>
       <div *ngIf="detailsLoading" class="info">Caricamento dettagli...</div>
       <div *ngIf="detailsError" class="error">{{ detailsError }}</div>
-      <div *ngIf="!detailsLoading && selectedOrderDetails">
+  <div *ngIf="!detailsLoading && selectedOrderDetails" class="modal-body">
         <div class="order-meta">
           <p><strong>Data:</strong> {{ selectedOrderDetails.order.datas | date:'full' }}</p>
           <p><strong>Prezzo:</strong> {{ formatCurrency(selectedOrderDetails.order.prezzo) }}</p>
@@ -45,20 +49,32 @@
           <p *ngIf="selectedOrderDetails.order.delivery_address"><strong>Indirizzo:</strong> {{ selectedOrderDetails.order.delivery_address }}, {{ selectedOrderDetails.order.delivery_city }} {{ selectedOrderDetails.order.delivery_postal_code }}</p>
         </div>
 
-        <h4>Prodotti</h4>
+          <!-- show cancel button only when order is pending -->
+          <div style="text-align:left; margin:8px 0;">
+            <button *ngIf="isOrderPending()" class="btn-cancel" (click)="cancelOrder()">Annulla ordine</button>
+          </div>
+        <br>
+        <hr>
+        <hr>
+        <br>
+
+        <h3>Prodotti</h3>
         <div *ngIf="selectedOrderDetails.items && selectedOrderDetails.items.length > 0">
           <ul class="items-list">
-            <li *ngFor="let it of selectedOrderDetails.items">
+            <li *ngFor="let it of selectedOrderDetails.items; trackBy: trackByOrderItemId">
               <div class="item-row">
-                <img *ngIf="it.product_image_path" [src]="it.product_image_path" alt="" class="item-img" />
+                <img [src]="getOrderItemImageUrl(it)" alt="" class="item-img" />
                 <div class="item-info">
                   <div class="item-name">{{ it.product_name || it.name || (it.product_id ? ('Prodotto #' + it.product_id) : 'Prodotto') }}</div>
                   <div class="item-qty">Quantità: {{ it.quantity || it.qty || it.qta || '-' }}</div>
-                  <div class="item-price">Prezzo unitario: {{ formatCurrency(it.unit_price || it.product_price || it.price) }}</div>
+                  <div class="item-price">Prezzo unitario: {{ formatCurrency(it.unit_price || it.product_price || it.price) }}</div> 
                 </div>
+                
               </div>
             </li>
+            <hr>
           </ul>
+          <hr>
         </div>
         <div *ngIf="!selectedOrderDetails.items || selectedOrderDetails.items.length === 0" class="info">Nessun dettaglio prodotti disponibile per questo ordine.</div>
       </div>

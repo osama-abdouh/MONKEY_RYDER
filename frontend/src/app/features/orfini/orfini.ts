@@ -48,10 +48,62 @@ export class Orfini implements OnInit {
     });
   }
 
+  // trackBy for orders list to avoid Angular duplicate tracking warnings
+  trackByOrderId(index: number, order: OrderDTO) {
+    return order?.id_ordine ?? index;
+  }
+
+  // trackBy for order items
+  trackByOrderItemId(index: number, item: any) {
+    return item?.order_item_id ?? item?.product_id ?? index;
+  }
+
+  // helper to build image URL for order item (falls back to default image)
+  getOrderItemImageUrl(item: any): string {
+    const path = item && (item.product_image_path || item.product_image_url || item.image_path || item.product_image);
+    if (path) {
+      // if the path already looks like an absolute URL, return as-is
+      if (/^https?:\/\//i.test(path)) return path;
+      // otherwise prefix the backend base
+      return `http://localhost:3000/${path}`;
+    }
+    return 'assets/images/no-image.png';
+  }
+
   closeDetails(): void {
     this.selectedOrderDetails = null;
     this.detailsError = null;
     this.detailsLoading = false;
+  }
+
+  // helper used by template: true when order status is pending (accepts localized forms)
+  isOrderPending(): boolean {
+    const st = this.selectedOrderDetails && this.selectedOrderDetails.order && this.selectedOrderDetails.order.stato;
+    if (!st) return false;
+    const s = String(st).toLowerCase();
+    return s === 'pending' || s === 'in attesa' || s === 'in_attesa';
+  }
+
+  // Cancel the currently selected order (only allowed when pending). Calls backend and refreshes list.
+  cancelOrder(): void {
+    if (!this.selectedOrderDetails || !this.selectedOrderDetails.order) return;
+    const id = this.selectedOrderDetails.order.id_ordine;
+    if (!id) return;
+    // simple confirmation
+    if (!confirm('Sei sicuro di voler annullare questo ordine?')) return;
+    const token = this.session.getToken() || undefined;
+    this.orderService.cancelOrder(id).subscribe({
+      next: (res) => {
+        // close modal and remove the order locally from the list for immediate UI update
+        const idToRemove = id;
+        this.orders = (this.orders || []).filter(o => o.id_ordine !== idToRemove);
+        this.closeDetails();
+      },
+      error: (err) => {
+        console.error('Errore annullamento ordine', err);
+        this.detailsError = 'Impossibile annullare l\'ordine';
+      }
+    });
   }
 
   formatCurrency(value: any): string {
