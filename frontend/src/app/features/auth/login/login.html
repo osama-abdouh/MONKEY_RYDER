@@ -1,1 +1,26 @@
-<p>login works!</p>
+<div class="login-container">
+    <h2>Accedi al tuo account</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="OnLogin()">
+        <div class="login-inputs">
+            <div class="input-container">
+                <input type="email" id="email" formControlName="email" placeholder="Email">
+                @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                    <div class="form-error">Email non valida.</div>
+                }
+            </div>
+            <div class="input-container">
+                <input type="password" id="password" formControlName="password" placeholder="Password">
+                @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                    <div class="form-error">La password è obbligatoria.</div>
+                }
+            </div>
+        </div>
+        @if(error) {
+            <div class="form-message">{{ error }}</div>
+        }
+        <button type="submit" [disabled]="loginForm.invalid">ACCEDI</button>
+    </form>
+    <div class="registration-redirect">
+        <p>Non hai un account? <a routerLink="/register">Crea un account</a></p>
+    </div>
+</div>
