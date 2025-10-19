@@ -35,4 +35,23 @@ export class OrderService {
       {}
     );
   }
+
+  // Ottiene gli ordini dell'utente autenticato. Se viene passato un token opzionale,
+  // viene incluso nell'header Authorization come Bearer token.
+  getMyOrders(token?: string): Observable<OrderDTO[]> {
+    const url = `${this.apiUrl}/orders/mine`;
+    if (token) {
+      return this.http.get<OrderDTO[]>(url, { headers: { Authorization: `Bearer ${token}` } as any });
+    }
+    return this.http.get<OrderDTO[]>(url);
+  }
+
+  // Ottiene i dettagli di un singolo ordine (order + items)
+  getOrderDetails(orderId: number, token?: string): Observable<any> {
+    const url = `${this.apiUrl}/orders/${orderId}`;
+    if (token) {
+      return this.http.get<any>(url, { headers: { Authorization: `Bearer ${token}` } as any });
+    }
+    return this.http.get<any>(url);
+  }
 }

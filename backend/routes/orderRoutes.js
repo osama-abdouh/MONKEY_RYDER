@@ -10,6 +10,12 @@ router.get('/orders', orderController.getAllOrders);
 // GET /api/orders/pending -> list only pending orders
 router.get('/orders/pending', orderController.getPendingOrders);
 
+// GET /api/orders/mine -> get orders for authenticated user
+router.get('/orders/mine', authenticateToken, orderController.getOrdersByUser);
+
+// GET /api/orders/:id -> get details for a specific order (authenticated)
+router.get('/orders/:id', authenticateToken, orderController.getOrderDetails);
+
 // PATCH /api/orders/:id/cancel -> cancel a pending order by id
 router.patch('/orders/:id/cancel', orderController.cancelOrder);
 
@@ -20,7 +26,6 @@ router.post('/orders', authenticateToken, orderController.createOrder);
 router.post('/orders/confirm-payment', authenticateToken, orderController.confirmPayment);
 
 // GET /api/orders/mine -> get orders for authenticated user
-router.get('/orders/mine', authenticateToken, orderController.getOrdersByUser);
 
 // PATCH /api/orders/:id/delivery -> update delivery data for an order
 router.patch('/orders/:id/delivery', orderController.updateDeliveryData);

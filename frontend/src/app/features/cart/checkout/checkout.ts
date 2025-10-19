@@ -126,7 +126,8 @@ export class Checkout implements OnInit, OnDestroy {
         const id_ordine = created?.id_ordine;
         this.http.post<any>(`${api}/orders/confirm-payment`, {
           id_ordine,
-          payment_ref: 'MOCK-' + Date.now()
+          payment_ref: 'MOCK-' + Date.now(),
+          items: this.cartItems.map(i => ({ product_id: i.productId, quantity: i.quantity, unit_price: i.price }))
         }, { headers }).subscribe({
           next: () => {
             try {
