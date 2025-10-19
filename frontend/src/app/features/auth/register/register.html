@@ -2,50 +2,51 @@
   <h2>Crea il tuo account</h2>
 
   <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-    <div class="name-surname-container">
-      <div class="name-container">
-        <input type="text" formControlName="nome" placeholder="Nome" />
+    <div class="registration-inputs">
+      <div class="name-surname-container">
+        <div class="input-container">
+          <input type="text" formControlName="first_name" placeholder="Nome" required />
+          @if(registerForm.get('first_name')?.invalid && registerForm.get('first_name')?.touched) {
+            <div class="form-error">Il nome è obbligatorio.</div>
+          }
+        </div>
+        <div class="input-container">
+          <input type="text" formControlName="last_name" placeholder="Cognome" required />
+          @if(registerForm.get('last_name')?.invalid && registerForm.get('last_name')?.touched) {
+            <div class="form-error">Il cognome è obbligatorio.</div>
+          }
+        </div>
       </div>
-      <div class="surname-container">
-        <input type="text" formControlName="cognome" placeholder="Cognome" />
+      <div class="input-container">
+        <input type="email" formControlName="email" placeholder="Email" required />
+        @if(registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+          <div class="form-error">Email non valida.</div>
+        }
+      </div>
+
+      <div class="input-container">
+        <input type="password" formControlName="password" placeholder="Password" required />
+        @if(registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+          <div class="form-error">La password deve avere almeno 8 caratteri.</div>
+        } 
+      </div>
+
+      <div class="input-container">
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="Conferma Password"
+          required
+        />
+        @if(registerForm.get('confirmPassword')?.hasError('mismatch') && registerForm.get('confirmPassword')?.touched) {
+          <div class="form-error">Le password non corrispondono.</div>
+        }
       </div>
     </div>
 
-    <div class="input-container">
-      <input type="email" formControlName="email" placeholder="Email" required />
-    </div>
-
-    <div class="input-container">
-      <input type="password" formControlName="password" placeholder="Password" required />
-    </div>
-
-    <div class="input-container">
-      <input
-        type="password"
-        formControlName="confirmPassword"
-        placeholder="Conferma Password"
-        required
-      />
-    </div>
-
-    <!-- Sezione errori alla fine del form -->
-    <div class="error-container">
-      @if(registerForm.get('nome')?.invalid && registerForm.get('nome')?.touched) {
-      <div class="form-error">Il nome è obbligatorio.</div>
-      } @if(registerForm.get('cognome')?.invalid && registerForm.get('cognome')?.touched) {
-      <div class="form-error">Il cognome è obbligatorio.</div>
-      } @if(registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
-      <div class="form-error">Email non valida.</div>
-      } @if(registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
-      <div class="form-error">La password deve avere almeno 8 caratteri.</div>
-      } @if(registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched) {
-      <div class="form-error">Le password non corrispondono.</div>
-      }
-    </div>
-
-    <button type="submit" [disabled]="registerForm.invalid">CREA</button>
+    <button type="submit" [disabled]="registerForm.invalid">REGISTRATI</button>
     @if(message) {
-    <div class="form-message">{{ message }}</div>
+      <div class="form-message">{{ message }}</div>
     }
   </form>
 

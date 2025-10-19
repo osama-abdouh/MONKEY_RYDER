@@ -1,120 +1,120 @@
-/* Rimuovere outline di debug */
-* {
-  /* outline: 1.5px dashed #D64933; */
-}
-
-/* Aggiungere container per tutti gli input */
-.input-container {
-  position: relative;
-  width: 50%;
-  margin-bottom: 1.5rem; /* Spazio per il messaggio di errore */
-}
-
-/* Stile comune per tutti gli errori */
-.error {
-  position: absolute;
-  bottom: -1.5rem;
-  left: 0;
-  color: #d64933;
-  font-size: 0.875rem;
-  font-weight: 600;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 2px 5px;
-  border-radius: 2px;
-}
-
-/* Modificare input per riempire il contenitore */
-.input-container input {
-  width: 100%;
-  max-width: 100%;
-}
-
-/* Aggiustare il form */
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem; /* Aumenta lo spazio tra gli elementi */
-  width: 100%;
-  padding: 0 1rem;
-}
-
 .register-container {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
   align-items: center;
-  background-color: #8a9b68;
+  background-color: #444444;
   margin: 32px auto;
-  padding-top: 1rem;
+  padding-top: 1.8rem;
   border-radius: 4px;
   max-width: 40%;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
 }
+.register-container h2 {
+  color: #E0E0E0;
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.registration-inputs {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  margin: 2rem 0 0 0;
+}
+
 .name-surname-container {
   display: flex;
-  gap: 10px; /* Spaziatura tra i campi */
+  gap: 10px; 
 }
 
-.name-surname-container input {
-  flex: 1; /* I campi avranno la stessa larghezza */
-}
-.name-container,
-.surname-container {
-  position: relative;
+.name-surname-container .input-container {
   flex: 1;
-  min-height: 4rem;
-}
-.name-container input:invalid {
-  border-bottom: 2px solid #d64933;
 }
 
-.name-container input:valid:not(:placeholder-shown) {
-  border-bottom: 2px solid #8a9b68;
-}
-
-input {
-  background: #d5ddbc;
-  border: none;
-  border-radius: 2px;
-  padding: 0.5rem;
-  height: 1.8rem;
-  font-size: 1rem;
+.input-container {
+  position: relative;
   width: 100%;
-  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  min-height: 70px;
+}
+
+.input-container input {
+  background-color: #888888;
+  color: #E0E0E0;
+  border: none;
+  border-radius: 1px;
+  padding: 0.5rem;
+  height: 2rem;
+  font-size: 1rem;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
   box-sizing: border-box;
+  width: 100%;
 }
-input::placeholder {
-  color: #423e37;
+.input-container input::placeholder {
+  color: #B0B0B0;
 }
+.input-container input.ng-invalid.ng-touched {
+  border-bottom: 3px solid #D64933;
+}
+.input-container input.ng-valid.ng-touched {
+  border-bottom: 3px solid #8A9B68;
+}
+
+.form-error {
+  color: #D64933;
+  font-weight: 400;
+  font-size: 0.875rem;
+  text-align: left;
+  margin: 3px 0 0 0;
+  padding: 0;
+}
+
 button {
-  background: #d5ddbc;
+  background: #D64933;
   border: none;
   border-radius: 2px;
   padding: 0.5rem 1rem;
-  color: black;
+  color: #E0E0E0;
   font-size: 1rem;
-  font-weight: bolder;
+  font-weight: 700;
   cursor: pointer;
   margin-top: 0.5rem;
-  width: 50%;
+  width: 30%;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 button:hover {
   background: #423e37;
-  color: white;
+  color: #E0E0E0;
+}
+button:disabled {
+  background: #AAAAAA;
+  color: #161616;
+  cursor: not-allowed;
 }
 
 .login-redirect {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1rem;
+  margin: 1.5rem 0 2rem 0;
+}
+.login-redirect p {
+  color: #E0E0E0;
+  margin: 0;
+  padding: 0;
 }
 .login-redirect a {
-  color: #423e37;
+  color: #E0E0E0;
   text-decoration: none;
   font-weight: bold;
   cursor: pointer;
@@ -122,61 +122,4 @@ button:hover {
 }
 .login-redirect a:hover {
   color: #d64933;
-}
-
-.input-container input:invalid {
-  border-bottom: 2px solid #d64933;
-}
-
-.input-container input:valid:not(:placeholder-shown) {
-  border-bottom: 2px solid #8a9b68;
-}
-
-form > .error {
-  color: #d64933;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-align: center;
-  margin-top: -0.5rem;
-}
-
-.form-message {
-  padding: 0.75rem;
-  border-radius: 4px;
-  background-color: #d5ddbc;
-  color: #423e37;
-  font-weight: 600;
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-.error-container {
-  width: 50%;
-  margin-bottom: 1rem;
-  background-color: rgba(214, 73, 51, 0.1);
-  border-left: 3px solid #d64933;
-  border-radius: 2px;
-  padding: 0.5rem 0;
-}
-
-.form-error {
-  color: #d64933;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-align: left;
-  padding: 0.25rem 0.75rem;
-}
-
-/* Nascondi error-container se vuoto */
-.error-container:empty {
-  display: none;
-}
-
-/* E sostituiscili con questi selettori generali che funzionano con Angular */
-input.ng-invalid.ng-touched {
-  border-bottom: 2px solid #d64933;
-}
-
-input.ng-valid.ng-touched {
-  border-bottom: 2px solid #8a9b68;
 }

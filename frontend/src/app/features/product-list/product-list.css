@@ -15,15 +15,15 @@ input[type="number"]::-webkit-outer-spin-button {
 h1 {
   text-align: start;
   padding: 1rem;
-  color: white;
+  color: #E0E0E0;
 }
 
 .filter-bar {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  border-top: 2px solid grey;
-  border-bottom: 2px solid grey;
+  border-top: 2px solid #444444;
+  border-bottom: 2px solid #444444;
   padding : 10px 20px;
   gap: 15px;
 }
@@ -53,7 +53,7 @@ h1 {
   flex-direction: column;
 }
 .price-input label {
-  color: white;
+  color: #E0E0E0;
   font-size: 16px;
   margin-bottom: 5px;
   text-align: start;
@@ -64,8 +64,8 @@ h1 {
   border: 1px solid #ccc;
   font-size: 14px;
   width: 100px;
-  background-color: grey;
-  color: white
+  background-color: #444444;
+  color: #E0E0E0;
 }
 .price-input input::placeholder {
   color: #ddd;
@@ -78,7 +78,7 @@ h1 {
   padding: 8px 16px;
   font-size: 14px;
   background-color: #D64933;
-  color: white;
+  color: #E0E0E0;
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -89,11 +89,11 @@ h1 {
   justify-self: center;
 }
 .search-container input {
-  color: white;
-  background-color: grey;
+  color: #E0E0E0;
+  background-color: #444444;
   padding: 10px 200px;
   font-size: 16px;
-  border: 1px solid grey;
+  border: 1px solid #444444;
   border-radius: 1px;
 }
 .search-container input::placeholder {
@@ -101,9 +101,9 @@ h1 {
 }
 
 .dropbtn {
-  color: white;
-  background-color: #423E37;
-  border: 1px solid grey; 
+  color: #E0E0E0;
+  background-color: #161616;
+  border: 1px solid #444444;
   padding: 10px 20px;
   font-size: 16px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -118,7 +118,7 @@ h1 {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #423E37;
+  background-color: #161616;
   min-width: 150px;
   box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
   z-index: 1;
@@ -131,7 +131,7 @@ h1 {
 }
 
 .dropdown-content a {
-  color: white;
+  color: #E0E0E0;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
@@ -139,13 +139,13 @@ h1 {
 }
 
 .dropdown-content a.active {
-  background-color: #5a5449;
+  background-color: #444444;
   font-weight: bold;
   border-left: 3px solid #D64933;
 }
 
 .dropdown-content a:hover {
-  background-color: #5a5449;
+  background-color: #444444;
 }
 
 .product-list-grid {
@@ -163,7 +163,7 @@ h1 {
   display: flex;
   flex-direction: column;
   border-radius: 1px;
-  background-color: grey;
+  background-color: #888888;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: transform 0.2s;
@@ -198,7 +198,7 @@ h1 {
 
 .product-info p {
   margin: 0 0 0 0;
-  color: white;
+  color: #E0E0E0;
   font-size: 20px;
   text-align: start;
   font-weight: 200;
@@ -207,7 +207,7 @@ h1 {
 .product-info .product-price {
   font-size: 20px;
   font-weight: 100;
-  color: white;
+  color: #E0E0E0;
   margin: 10px 0;
 }
 .product-actions {
@@ -222,7 +222,7 @@ h1 {
   margin-top: auto;
   padding: 10px;
   background-color: #D64933;
-  color: white;
+  color: #E0E0E0;
   border: none;
   border-radius: 1px;
   cursor: pointer;
@@ -279,7 +279,7 @@ h1 {
   margin-left: 10px;
   padding: 8px 16px;
   background-color: #007bff;
-  color: white;
+  color: #E0E0E0;
   border: none;
   border-radius: 4px;
   cursor: pointer;

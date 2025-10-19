@@ -1,18 +1,1 @@
-<div class="login-header">
-  <h2>Accedi</h2>
-  <img src="assets/icone/close.svg" alt="Close Icon" class="close-icon" (click)="closeDropdown()"/>
-</div>
-<div class="login-content">
-  <p>Se hai già un account, accedi qui:</p>
-  <form [formGroup]="loginForm" (ngSubmit)="OnSubmit()">
-      <input type="email" id="email" formControlName="email" placeholder="Email">
-      <input type="password" id="password" formControlName="password" placeholder="Password">
-    <button type="submit">Accedi</button>
-  </form>
-  @if(error) {
-    <div class="form-message">{{ error }}</div>
-  }  
-</div>
-<div class="login-footer">
-  <p>Non hai un account? <a routerLink="/register" (click)="closeDropdown()">Crea un account</a></p>
-</div>
+<p>login works!</p>
