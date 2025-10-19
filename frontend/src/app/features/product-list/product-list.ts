@@ -55,6 +55,7 @@ export class ProductListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+
     // Leggi i parametri di query
     this.route.queryParams.subscribe(params => {
       this.searchTerm = params['search'] || '';
@@ -81,19 +82,15 @@ export class ProductListComponent implements OnInit {
     
     let params = new HttpParams();
     params = params.set('search', this.searchTerm);
-    
-    console.log('Calling search API with term:', this.searchTerm); // Debug
-    
+        
     // Usa l'URL corretto
     this.http.get<ProductItem[]>('http://localhost:3000/api/search', { params }).subscribe({
       next: (data) => {
-        console.log('Risultati ricerca:', data); // Debug
         this.products = data || [];
         this.filteredProducts = [...this.products];
         this.loading = false;
       },
       error: (err) => {
-        console.error('Errore API:', err); // Debug
         this.error = 'Errore nella ricerca dei prodotti';
         this.loading = false;
       },
@@ -222,7 +219,10 @@ export class ProductListComponent implements OnInit {
     }
     this.applyFilters();
   }
-  
+
+  goToProductDetail(productId: number): void {
+    this.router.navigate(['/product', productId]);
+  }
 
   addToCart(product: ProductItem) {
     this.cartService.add({

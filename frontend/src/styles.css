@@ -14,7 +14,7 @@ html {
 }
 
 body {
-  background-color: #423E37;
+  background-color: #161616;
   min-height: 100vh; /* Garantisce altezza minima per lo scroll */
   overflow-x: hidden; /* Previene scroll orizzontale */
   margin: 0;

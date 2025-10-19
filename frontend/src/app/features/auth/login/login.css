@@ -1,74 +1,116 @@
-.login-header {
-	display: flex; /*uso le flexbox*/
-	justify-content: space-between; /*aggiungo spazio tra gli elementi*/
-	align-items: center; /*centro verticalme*/
-	padding: 1rem;
-	border-bottom: 1px solid #423E37;
-}
-.close-icon {
-	cursor: pointer;
-}
-
-.login-content{
-	display: flex;
-	flex-direction: column; /*mette i flexbox in colonna*/
-	align-items: stretch; /*gli elementi si espandono per riempire la larghezza*/
-	padding: 1rem;
-}
-.login-content p{
-	margin-bottom: 1rem;
-}
-.login-content form {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch; /*gli elementi si espandono per riempire la larghezza*/
-	margin-bottom: 1rem;
-}
-.login-content input {
-	background: #D5DDBC;
-	color: black;
-	padding: 0.5rem;
-	margin-bottom: 1rem;
-	border: none;
-	border-radius: 2px;
-	height: 1.8rem;
-	text-align: left;
-	font-size: 1rem;
-	font-weight: normal;
-	box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
-}
-
-button{
-	background: #D5DDBC;
-	border: none;
-	border-radius: 2px;
-	padding: 0.5rem 1rem;
-	color: black;
-	font-size: 1rem;
-	font-weight: bolder;
-	cursor: pointer;
-	margin-top: 0.5rem;
-	width: 100%;
-	box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
-	transition: background-color 0.3s ease, color 0.3s ease;
-}
-button:hover{
-	background: #423E37;
-	color: white;
-}
-.login-footer {
+.login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1rem;
+  background-color: #444444;
+  margin: 32px auto;
+  padding-top: 1.8rem;
+  border-radius: 4px;
+  max-width: 40%;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
 }
-.login-footer a {
-	color: #423E37;
-	text-decoration: none;
-	font-weight: bold;
-	cursor: pointer;
-	transition: color 0.3s ease;
+.login-container h2 {
+  color: #E0E0E0;
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 1rem;
 }
-.login-footer a:hover {
-	color: #D64933;
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.login-inputs {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  margin: 2rem 0 0 0;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 70px;
+}
+
+.input-container input {
+  background-color: #888888;
+  color: #E0E0E0;
+  border: none;
+  border-radius: 1px;
+  padding: 0.5rem;
+  height: 2rem;
+  font-size: 1rem;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+  box-sizing: border-box;
+  width: 100%;
+}
+.input-container input::placeholder {
+  color: #B0B0B0;
+}
+.input-container input.ng-invalid.ng-touched {
+  border-bottom: 3px solid #D64933;
+}
+.input-container input.ng-valid.ng-touched {
+  border-bottom: 3px solid #8A9B68;
+}
+.form-message,
+.form-error {
+  color: #D64933;
+  font-weight: 400;
+  font-size: 0.875rem;
+  text-align: left;
+  margin: 3px 0 0 0;
+  padding: 0;
+}
+
+button {
+  background: #D64933;
+  border: none;
+  border-radius: 2px;
+  padding: 0.5rem 1rem;
+  color: #E0E0E0;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  width: 30%;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+button:hover {
+  background: #423e37;
+  color: #E0E0E0;
+}
+button:disabled {
+  background: #AAAAAA;
+  color: #161616;
+  cursor: not-allowed;
+}
+
+.registration-redirect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem 0 2rem 0;
+}
+.registration-redirect p {
+  color: #E0E0E0;
+  margin: 0;
+  padding: 0;
+}
+.registration-redirect a {
+  color: #E0E0E0;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.registration-redirect a:hover {
+  color: #d64933;
 }

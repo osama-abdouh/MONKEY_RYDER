@@ -10,6 +10,7 @@ const getAllProducts = async function (connection) {
       products.price,
       products.category_id,
       products.image_path,
+      products.quantity,
       categories.name as category_name,
       products.brand_id,
       brand.name as brand_name
@@ -43,6 +44,28 @@ const getAllBrands = async function (connection) {
 };
 
 // GetBy functions
+const getProductsByID = async function (connection, productId) {
+  const query = `
+    SELECT 
+      products.id,
+      products.name,
+      products.description,
+      products.price,
+      products.category_id,
+      products.image_path,
+      products.quantity,
+      categories.name as category_name,
+      products.brand_id,
+      brand.name as brand_name
+    FROM products 
+    JOIN categories ON products.category_id = categories.id
+    LEFT JOIN brand ON products.brand_id = brand.id
+    WHERE products.id = $1
+  `;
+  const result = await db.execute(connection, query, [productId]);
+  return result;
+};
+
 const getProductsByCategory = async function (connection, categoryId) {
   const query = `
     SELECT 
@@ -52,6 +75,7 @@ const getProductsByCategory = async function (connection, categoryId) {
       products.price,
       products.category_id,
       products.image_path,
+      products.quantity,
       categories.name as category_name,
       products.brand_id,
       brand.name as brand_name
@@ -71,6 +95,7 @@ const getProductsByCategoryName = async function (connection, categoryName) {
       products.price,
       products.category_id,
       products.image_path,
+      products.quantity,
       categories.name as category_name,
       products.brand_id,
       brand.name as brand_name
@@ -181,6 +206,8 @@ const getPushProducts = async function (connection, limit = 9) {
       products.description,
       products.price,
       products.category_id,
+      products.image_path,
+      products.quantity,
       products.sales_count,
       categories.name as category_name
     FROM products
@@ -265,6 +292,7 @@ module.exports = {
   getAllCategories,
   getAllProducts,
   getAllBrands,
+  getProductsByID,
   getProductsByCategory,
   getPushProducts,
   searchProducts,

@@ -25,12 +25,12 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: [''],
-      password: ['']
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
     });
   }
 
-  OnSubmit() {
+  OnLogin() {
     const { email, password } = this.loginForm.value;
     
     this.authService.login(email, password).subscribe({
