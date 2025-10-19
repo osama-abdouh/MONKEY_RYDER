@@ -186,6 +186,12 @@
   color: #E0E0E0;
 }
 
+.wishlist-btn.filled .wishlist-icon path {
+  fill: #E0E0E0;
+  stroke: #E0E0E0;
+}
+
+
 .error {
   text-align: center;
   padding: 20px;
