@@ -11,6 +11,7 @@ import { LoginComponent } from './features/auth/login/login';
 import { ProductListComponent } from './features/product-list/product-list';
 import { Gestione } from './features/gestione/gestione';
 import { Modifiche } from './features/modifiche/modifiche';
+import { Orfini } from './features/orfini/orfini';
 
 
 export const routes: Routes = [
@@ -24,6 +25,7 @@ export const routes: Routes = [
     { path: 'contact-us', component: ContactUsComponent },
     { path: 'profile', component: ProfileComponent },
     { path: 'product-list', component: ProductListComponent },
+    { path: 'ordini', component: Orfini },
     { path: 'gestione', component: Gestione },
     { path: 'modifiche', component: Modifiche },
     { path: '**', redirectTo: '' } // Rotta di fallback per URL non validi

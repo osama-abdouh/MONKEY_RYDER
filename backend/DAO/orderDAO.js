@@ -107,3 +107,70 @@ const findByUser = async function(connection, userId) {
 };
 
 module.exports = { findAll, findPending, cancelById, createOrder, markOrderPaid, updateDeliveryData, findByUser };
+
+// Find single order by id and return order + items (if ordine_prodotti table exists)
+const findById = async function(connection, orderId) {
+  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas, o.stato,
+    o.payment_provider, o.payment_ref, o.payment_status, o.delivery_address, o.delivery_city, o.delivery_postal_code, o.delivery_phone
+    FROM ordini o
+    WHERE o.id_ordine = $1`;
+  try {
+    const rows = await db.execute(connection, sql, [orderId]);
+    if (!rows || rows.length === 0) return null;
+    const order = rows[0];
+
+    // Try to fetch order items from ordine_prodotti (if table exists). If it doesn't, return empty list.
+    let items = [];
+    try {
+      const itemsSql = `SELECT 
+          op.id as order_item_id,
+          op.id_ordine,
+          op.product_id,
+          op.quantity,
+          op.unit_price,
+          p.id as product_id,
+          p.name as product_name,
+          p.price as product_price,
+          p.description as product_description,
+          p.image_url as product_image_url
+        FROM ordine_prodotti op
+        LEFT JOIN products p ON p.id = op.product_id
+        WHERE op.id_ordine = $1
+        ORDER BY op.id ASC`;
+      items = await db.execute(connection, itemsSql, [orderId]);
+  console.log('[DEBUG] orderDAO.findById fetched items count for order', orderId, items && items.length);
+  console.log('[DEBUG] orderDAO.findById items:', JSON.stringify(items));
+    } catch (err) {
+      // Table might not exist or query failed; log and continue with empty items
+      console.warn('orderDAO.findById: unable to read ordine_prodotti, returning empty items', err.message || err);
+      items = [];
+    }
+
+    return { order, items };
+  } catch (err) {
+    console.error('orderDAO.findById error', err);
+    return null;
+  }
+};
+
+// export with new function
+// Insert multiple order items for a given order
+const insertOrderItems = async function(connection, orderId, items) {
+  if (!Array.isArray(items) || items.length === 0) return true;
+  try {
+    // Insert each item (simple approach)
+    for (const it of items) {
+      const productId = it.product_id || it.productId || it.product || null;
+      const quantity = it.quantity || it.qty || it.qta || 1;
+      const unitPrice = it.unit_price || it.unitPrice || it.price || null;
+      const sql = `INSERT INTO ordine_prodotti (id_ordine, product_id, quantity, unit_price) VALUES ($1, $2, $3, $4)`;
+      await connection.none(sql, [orderId, productId, quantity, unitPrice]);
+    }
+    return true;
+  } catch (err) {
+    console.error('orderDAO.insertOrderItems error', err);
+    return false;
+  }
+};
+
+module.exports = { findAll, findPending, cancelById, createOrder, markOrderPaid, updateDeliveryData, findByUser, findById, insertOrderItems };
