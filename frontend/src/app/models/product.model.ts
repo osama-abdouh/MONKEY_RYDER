@@ -3,6 +3,7 @@ export interface ProductItem {
   name: string;
   description: string;
   price: number;
+  quantity: number;
   category_id: number;
   brand_id: number;
   image_path?: string;

@@ -8,6 +8,7 @@ const router = express.Router();
 router.get('/search', productController.searchProducts);
 router.get('/products', productController.getAllProducts);
 router.post('/products', productController.createProduct);
+router.get('/products/:id', productController.getProductByID);
 router.get('/products/category/:categoryId', productController.getProductsByCategory);
 router.get('/products/category/name/:categoryName', productController.getProductsByCategoryName);
 router.get('/categories', productController.getAllCategories);
