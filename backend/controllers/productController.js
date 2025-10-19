@@ -39,6 +39,24 @@ exports.getAllCategories = async (req, res) => {
   }
 };
 
+exports.getProductByID = async (req, res) => {
+  let conn = await db.getConnection();
+  try {
+    const productId = req.params.id;
+    const rows = await productDAO.getProductsByID(conn, productId);
+    const product = Array.isArray(rows) ? rows[0] ?? null : rows;
+    if (!product) {
+      return res.status(404).json({ error: "Prodotto non trovato" });
+    }
+    res.json(product);
+  } catch (error) {
+    console.error("Errore nel recupero del prodotto:", error);
+    res.status(500).json({ error: "Errore nel recupero del prodotto" });
+  } finally {
+    if (conn) conn.done();
+  }
+};
+
 exports.getProductsByCategory = async (req, res) => {
   let conn = await db.getConnection();
   try {
