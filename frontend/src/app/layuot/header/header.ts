@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class HeaderComponent {
   showDropdown = false;
+  isAdmin: boolean = false;
   loginForm! : FormGroup;
   errorMessage: string = '';
   searchQuery: string = '';
@@ -29,6 +30,9 @@ export class HeaderComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+
+    // sottoscrizione allo stato admin
+    this.authService.isAdmin$.subscribe({ next: (v) => this.isAdmin = v, error: () => this.isAdmin = false });
   }
 
   onLoginSubmit() {

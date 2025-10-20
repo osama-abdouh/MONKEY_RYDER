@@ -2,6 +2,8 @@ const db = require('../services/db');
 const authDAO = require('../DAO/authDAO');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const userDAO = require('../DAO/userDAO');
+const dbService = require('../services/db');
 
 
 exports.login = async function (req, res) {
@@ -91,5 +93,23 @@ exports.register = async function (req, res) {
         });
     } finally {
         if (conn) conn.done(); // Rilascia la connessione se esiste
+    }
+};
+
+// Endpoint che ritorna se l'utente autenticato è admin
+exports.isAdmin = async function (req, res) {
+    let conn;
+    try {
+        const userId = req.user && (req.user.userId || req.user.id);
+        if (!userId) return res.status(401).json({ message: 'Utente non autenticato' });
+
+        conn = await dbService.getConnection();
+        const ok = await userDAO.isUserAdmin(conn, userId);
+        return res.json({ isAdmin: !!ok });
+    } catch (err) {
+        console.error('isAdmin handler error', err);
+        return res.status(500).json({ message: 'Errore server durante controllo ruolo' });
+    } finally {
+        if (conn) conn && conn.done && conn.done();
     }
 };

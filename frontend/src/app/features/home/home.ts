@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { ProductSearch } from '../product-search/product-search';
 import { CategoriesComponent } from './categories/categories';
-import { BestSellerComponent } from './best-seller/best-seller';
 import { ProductShowcase } from "./product-showcase/product-showcase";
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ProductSearch, CategoriesComponent, BestSellerComponent, ProductShowcase],
+  imports: [ProductSearch, CategoriesComponent, ProductShowcase],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
