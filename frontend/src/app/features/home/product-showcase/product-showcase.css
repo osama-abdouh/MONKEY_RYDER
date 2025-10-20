@@ -117,10 +117,31 @@
   flex-shrink: 0;
 }
 
-.whishlist-icon {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
+.wishlist-btn {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: 1px solid #666;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+}
+.wishlist-btn:hover {
+  border-color: #D64933;
+}
+
+.wishlist-icon {
+  width: 24px;
+  height: 24px;
+  color: #E0E0E0;
+}
+
+.wishlist-btn.filled .wishlist-icon path {
+  fill: #E0E0E0;
+  stroke: #E0E0E0;
 }
 
 .nav-button {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShowcaseService, ShowcaseProduct } from '../../../services/showcase.service';
 import { CartService } from '../../cart/cart.service';
+import { WishlistManagerService } from '../../../services/wishlist-manager.service';
 
 
 @Component({
@@ -17,12 +18,21 @@ export class ProductShowcase implements OnInit {
   itemsPerPage = 4;
   isLoading = false;
   error: string | null = null;
+  wishlistProductIds: Set<number> = new Set();
 
-  constructor(private showcaseService: ShowcaseService, private cartService: CartService,
+  constructor(private showcaseService: ShowcaseService,
+    private cartService: CartService,
+    private wishlistManager: WishlistManagerService
   ) {}
 
   ngOnInit(): void {
     this.loadShowcaseProducts();
+
+    this.wishlistManager.wishlistProductIds$.subscribe(ids => {
+      this.wishlistProductIds = ids;
+    });
+
+
   }
 
   loadShowcaseProducts(): void {
@@ -66,7 +76,6 @@ export class ProductShowcase implements OnInit {
     }
   }
     getProductImageUrl(product: ShowcaseProduct): string {
-      console.log('Product:', product.name, 'Image path:', product.image_path); // Debug
       if (product.image_path) {
         return `http://localhost:3000/${product.image_path}`;
       }
@@ -75,12 +84,27 @@ export class ProductShowcase implements OnInit {
     onImageError(event: Event): void {
       (event.target as HTMLImageElement).src = 'assets/images/no-image.png';
     }
-      addToCart(product: ShowcaseProduct) {
-        this.cartService.add({
-          productId: product.id,
-          name: product.name,
-          price: product.price,
-          quantity: 1,
-        });
-      }
+
+    addToCart(product: ShowcaseProduct) {
+      this.cartService.add({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+      });
+    }
+
+  toggleWishlist(product: ShowcaseProduct) {
+    this.wishlistManager.toggleWishlist(product.id).subscribe({
+      next: () => {
+        const isInWishlist = this.wishlistManager.isInWishlist(product.id);
+        const message = isInWishlist ? 'Aggiunto alla wishlist' : 'Rimosso dalla wishlist';
+        console.log(`${message}: ${product.id}`);
+      },
+      error: (err) => {
+        console.error('Errore operazione wishlist', err);
+        alert("Errore nell'operazione");
+      },
+    });
+  }
 }

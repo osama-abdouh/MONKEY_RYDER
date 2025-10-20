@@ -7,6 +7,7 @@ import { Category } from '../home/categories/categories';
 import { Brand } from '../../models/brand.model';
 import { ProductItem } from '../../models/product.model';
 import { ActivatedRoute, Router } from '@angular/router'; // Aggiungi questi import
+import { WishlistManagerService } from '../../services/wishlist-manager.service'; // Cambia import
 
 @Component({
   selector: 'app-product-list',
@@ -27,14 +28,15 @@ export class ProductListComponent implements OnInit {
   maxPrice: number | null = null; // Prezzo massimo
   searchTerm: string = ''; // Aggiungi questa proprietà
   currentSort: string = 'default';
+  wishlistProductIds: Set<number> = new Set();
 
   sortOptions = [
-  { value: 'default', label: 'Predefinito' },
-  { value: 'price-low', label: 'Prezzo: dal più basso' },
-  { value: 'price-high', label: 'Prezzo: dal più alto' },
-  { value: 'name-az', label: 'Nome: A-Z' },
-  { value: 'name-za', label: 'Nome: Z-A' },
-];
+    { value: 'default', label: 'Predefinito' },
+    { value: 'price-low', label: 'Prezzo: dal più basso' },
+    { value: 'price-high', label: 'Prezzo: dal più alto' },
+    { value: 'name-az', label: 'Nome: A-Z' },
+    { value: 'name-za', label: 'Nome: Z-A' },
+  ];
 
   // Oggetto con le funzioni di ordinamento
   private sortFunctions: { [key: string]: (a: ProductItem, b: ProductItem) => number } = {
@@ -50,22 +52,22 @@ export class ProductListComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private cartService: CartService,
+    private wishlistManager: WishlistManagerService, // Cambia injection
     private route: ActivatedRoute, // Inietta ActivatedRoute
     private router: Router // Inietta Router
   ) {}
 
   ngOnInit() {
-
     // Leggi i parametri di query
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.searchTerm = params['search'] || '';
-      
+
       console.log('Search term ricevuto:', this.searchTerm); // Debug
-      
+
       // Carica categorie e brand
       this.getAllCategories();
       this.getAllBrands();
-      
+
       // Se c'è un termine di ricerca, chiama la ricerca
       if (this.searchTerm.trim()) {
         this.searchProducts();
@@ -73,16 +75,21 @@ export class ProductListComponent implements OnInit {
         this.getAllProducts();
       }
     });
+
+    // Sottoscrivi agli aggiornamenti della wishlist
+    this.wishlistManager.wishlistProductIds$.subscribe((ids) => {
+      this.wishlistProductIds = ids;
+    });
   }
 
   // Nuovo metodo per la ricerca dei prodotti
   searchProducts() {
     this.loading = true;
     this.error = '';
-    
+
     let params = new HttpParams();
     params = params.set('search', this.searchTerm);
-        
+
     // Usa l'URL corretto
     this.http.get<ProductItem[]>('http://localhost:3000/api/search', { params }).subscribe({
       next: (data) => {
@@ -230,6 +237,20 @@ export class ProductListComponent implements OnInit {
       name: product.name,
       price: product.price,
       quantity: 1,
+    });
+  }
+
+  toggleWishlist(product: ProductItem) {
+    this.wishlistManager.toggleWishlist(product.id).subscribe({
+      next: () => {
+        const isInWishlist = this.wishlistManager.isInWishlist(product.id);
+        const message = isInWishlist ? 'Aggiunto alla wishlist' : 'Rimosso dalla wishlist';
+        console.log(`${message}: ${product.id}`);
+      },
+      error: (err) => {
+        console.error('Errore operazione wishlist', err);
+        alert("Errore nell'operazione");
+      },
     });
   }
 }

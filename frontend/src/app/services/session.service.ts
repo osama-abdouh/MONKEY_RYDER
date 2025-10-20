@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class SessionService {
-
-  getToken(): string | null {
-    return localStorage.getItem('jwtToken');
-  }
+  private readonly TOKEN_KEY = 'token';
 
   setToken(token: string): void {
-    localStorage.setItem('jwtToken', token);
+    localStorage.setItem(this.TOKEN_KEY, token); // Usa localStorage per coerenza
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
   clearToken(): void {
-    localStorage.removeItem('jwtToken');
+    localStorage.removeItem(this.TOKEN_KEY);
   }
-  
 }
