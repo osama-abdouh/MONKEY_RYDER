@@ -8,144 +8,215 @@ background: #8A9B68;
 box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 .header-top {
-    background: #423E37;
-    font-size: 0.95rem;
-    padding: 0.3rem 0;
+background: #423E37;
+font-size: 0.95rem;
+padding: 0.3rem 0;
 }
 .header-top .container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+display: flex;
+justify-content: flex-end;
+align-items: center;
 }
 .lang-switcher {
-    display: flex;
-    gap: 0.5rem;
+display: flex;
+gap: 0.5rem;
 }
 .lang-btn {
-    background: none;
-    border: none;
-    color: black;
-    padding: 0.2rem 0.5rem;
-    cursor: pointer;
-    transition: background 0.3s;
+background: none;
+border: none;
+color: black;
+padding: 0.2rem 0.5rem;
+cursor: pointer;
+transition: background 0.3s;
 }
 .lang-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+background: rgba(255, 255, 255, 0.2);
 }
 
 .header-middle {
-    padding: 1rem 0;
-    border-bottom: 1.5px solid #403D39; /* linea divisoria */
-    overflow-x: visible;
+padding: 1rem 0;
+border-bottom: 1.5px solid #403D39; /* linea divisoria */
+overflow-x: visible;
 }
 .header-middle .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 1rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
 
 }
 .logo {
-    display: flex;
-    align-items: center;
+display: flex;
+align-items: center;
 }
 .logo a {
-    display: flex;
-    cursor: pointer;
-    align-items: center;
-    text-decoration: none;
+display: flex;
+cursor: pointer;
+align-items: center;
+text-decoration: none;
 }
 .logo-img {
-    height: 100px;
-    width: auto;
-    margin-right: 0.7rem;
+height: 100px;
+width: auto;
+margin-right: 0.7rem;
 }
 .logo-text {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    font-size: 2rem;
-    letter-spacing: 1px;
-    color: #18191a;
+font-family: Arial, Helvetica, sans-serif;
+font-weight: bold;
+font-size: 2rem;
+letter-spacing: 1px;
+color: #18191a;
 }
 
 .search-center {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+flex: 1;
+display: flex;
+justify-content: center;
 }
 .search-input {
-    background: #D5DDBC;
-    padding: 0.5rem;
-    border: 1px solid #8A9B68;
-    color: #423E37;
-    border-radius: 2px;
-    height: 40px;
-    width: 500px;
-    text-align: left;
-    font-size: 1rem;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24)
+background: #D5DDBC;
+padding: 0.5rem;
+border: 1px solid #8A9B68;
+color: #423E37;
+border-radius: 2px;
+height: 40px;
+width: 500px;
+text-align: left;
+font-size: 1rem;
+box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24)
 }
 .search-input::placeholder {
-    color: #423E37;
+color: #423E37;
 }
 .navUser-actions{
-    display: flex;
-    justify-content: end;
-    flex-direction: row;
-    gap: 1rem
+display: flex;
+justify-content: end;
+flex-direction: row;
+gap: 1rem
 }
 .cart-icon,
 .user-icon,
 .wishlist-icon{
-    width: 1.75rem;
-    height: 1.75rem;
+width: 1.75rem;
+height: 1.75rem;
 }
 .cart-btn,
 .user-btn,
 .whishlist-btn {
-    border: none;
-    padding: 0.5rem 0.5rem;
-    border-radius: 3px;
-    background: none;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: bold;
-    transition: background 0.2s, color 0.2s;
+border: none;
+padding: 0.5rem 0.5rem;
+border-radius: 3px;
+background: none;
+cursor: pointer;
+text-decoration: none;
+display: inline-block;
+font-weight: bold;
+transition: background 0.2s, color 0.2s;
 }
 
 .cart-btn:hover,
 .user-btn:hover,
 .whishlist-btn:hover{
-    background: #B6C197;
-    color: black;
-    opacity: 0.85;
-
+background: #B6C197;
+color: black;
+opacity: 0.85;
 }
-
-
 
 .profile-menu {
-    position: relative;
+position: relative;
 }
 .dropdown-menu {
-    position: absolute;
-    right: 0;
-    background: #8A9B68;
-    min-width: 10rem;
-    border: 1px solid #423E37;
-    border-radius: 8px;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
-    z-index: 10;
+position: absolute;
+right: 0;
+background: #8A9B68;
+min-width: 10rem;
+border: 1px solid #423E37;
+border-radius: 8px;
+box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+z-index: 10;
 }
 .dropdown-menu a {
-    text-decoration: none;
-    color: black;
+text-decoration: none;
+color: black;
 }
 .dropdown-menu a:hover {
-    background: rgba(255, 255, 255, 0.2);
+background: rgba(255, 255, 255, 0.2);
+}
+.login-header {
+	display: flex; /*uso le flexbox*/
+	justify-content: space-between; /*aggiungo spazio tra gli elementi*/
+	align-items: center; /*centro verticalme*/
+	padding: 1rem;
+	border-bottom: 1px solid #423E37;
+}
+.close-icon {
+	cursor: pointer;
+}
+
+.login-content{
+	display: flex;
+	flex-direction: column; /*mette i flexbox in colonna*/
+	align-items: stretch; /*gli elementi si espandono per riempire la larghezza*/
+	padding: 1rem;
+}
+.login-content p{
+	margin-bottom: 1rem;
+}
+.login-content form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /*gli elementi si espandono per riempire la larghezza*/
+	margin-bottom: 1rem;
+}
+.login-content input {
+	background: #D5DDBC;
+	color: black;
+	padding: 0.5rem;
+	margin-bottom: 1rem;
+	border: none;
+	border-radius: 2px;
+	height: 1.8rem;
+	text-align: left;
+	font-size: 1rem;
+	font-weight: normal;
+	box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+}
+
+.login-content button{
+	background: #D5DDBC;
+	border: none;
+	border-radius: 2px;
+	padding: 0.5rem 1rem;
+	color: black;
+	font-size: 1rem;
+	font-weight: bolder;
+	cursor: pointer;
+	margin-top: 0.5rem;
+	width: 100%;
+	box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.24);
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+.login-content button:hover{
+	background: #423E37;
+	color: white;
+}
+.login-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+}
+.login-footer a {
+	color: #423E37;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+	transition: color 0.3s ease;
+}
+.login-footer a:hover {
+	color: #D64933;
 }
 
 

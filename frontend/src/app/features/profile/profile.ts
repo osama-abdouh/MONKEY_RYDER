@@ -3,17 +3,20 @@ import { AuthService } from '../../services/auth.service';
 import { SessionService } from '../../services/session.service';
 import { UserService, User } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
+import { PersonalDataComponent } from './personal-data/personal-data';
+import { AddressesComponent } from './addresses/addresses';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PersonalDataComponent, AddressesComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.css'
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
   error: string | null = null;
+  currentView: 'personal' | 'addresses'  = 'personal';
 
   constructor(private authService: AuthService, private userService: UserService, private sessionService: SessionService) {}
 
@@ -51,5 +54,9 @@ export class ProfileComponent implements OnInit {
       this.error = 'Token non valido';
       console.error('Error decoding token:', e);
     }
+  }
+
+  selectView(view: 'personal' | 'addresses'): void {
+    this.currentView = view;
   }
 }

@@ -1,3 +1,37 @@
 *{
     color: white;
 }
+.profile-page {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.sidebar-menu {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-right: 1px solid #ccc;
+  padding-right: 1.2rem;
+}
+
+.sidebar-menu button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  text-align: left;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.sidebar-menu button.active {
+  font-weight: bold;
+  color: #f7a700;
+}
+
+.content {
+  flex: 1;
+}

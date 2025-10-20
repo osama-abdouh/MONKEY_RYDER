@@ -1,45 +1,68 @@
-<div class="footer-container">
-    <div class="footer-content">
-        <div class="newsletter">
-            <h1>Don't miss our news!</h1>
-            <p>Subscribe to Our Newsletter</p>
-            <div class="newsletter-row">
-                <input type="email" placeholder="email" class="newsletter-input">
-                <button class="newsletter-btn">Subscribe</button>
-            </div>
-        </div>
-        <div class="destra">
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.5rem;">
-                <h2 class="aiuto">Assistenza</h2>
-                <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem; align-items:flex-end;">
-                    <button class="aiuto">FAQ</button>
-                    <button class="aiuto" routerLink="/contact-us">Contattaci</button>
-                </div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:-0.0rem; align-items:flex-end;">
-                <h2 class="aiuto" style="margin-right:3rem;"> Policy </h2>
-                <button class="Policy">Privacy Policy</button>
-            </div>
-        </div>
-
-        <div class="sinistra">
-            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:-0.0rem; align-items:flex-end;">
-                <h2 class="aiuto">Trovaci</h2>
-                <button class="Location"><img src="/assets/icone/location.svg" alt="location" class="Location"></button>
-            </div>
-                <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:-0.0rem; align-items:flex-end;">
-                    <h2 class="aiuto">Social</h2>
-                    <button class="Location"><img src="/assets/icone/linkedin.svg" alt="location" class="logo"></button>
-                    <button class="Location"><img src="/assets/icone/facebook.svg" alt="location" class="logo"></button>
-                    <button class="Location"><img src="/assets/icone/instagram.svg" alt="location" class="logo"></button>
-
-            </div>
-        </div>
+<footer class="custom-footer">
+  <div class="footer-top">
+    <div class="footer-logo">
+    <div class="logo-row">
+        <span class="logo-text">MONKEY RIDER</span>
+        <img src="assets/images/logo.png" alt="Monkey Rider Logo" class="logo-img" />
     </div>
-    <div class="pie">
-        <img src="/assets/logo.png" alt="Logo Monkey Rider" class="pie-logo" routerLink="/home">
-        <h2>Monkey Rider - I tuoi componenti auto di qualità</h2>
-        <p>© 2025 Monkey Rider.</p>
+    <span class="slogan">Componenti auto di qualità</span>
     </div>
-</div>
+
+    <div class="footer-columns">
+      <div class="footer-column">
+        <span>PRODOTTI</span>
+        <a href="#">Nuovi arrivi</a>
+        <a href="#">Catalogo</a>
+        <a href="#">Offerte</a>
+      </div>
+      <div class="footer-column">
+        <span>SERVIZI</span>
+        <a href="#">Assistenza</a>
+        <a href="#">FAQ</a>
+        <a href="#">Supporto</a>
+      </div>
+      <div class="footer-column">
+        <span>AZIENDA</span>
+        <a href="#">Chi siamo</a>
+        <a href="#">Contattaci</a>
+        <a href="#">Risorse</a>
+      </div>
+      <div class="footer-column">
+        <span>INFO</span>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Termini</a>
+        <a href="#">Affiliazioni</a>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="footer-bottom">
+    <div class="footer-social">
+      <a href="https://facebook.com/tuapagina" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+        </svg>
+      </a>
+      <a href="https://x.com/tuoprofilo" target="_blank" rel="noopener" aria-label="X">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+            <path d="M17.751 3h3.067l-6.7 7.625L22 21h-6.172l-4.833-6.293L5.464 21h-3.07l7.167-8.155L2 3h6.328l4.37 5.752zm-1.076 16.172h1.7L7.404 4.732H5.58z"/>
+        </svg>
+      </a>
+      <a href="https://instagram.com/tuoprofilo" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+            <path d="M12 0C8.74 0 8.333.015 7.053.072C5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053C.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913a5.885 5.885 0 0 0 1.384 2.126A5.868 5.868 0 0 0 4.14 23.37c.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558a5.898 5.898 0 0 0 2.126-1.384a5.86 5.86 0 0 0 1.384-2.126c.296-.765.499-1.636.558-2.913c.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913a5.89 5.89 0 0 0-1.384-2.126A5.847 5.847 0 0 0 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071c1.17.055 1.805.249 2.227.415c.562.217.96.477 1.382.896c.419.42.679.819.896 1.381c.164.422.36 1.057.413 2.227c.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227a3.81 3.81 0 0 1-.899 1.382a3.744 3.744 0 0 1-1.38.896c-.42.164-1.065.36-2.235.413c-1.274.057-1.649.07-4.859.07c-3.211 0-3.586-.015-4.859-.074c-1.171-.061-1.816-.256-2.236-.421a3.716 3.716 0 0 1-1.379-.899a3.644 3.644 0 0 1-.9-1.38c-.165-.42-.359-1.065-.42-2.235c-.045-1.26-.061-1.649-.061-4.844c0-3.196.016-3.586.061-4.861c.061-1.17.255-1.814.42-2.234c.21-.57.479-.96.9-1.381c.419-.419.81-.689 1.379-.898c.42-.166 1.051-.361 2.221-.421c1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 1 0 0 12.324a6.162 6.162 0 1 0 0-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4s4 1.79 4 4s-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 0 1-2.88 0a1.44 1.44 0 0 1 2.88 0z"/>
+        </svg>
+      </a>
+      <a href="https://linkedin.com/tuoprofilo" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.025-3.037-1.852-3.037c-1.853 0-2.136 1.445-2.136 2.939v5.667H9.354V9h3.414v1.561h.049c.476-.9 1.637-1.852 3.369-1.852c3.602 0 4.268 2.37 4.268 5.455v6.288zM5.337 7.433c-1.144 0-2.067-.926-2.067-2.067c0-1.142.923-2.067 2.067-2.067c1.142 0 2.066.925 2.066 2.067c0 1.141-.924 2.067-2.066 2.067zm1.777 13.019H3.56V9h3.554v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.226.792 24 1.771 24h20.451C23.2 24 24 23.226 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
+        </svg>
+      </a>
+      <a href="https://youtube.com/tuoprofilo" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </a>
+    </div>
+    <div class="footer-copy">
+      &copy; 2025 Monkey Rider. All rights reserved.

@@ -1,0 +1,7 @@
+<div class="addresses-list">
+  <div *ngFor="let addr of addresses" class="address-item">
+    <p><strong>Indirizzo:</strong> {{ addr.street }}</p>
+    <p><strong>Città:</strong> {{ addr.city }}</p>
+    <p><strong>CAP:</strong> {{ addr.zip }}</p>
+  </div>
+</div>

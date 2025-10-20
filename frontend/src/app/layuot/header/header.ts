@@ -1,26 +1,49 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { RouterModule , Router} from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { LoginComponent } from "../../features/auth/login/login";
+import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserMenuComponent } from "../../features/user-menu/user-menu";
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule, LoginComponent, UserMenuComponent, FormsModule],
+  imports: [RouterModule, CommonModule, UserMenuComponent, FormsModule, ReactiveFormsModule],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
 export class HeaderComponent {
   showDropdown = false;
+  loginForm! : FormGroup;
+  errorMessage: string = '';
   searchQuery: string = '';
 
   constructor(
+    private fb: FormBuilder,
     public authService: AuthService,
     private router: Router
   ) {}
+
+  ngOnInit() {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
+  }
+
+  onLoginSubmit() {
+    const { email, password } = this.loginForm.value;
+    this.authService.login(email, password).subscribe({
+      next: () => {
+        this.showDropdown = false;
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        this.errorMessage = 'Email o password errati';
+        console.error(err);
+      }
+    });
+  }
 
   ToggleDropdown() {
     this.showDropdown = !this.showDropdown

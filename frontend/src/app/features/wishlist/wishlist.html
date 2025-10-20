@@ -50,25 +50,4 @@
       </p>
     </div>
   </div>
-
-  <!-- Add Product Form -->
-  <div class="add-product-section">
-    <h3>Aggiungi Prodotto</h3>
-    <div class="add-form">
-      <div class="input-group">
-        <label for="productId">ID Prodotto:</label>
-        <input
-          id="productId"
-          type="number"
-          [(ngModel)]="productIdToAdd"
-          placeholder="Inserisci ID prodotto"
-          min="1"
-          class="input-field"
-        />
-      </div>
-      <button (click)="addToWishlist()" [disabled]="!productIdToAdd || loading" class="btn-add">
-        {{ loading ? 'Aggiungendo...' : 'Aggiungi alla Wishlist' }}
-      </button>
-    </div>
-  </div>
 </div>
