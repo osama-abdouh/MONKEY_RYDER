@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ProductItem } from '../../models/product.model';
 import { CartService } from '../cart/cart.service';
+import { WishlistManagerService } from '../../services/wishlist-manager.service'; 
 
 @Component({
   selector: 'app-product-detail',
@@ -17,12 +18,14 @@ export class ProductDetailComponent implements OnInit {
   loading = false;
   error = '';
   stock: number = 1;
+  wishlistProductIds: Set<number> = new Set();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private cartService: CartService
+    private cartService: CartService,
+    private wishlistManager: WishlistManagerService
   ) {}
 
   ngOnInit() {
@@ -31,6 +34,10 @@ export class ProductDetailComponent implements OnInit {
       if (id) {
         this.loadProduct(id);
       }
+    });
+
+    this.wishlistManager.wishlistProductIds$.subscribe(ids => {
+      this.wishlistProductIds = ids;
     });
   }
 
@@ -83,6 +90,20 @@ export class ProductDetailComponent implements OnInit {
         quantity: this.stock
       });
     }
+  }
+
+  toggleWishlist(product: ProductItem) {
+    this.wishlistManager.toggleWishlist(product.id).subscribe({
+      next: () => {
+        const isInWishlist = this.wishlistManager.isInWishlist(product.id);
+        const message = isInWishlist ? 'Aggiunto alla wishlist' : 'Rimosso dalla wishlist';
+        console.log(`${message}: ${product.id}`);
+      },
+      error: (err) => {
+        console.error('Errore operazione wishlist', err);
+        alert("Errore nell'operazione");
+      },
+    });
   }
 
   goBack() {

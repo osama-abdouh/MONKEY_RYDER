@@ -65,7 +65,6 @@ const getProductsByID = async function (connection, productId) {
   const result = await db.execute(connection, query, [productId]);
   return result;
 };
-
 const getProductsByCategory = async function (connection, categoryId) {
   const query = `
     SELECT 

@@ -35,8 +35,7 @@ export class LoginComponent {
     
     this.authService.login(email, password).subscribe({
       next: (res) => {
-        this.sessionService.setToken(res.token); //salva il token
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/home']);
         this.closeDropdown?.(); // Chiude il dropdown se la funzione è definita
       },
       error: (error) => {

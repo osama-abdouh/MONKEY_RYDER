@@ -1,1 +1,53 @@
-<p>wishlist works!</p>
+<div class="wishlist-container">
+  <div class="wishlist-header">
+    <h2>La Mia Wishlist</h2>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="loading-spinner"></div>
+    <p>Caricamento...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-message">
+    <p>{{ error }}</p>
+    <button (click)="clearError()" class="btn-close">×</button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && wishlist.length === 0 && !error" class="empty-state">
+    <div class="empty-icon">❤️</div>
+    <h3>La tua wishlist è vuota</h3>
+    <p>Aggiungi i tuoi prodotti preferiti per trovarli facilmente!</p>
+  </div>
+
+  <!-- Wishlist Items -->
+  <div *ngIf="!loading && wishlist.length > 0" class="wishlist-content">
+    <div class="wishlist-items">
+      <div *ngFor="let item of wishlist" class="wishlist-item">
+        <div class="item-info">
+          <h4 class="item-name">{{ item.name || 'Prodotto senza nome' }}</h4>
+          <p class="item-price" *ngIf="item.price">€{{ item.price | number : '1.2-2' }}</p>
+          <p class="item-id">ID: {{ item.id }}</p>
+        </div>
+        <div class="item-actions">
+          <button
+            (click)="removeFromWishlist(item.id)"
+            class="btn-remove"
+            title="Rimuovi dalla wishlist"
+          >
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wishlist-summary">
+      <p>
+        <strong>{{ wishlist.length }}</strong> prodotto{{ wishlist.length !== 1 ? 'i' : '' }} nella
+        wishlist
+      </p>
+    </div>
+  </div>
+</div>

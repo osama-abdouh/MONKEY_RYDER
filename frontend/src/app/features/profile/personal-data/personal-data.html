@@ -1,0 +1,12 @@
+<form [formGroup]="personalForm" (ngSubmit)="onSubmit()">
+  <label>Nome</label>
+  <input formControlName="name" type="text" placeholder="Nome" />
+
+  <label>Email</label>
+  <input formControlName="email" type="email" placeholder="Email" />
+
+  <label>Telefono</label>
+  <input formControlName="phone" type="tel" placeholder="Telefono" />
+
+  <button type="submit" [disabled]="personalForm.invalid">Aggiorna dati</button>
+</form>

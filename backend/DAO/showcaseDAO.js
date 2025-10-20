@@ -5,7 +5,7 @@ const getAllShowcaseProducts = async function (connection) {
   const query = `
     SELECT 
       showcase.id as showcase_id,
-      showcase.product_id,
+      showcase.product_id AS id,
       showcase.position,
       products.name,
       products.description,
