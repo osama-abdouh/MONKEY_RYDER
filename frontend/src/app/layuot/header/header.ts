@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class HeaderComponent {
   showDropdown = false;
+  isAdmin: boolean = false;
   loginForm! : FormGroup;
   errorMessage: string = '';
   searchQuery: string = '';
@@ -29,6 +30,9 @@ export class HeaderComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+
+    // Sottoscrivi lo stato admin in modo da aggiornare UI automaticamente dopo login/logout
+    this.authService.isAdmin$.subscribe({ next: (v) => this.isAdmin = v, error: () => this.isAdmin = false });
   }
 
   onLoginSubmit() {
@@ -36,6 +40,7 @@ export class HeaderComponent {
     this.authService.login(email, password).subscribe({
       next: () => {
         this.showDropdown = false;
+  // lo stato admin verrà aggiornato automaticamente via isAdmin$ (fetchAndSetAdmin chiamato in login)
         this.router.navigate(['/home']);
       },
       error: (err) => {

@@ -206,3 +206,19 @@ const createAddress = async function(connection, userId, addr) {
 };
 
 module.exports.createAddress = createAddress;
+
+// Controlla se un dato user_id ha ruolo admin
+const isUserAdmin = async function(connection, userId) {
+  if (!userId) return false;
+  try {
+    const rows = await db.execute(connection, 'SELECT role FROM users WHERE user_id = $1', [userId]);
+    if (!rows || !rows[0]) return false;
+    const role = rows[0].role || null;
+    return role === 'admin';
+  } catch (err) {
+    console.error('userDAO.isUserAdmin error', err && err.message ? err.message : err);
+    return false;
+  }
+};
+
+module.exports.isUserAdmin = isUserAdmin;
