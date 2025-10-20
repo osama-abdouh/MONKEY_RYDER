@@ -157,6 +157,22 @@ const findAddressesByUser = async function(connection, userId) {
 
 module.exports.findAddressesByUser = findAddressesByUser;
 
+// Controlla se un utente (user_id) ha ruolo 'admin'
+const isUserAdmin = async function(connection, userId) {
+  if (!userId) return false;
+  try {
+    const rows = await db.execute(connection, 'SELECT role FROM users WHERE user_id = $1', [userId]);
+    if (!rows || !rows[0]) return false;
+    const role = rows[0].role || null;
+    return role === 'admin';
+  } catch (err) {
+    console.error('userDAO.isUserAdmin error', err && err.message ? err.message : err);
+    return false;
+  }
+};
+
+module.exports.isUserAdmin = isUserAdmin;
+
 // Create a new address for a user. Try italian 'indirizzi' table first, fallback to 'addresses'.
 const createAddress = async function(connection, userId, addr) {
   // normalize incoming fields
@@ -206,19 +222,3 @@ const createAddress = async function(connection, userId, addr) {
 };
 
 module.exports.createAddress = createAddress;
-
-// Controlla se un dato user_id ha ruolo admin
-const isUserAdmin = async function(connection, userId) {
-  if (!userId) return false;
-  try {
-    const rows = await db.execute(connection, 'SELECT role FROM users WHERE user_id = $1', [userId]);
-    if (!rows || !rows[0]) return false;
-    const role = rows[0].role || null;
-    return role === 'admin';
-  } catch (err) {
-    console.error('userDAO.isUserAdmin error', err && err.message ? err.message : err);
-    return false;
-  }
-};
-
-module.exports.isUserAdmin = isUserAdmin;

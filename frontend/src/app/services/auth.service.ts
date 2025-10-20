@@ -1,19 +1,18 @@
 // gestione della richiesta di login e token JWT
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, tap, BehaviorSubject, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { SessionService } from './session.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api';
-  // stream pubblico per lo stato admin: Header e altri componenti possono sottoscriversi
   public isAdmin$ = new BehaviorSubject<boolean>(false);
   constructor(private http: HttpClient, private session: SessionService) {
-    // se c'è già un token al caricamento dell'app, prova a recuperare lo stato admin
+    // inizializza lo stato admin se token già presente
     if (this.session.getToken()) {
-      this.fetchAndSetAdmin();
+      this.checkAdmin().subscribe();
     }
   }
 
@@ -23,8 +22,8 @@ export class AuthService {
         if (response.token) {
           this.session.setToken(response.token); // Salva il token dopo login
           console.log('Token saved:', response.token); // Aggiungi questo per debug
-          // Aggiorna lo stato admin dopo il login
-          this.fetchAndSetAdmin();
+          // aggiorna lo stato admin dopo il login
+          this.checkAdmin().subscribe({ next: (v) => this.isAdmin$.next(v), error: () => this.isAdmin$.next(false) });
         }
       })
     );
@@ -32,7 +31,7 @@ export class AuthService {
 
   logout(): void {
     this.session.clearToken();
-    // al logout azzera lo stato admin così il pulsante scompare
+    // al logout resetta lo stato admin
     this.isAdmin$.next(false);
   }
 
@@ -40,19 +39,17 @@ export class AuthService {
     return this.session.getToken() !== null;
   }
 
-  // Chiama il backend per verificare se l'utente autenticato è admin
-  isAdmin(): Observable<boolean> {
+  // helper che chiama backend /is-admin e aggiorna stream
+  checkAdmin(): Observable<boolean> {
     const token = this.session.getToken();
     if (!token) return of(false);
     const headers = { Authorization: `Bearer ${token}` } as any;
     return this.http.get<{ isAdmin: boolean }>(`${this.apiUrl}/is-admin`, { headers }).pipe(
-      map((resp) => !!(resp && resp.isAdmin)),
-      tap((isAdmin) => console.log('isAdmin:', isAdmin))
+      map((resp) => {
+        const isAdmin = !!(resp && resp.isAdmin);
+        this.isAdmin$.next(isAdmin);
+        return isAdmin;
+      })
     );
-  }
-
-  // helper che chiama isAdmin() e aggiorna il BehaviorSubject pubblico
-  fetchAndSetAdmin(): void {
-    this.isAdmin().subscribe({ next: (v) => this.isAdmin$.next(v), error: () => this.isAdmin$.next(false) });
   }
 }
