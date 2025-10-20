@@ -1,3 +1,16 @@
+<div class="profile-page">
+  <aside class="sidebar-menu">
+    <button (click)="selectView('personal')" [class.active]="currentView === 'personal'">Dati Personali</button>
+    <button (click)="selectView('addresses')" [class.active]="currentView === 'addresses'">Indirizzi</button>
+ì  </aside>
+  
+  <section class="content">
+    <app-personal-data *ngIf="currentView === 'personal'"></app-personal-data>
+    <app-addresses *ngIf="currentView === 'addresses'"></app-addresses>
+  </section>
+</div>
+
+
 <div class="profile-container">
   <h1>Il Mio Profilo</h1>
   @if (user) {

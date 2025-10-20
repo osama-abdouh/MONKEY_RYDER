@@ -1,0 +1,12 @@
+.addresses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.address-item {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
