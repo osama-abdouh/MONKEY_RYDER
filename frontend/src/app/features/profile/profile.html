@@ -2,31 +2,17 @@
   <aside class="sidebar-menu">
     <button (click)="selectView('personal')" [class.active]="currentView === 'personal'">Dati Personali</button>
     <button (click)="selectView('addresses')" [class.active]="currentView === 'addresses'">Indirizzi</button>
-ì  </aside>
+  <button (click)="selectView('orders')" [class.active]="currentView === 'orders'">i miei ordini</button>
+    <button (click)="selectView('wishlist')" [class.active]="currentView === 'wishlist'">wish list</button>
+  <button (click)="logout()">Logout</button>
+  </aside>
   
   <section class="content">
     <app-personal-data *ngIf="currentView === 'personal'"></app-personal-data>
-    <app-addresses *ngIf="currentView === 'addresses'"></app-addresses>
+  <app-addresses *ngIf="currentView === 'addresses'"></app-addresses>
+  <app-orfini *ngIf="currentView === 'orders'"></app-orfini>
+  <app-wishlist *ngIf="currentView === 'wishlist'"></app-wishlist>
   </section>
 </div>
 
 
-<div class="profile-container">
-  <h1>Il Mio Profilo</h1>
-  @if (user) {
-    <div class="profile-info">
-      <div class="info-item">
-        <label>Nome:</label>
-        <span>{{ user.first_name }}</span>
-      </div>
-      <div class="info-item">
-        <label>Cognome:</label>
-        <span>{{ user.last_name || 'N/A' }}</span>
-      </div>
-      <div class="info-item">
-        <label>Email:</label>
-        <span>{{ user.email }}</span>
-      </div>
-    </div>
-  }
-</div>

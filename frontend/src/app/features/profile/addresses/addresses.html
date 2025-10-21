@@ -1,7 +1,42 @@
-<div class="addresses-list">
-  <div *ngFor="let addr of addresses" class="address-item">
-    <p><strong>Indirizzo:</strong> {{ addr.street }}</p>
-    <p><strong>Città:</strong> {{ addr.city }}</p>
-    <p><strong>CAP:</strong> {{ addr.zip }}</p>
-  </div>
+<div class="addresses">
+	<h3>I miei indirizzi</h3>
+
+	<div class="addresses-controls">
+		<button class="add-address" type="button" (click)="addNewAddress()">Aggiungi indirizzo</button>
+	</div>
+
+	<div *ngIf="loading">Caricamento indirizzi...</div>
+	<div *ngIf="error" class="error">{{ error }}</div>
+
+	<div *ngIf="!loading && !addresses.length">Nessun indirizzo salvato.</div>
+
+		<div *ngIf="addresses.length" class="addresses-list">
+			<button *ngFor="let a of addresses" class="address-item address-btn" (click)="selectAddress(a)" [class.selected]="selectedAddress === a" [attr.aria-pressed]="selectedAddress === a">
+				<div class="addr-line">{{ a.fullName || a.label || a.nome_campanello || '' }}</div>
+				<div class="addr-line">{{ a.address || a.indirizzo || '' }} - {{ a.city || a.citta || '' }}</div>
+				<div class="addr-meta">{{ a.postalCode || a.cap || a.postal_code || '' }} | {{ a.phone || '' }}</div>
+				<!-- delete X on the right: use a span so we don't nest a button inside a button. stopPropagation prevents selectAddress from firing -->
+				<span class="addr-delete" role="button" tabindex="0" aria-label="Elimina indirizzo" (click)="$event.stopPropagation(); confirmDelete(a)">✕</span>
+			</button>
+		</div>
+
+		<div *ngIf="selectedAddress" class="address-edit">
+			<h4>{{ selectedAddress && !selectedAddress.id ? 'Aggiungi indirizzo' : 'Modifica indirizzo' }}</h4>
+			<label>Nome</label>
+			<input [(ngModel)]="selectedAddress.fullName" [ngModelOptions]="{standalone: true}" />
+			<label>Indirizzo</label>
+			<input [(ngModel)]="selectedAddress.address" [ngModelOptions]="{standalone: true}" />
+			<label>Città</label>
+			<input [(ngModel)]="selectedAddress.city" [ngModelOptions]="{standalone: true}" />
+			<label>CAP</label>
+			<input [(ngModel)]="selectedAddress.postalCode" (ngModelChange)="onPostalChange($event)" [ngModelOptions]="{standalone: true}" />
+			<div *ngIf="postalError" class="field-error">{{ postalError }}</div>
+			<label>Telefono</label>
+			<input [(ngModel)]="selectedAddress.phone" [ngModelOptions]="{standalone: true}" />
+			<div class="actions">
+				<button class="primary" type="button" (click)="saveEditedAddress()" [disabled]="!isPostalValid && selectedAddress">Salva</button>
+				<button class="secondary" type="button" (click)="cancelEdit()">Annulla</button>
+			</div>
+		</div>
 </div>
+
