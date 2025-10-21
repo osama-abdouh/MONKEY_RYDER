@@ -207,12 +207,27 @@ exports.saveAddress = async function(req, res) {
     let conn;
     try {
         const userId = req.user && req.user.userId;
-        if (!userId) return res.status(401).json({ message: 'Utente non autenticato' });
+        // debug: log who is calling and the payload
         const payload = req.body || {};
+        console.log('saveAddress called. userId:', userId, 'payload:', payload);
+        if (!userId) {
+            console.warn('saveAddress: missing userId on request');
+            return res.status(401).json({ message: 'Utente non autenticato' });
+        }
         // basic validation
         if (!payload.address || !payload.city) return res.status(400).json({ message: 'address e city sono obbligatori' });
+        // normalize postal code field names and validate: must be exactly 5 digits
+        const postalCode = payload.postalCode || payload.postal_code || payload.cap || null;
+        if (!postalCode || !/^[0-9]{5}$/.test(String(postalCode))) return res.status(400).json({ message: 'CAP invalido: deve contenere esattamente 5 cifre' });
         conn = await db.getConnection();
-        const result = await userDAO.createAddress(conn, userId, payload);
+        let result = await userDAO.createAddress(conn, userId, payload);
+        console.log('userDAO.createAddress result:', result && (result.created ? 'created' : result.existed ? 'existed' : 'unknown'), result && result.row ? result.row : 'no-row');
+        if (!result) {
+            // fallback: try direct creation which will create the 'addresses' table if missing
+            console.warn('controller.userController.saveAddress: createAddress returned null, trying createAddressDirect');
+            result = await userDAO.createAddressDirect(conn, userId, payload);
+            console.log('userDAO.createAddressDirect result:', result && (result.created ? 'created' : result.existed ? 'existed' : 'unknown'), result && result.row ? result.row : 'no-row');
+        }
         if (!result) return res.status(500).json({ message: 'Creazione indirizzo fallita' });
         if (result.existed) {
             return res.status(200).json({ message: 'Indirizzo già presente', address: result.row });
@@ -225,6 +240,133 @@ exports.saveAddress = async function(req, res) {
     } catch (error) {
         console.error('controller/userController.js saveAddress', error);
         res.status(500).json({ message: 'Save address failed', error: error.message });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+// Direct creation endpoint: uses DAO.createAddressDirect which ensures 'addresses' table exists
+exports.saveAddressDirect = async function(req, res) {
+    let conn;
+    try {
+        const userId = req.user && req.user.userId;
+        if (!userId) return res.status(401).json({ message: 'Utente non autenticato' });
+        const payload = req.body || {};
+        // basic validation
+        if (!payload.address || !payload.city) return res.status(400).json({ message: 'address e city sono obbligatori' });
+        const postalCode = payload.postalCode || payload.postal_code || payload.cap || null;
+        if (!postalCode || !/^[0-9]{5}$/.test(String(postalCode))) return res.status(400).json({ message: 'CAP invalido: deve contenere esattamente 5 cifre' });
+        conn = await db.getConnection();
+        const result = await userDAO.createAddressDirect(conn, userId, payload);
+        if (!result) return res.status(500).json({ message: 'Creazione indirizzo fallita' });
+        if (result.existed) {
+            return res.status(200).json({ message: 'Indirizzo già presente', address: result.row });
+        }
+        if (result.created) {
+            return res.status(201).json(result.row);
+        }
+        return res.status(200).json(result.row || {});
+    } catch (error) {
+        console.error('controller/userController.js saveAddressDirect', error);
+        res.status(500).json({ message: 'Save address direct failed', error: error.message });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+exports.updateAddress = async function(req, res) {
+    let conn;
+    try {
+        const userId = req.user && req.user.userId;
+        if (!userId) return res.status(401).json({ message: 'Utente non autenticato' });
+        const addrId = req.params.id;
+        if (!addrId) return res.status(400).json({ message: 'Missing address id' });
+        const payload = req.body || {};
+        if (!payload.address || !payload.city) return res.status(400).json({ message: 'address e city sono obbligatori' });
+        const postalCode = payload.postalCode || payload.postal_code || payload.cap || null;
+        if (!postalCode || !/^[0-9]{5}$/.test(String(postalCode))) return res.status(400).json({ message: 'CAP invalido: deve contenere esattamente 5 cifre' });
+        conn = await db.getConnection();
+        const updated = await userDAO.updateAddressById(conn, userId, addrId, payload);
+        if (!updated) return res.status(404).json({ message: 'Address not found or not owned by user' });
+        return res.json(updated);
+    } catch (error) {
+        console.error('controller/userController.js updateAddress', error);
+        return res.status(500).json({ message: 'Failed to update address', error: error.message });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+// Delete an address by id for the authenticated user
+exports.deleteAddress = async function(req, res) {
+    let conn;
+    try {
+        const userId = req.user && req.user.userId;
+        if (!userId) return res.status(401).json({ message: 'Utente non autenticato' });
+        const addrId = req.params.id;
+        if (!addrId) return res.status(400).json({ message: 'Missing address id' });
+        conn = await db.getConnection();
+        const deleted = await userDAO.deleteAddressById(conn, userId, addrId);
+        if (!deleted) return res.status(404).json({ message: 'Address not found or not owned by user' });
+        return res.json({ deleted: true, id: addrId });
+    } catch (error) {
+        console.error('controller/userController.js deleteAddress', error);
+        return res.status(500).json({ message: 'Failed to delete address', error: error.message });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+// Restituisce i dati dell'utente attualmente autenticato (/user/me)
+exports.getCurrentUser = async function(req, res) {
+    let conn;
+    try {
+        const userId = req.user && (req.user.userId || req.user.id);
+        if (!userId) return res.status(401).json({ message: 'Utente non autenticato' });
+        conn = await db.getConnection();
+        const user = await userDAO.findUserById(conn, userId);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        // rimuovi campi sensibili
+        if (user.password_hash) delete user.password_hash;
+        res.json(user);
+    } catch (error) {
+        console.error('controller/userController.js getCurrentUser', error);
+        res.status(500).json({ message: 'Failed to get current user', error: error.message });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+// Aggiorna i campi editabili dell'utente autenticato (/user/me PATCH)
+exports.patchCurrentUser = async function(req, res) {
+    let conn;
+    try {
+        const userId = req.user && (req.user.userId || req.user.id);
+        if (!userId) return res.status(401).json({ message: 'Utente non autenticato' });
+        const payload = req.body || {};
+        // Permetti solo campi sicuri
+        const allowed = ['first_name','last_name','email','phone','birth_date'];
+        const updates = {};
+        allowed.forEach(k => {
+            if (payload[k] !== undefined) {
+                // evita di passare stringhe vuote per il tipo date (Postgres fallisce)
+                if (k === 'birth_date' && payload[k] === '') {
+                    updates[k] = null;
+                } else {
+                    updates[k] = payload[k];
+                }
+            }
+        });
+        if (!Object.keys(updates).length) return res.status(400).json({ message: 'Nessun campo valido da aggiornare' });
+
+        conn = await db.getConnection();
+        const updated = await userDAO.updateUserFields(conn, userId, updates);
+        if (!updated) return res.status(404).json({ message: 'User not found or update failed' });
+        if (updated.password_hash) delete updated.password_hash;
+        res.json(updated);
+    } catch (error) {
+        console.error('controller/userController.js patchCurrentUser', error);
+        res.status(500).json({ message: 'Failed to patch current user', error: error.message });
     } finally {
         if (conn) conn.done();
     }

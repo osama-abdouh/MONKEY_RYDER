@@ -63,7 +63,7 @@
                 </div>
               }
             </div>
-            <button class="whishlist-btn" routerLink="/wishlist">
+            <button class="whishlist-btn" [routerLink]="['/profile']" [queryParams]="{ view: 'wishlist' }">
               <img src="assets/icone/heart.svg" alt="Wishlist" class="wishlist-icon"/>
             </button>
             <button class="cart-btn" routerLink="/cart">

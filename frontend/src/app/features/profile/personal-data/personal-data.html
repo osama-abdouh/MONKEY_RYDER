@@ -1,12 +1,102 @@
-<form [formGroup]="personalForm" (ngSubmit)="onSubmit()">
-  <label>Nome</label>
-  <input formControlName="name" type="text" placeholder="Nome" />
+<div class="personal-data" style="display: flex; flex-direction: column; gap: 16px;">
+	<div class="profile-header">
+		<div class="avatar">{{ personalForm.get('first_name')?.value?.charAt(0) || 'U' }}</div>
+		<div class="profile-meta">
+			<div class="profile-name">{{ personalForm.get('first_name')?.value }} {{ personalForm.get('last_name')?.value }}</div>
+			<div class="profile-email">{{ personalForm.get('email')?.value }}</div>
+			<div class="badges">
+				<span class="badge role">{{ personalForm.get('role')?.value }}</span>
+				<span class="badge status">{{ personalForm.get('account_status')?.value }}</span>
+			</div>
+		</div>
+	</div>
 
-  <label>Email</label>
-  <input formControlName="email" type="email" placeholder="Email" />
+	<h3 class="sr-only">Dati personali</h3>
 
-  <label>Telefono</label>
-  <input formControlName="phone" type="tel" placeholder="Telefono" />
+	<div *ngIf="loading">Caricamento in corso...</div>
+	<div *ngIf="error" class="error">{{ error }}</div>
 
-  <button type="submit" [disabled]="personalForm.invalid">Aggiorna dati</button>
-</form>
+		<form [formGroup]="personalForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+			<div style="margin-bottom: 0;">
+				<div *ngIf="!editing" class="display-row">
+					<label>Nome</label>
+					<div class="value-display">{{ personalForm.get('first_name')?.value || '-' }}</div>
+				</div>
+				<input *ngIf="editing" formControlName="first_name" />
+			</div>
+			<div class="cognome-block" style="margin-bottom: 0;">
+				<div *ngIf="!editing" class="display-row">
+					<label>Cognome</label>
+					<div class="value-display">{{ personalForm.get('last_name')?.value || '-' }}</div>
+				</div>
+
+				<!-- email & phone nested under cognome when not editing -->
+				<div *ngIf="!editing" class="sub-rows">
+					<div class="sub-row">
+						<label>Email</label>
+						<div class="value-display">{{ personalForm.get('email')?.value || '-' }}</div>
+					</div>
+					<div class="sub-row">
+						<label>Telefono</label>
+						<div class="value-display">{{ personalForm.get('phone')?.value || '-' }}</div>
+					</div>
+				</div>
+
+				<!-- when editing, show inputs grouped for better UX -->
+				<div *ngIf="editing" class="edit-inputs" style="display: flex; flex-direction: column; gap: 16px;">
+					<input formControlName="last_name" placeholder="Cognome" />
+					<input formControlName="email" placeholder="Email" />
+					<input formControlName="phone" placeholder="Telefono" />
+				</div>
+			</div>
+
+			<div style="margin-bottom: 0;">
+				<div *ngIf="!editing" class="display-row">
+					<label>Data di nascita</label>
+					<div class="value-display">{{ formatDate(personalForm.get('birth_date')?.value) }}</div>
+				</div>
+				<input *ngIf="editing" type="date" formControlName="birth_date" />
+			</div>
+
+			<div *ngIf="!editing" class="display-row full-width" style="margin-bottom: 0;">
+				<label>Creato il</label>
+				<div class="value-display">{{ personalForm.get('created_at')?.value || '-' }}</div>
+			</div>
+			<div *ngIf="editing" style="margin-bottom: 0;">
+			<input formControlName="created_at" readonly />
+			</div>
+
+			<div class="actions" style="margin-bottom: 0;">
+				<button class="primary" *ngIf="!editing" type="button" (click)="edit()">Modifica profilo</button>
+				<button class="secondary change-pwd-btn" type="button" (click)="showPassword = !showPassword">Cambia password</button>
+				<div class="edit-actions" *ngIf="editing">
+					<button class="primary" type="button" (click)="save()" [disabled]="personalForm.invalid">Salva</button>
+					<button class="secondary" type="button" (click)="cancelEdit()">Annulla</button>
+				</div>
+			</div>
+
+			<!-- Password change form (toggle) -->
+			<div *ngIf="showPassword" class="password-change">
+				<h4 class="modifiche">Cambia password</h4>
+				<div>
+					<label>Vecchia password</label>
+					<input type="password" [(ngModel)]="oldPassword" name="oldPassword" [ngModelOptions]="{standalone: true}" />
+				</div>
+				<div>
+					<label>Nuova password</label>
+					<input type="password" [(ngModel)]="newPassword" name="newPassword" [ngModelOptions]="{standalone: true}" />
+				</div>
+				<div>
+					<label>Conferma nuova</label>
+					<input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" [ngModelOptions]="{standalone: true}" />
+				</div>
+				<div class="actions">
+					<button class="primary" type="button" (click)="onChangePassword()" [disabled]="pwdLoading">{{ pwdLoading ? 'Salvataggio...' : 'Aggiorna password' }}</button>
+					<button class="secondary" type="button" (click)="cancelChangePassword()" [disabled]="pwdLoading">Annulla</button>
+				</div>
+				<div *ngIf="pwdError" class="error">{{ pwdError }}</div>
+				<div *ngIf="pwdSuccess" class="success">{{ pwdSuccess }}</div>
+			</div>
+		</form>
+</div>
+

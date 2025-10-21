@@ -52,4 +52,12 @@ export class AuthService {
       })
     );
   }
+
+  // Cambia password per l'utente autenticato
+  changePassword(oldPassword: string, newPassword: string) {
+    const token = this.session.getToken();
+    if (!token) throw new Error('Not authenticated');
+    const headers = { Authorization: `Bearer ${token}` } as any;
+    return this.http.post(`${this.apiUrl}/change-password`, { oldPassword, newPassword }, { headers });
+  }
 }
