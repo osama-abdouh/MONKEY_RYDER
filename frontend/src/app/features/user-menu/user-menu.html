@@ -4,7 +4,7 @@
 </div>
 <div class="menu-content">
     <a routerLink="/profile" class="dropdown-item" (click)="closeDropdown()">Profilo</a>
-  <a routerLink="/ordini" class="dropdown-item" (click)="closeDropdown()">Ordini</a>
+  <a [routerLink]="['/profile']" [queryParams]="{ view: 'orders' }" class="dropdown-item" (click)="closeDropdown()">Ordini</a>
     <a (click)="authService.logout(); closeDropdown()" class="dropdown-item">Logout</a>
 </div>
 <div class="menu-footer">

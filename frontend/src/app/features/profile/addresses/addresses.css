@@ -1,12 +1,187 @@
-.addresses-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+.addresses {
+  padding: 1rem;
 }
 
+/* Center the addresses card and its content */
+.addresses {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center children horizontally */
+}
+
+/* Limit inner list and edit form width so they're centered */
+.addresses .addresses-list,
+.addresses .address-edit {
+  width: 100%;
+  max-width: 800px; /* increased to make address cards wider */
+}
+
+.addresses-controls {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.8rem;
+}
+
+.addresses-controls .add-address {
+  background: linear-gradient(135deg, #8A9B68 0%, #8A9B68 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.addresses-controls .add-address:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.14);
+}
+
+.addresses-controls .add-address:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.addresses h3 {
+  text-align: center;
+  width: 100%;
+}
+
+/* Larger heading and extra spacing */
+.addresses h3 {
+  font-size: 1.4rem; /* larger */
+  font-weight: 700;
+  margin-bottom: 2rem; /* space under the heading */
+}
+
+/* Extra gap between the buttons list and any preceding text like 'I miei ordini' */
+.addresses .addresses-list {
+  margin-top: 0.75rem;
+}
 .address-item {
-  padding: 1rem;
-  border: 1px solid #ddd;
+  background: #2e3340;
+  padding: 3rem 1.7rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  color: #eaeaea;
+}
+.address-btn {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #444444;
+  background: #444444;
+  color: #eaeaea;
+  padding: 2rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.address-btn:hover {
+  background: #3b3b3b;
+}
+.address-btn.selected {
+  outline: 2px solid rgba(138,155,104,0.35);
+  box-shadow: 0 0 12px r#444444;
+}
+
+/* position delete X to the right side of the card */
+.address-item,
+.address-btn {
+  position: relative; /* establish containing block for absolute delete */
+}
+.addr-delete {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.85);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+.addr-delete:hover,
+.addr-delete:focus {
+  background: rgba(255,255,255,0.06);
+  color: #8A9B68; /* green on hover as requested */
+  outline: none;
+}
+
+/* ensure delete is visible on small widths by reducing padding on address content */
+.address-btn .addr-line,
+.address-btn .addr-meta {
+  padding-right: 40px; /* avoid overlap with the delete icon */
+}
+
+.address-edit {
+  margin-top: 1rem;
+  background: #444444;
+  padding: 2rem;
+  border-radius: 8px;
+}
+.address-edit label {
+  display: block;
+  color: #8A9B68;
+  margin-top: 0.6rem;
+}
+.address-edit input {
+  width: 100%;
+  padding: 1rem 1rem;
+  margin-top: 0.35rem;
   border-radius: 6px;
-  background-color: #fafafa;
+  border: 1px solid rgba(255,255,255,0.04);
+  background: #161616;
+  color: #fff;
+}
+
+/* Style buttons inside the inline edit form to match app aesthetic */
+.address-edit .actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: flex-end;
+  margin-top: 0.9rem;
+}
+.address-edit .primary {
+  background: #161616;
+  color: #fff;
+  border: none;
+  padding: 1rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  min-width: 120px;
+}
+.address-edit .primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+}
+.address-edit .secondary {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(138,155,104,0.22);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 110px;
+}
+.address-edit .secondary:hover {
+  background: #3b3b3b;
+}
+.addr-line {
+  font-size: 0.95rem;
+}
+.addr-meta {
+  font-size: 0.85rem;
+  color: #b3b3b3;
 }

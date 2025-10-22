@@ -115,6 +115,22 @@ const deleteOrdersByUser = async function (connection, userId) {
   return true;
 };
 
+// Aggiorna campi permessi di un utente (first_name, last_name, email, phone, birth_date)
+const updateUserFields = async function(connection, userId, fields = {}) {
+  const allowed = ['first_name', 'last_name', 'email', 'phone', 'birth_date'];
+  const keys = Object.keys(fields || {}).filter(k => allowed.includes(k));
+  if (!keys.length) return null;
+
+  const sets = keys.map((k, idx) => `${k} = $${idx + 1}`);
+  const params = keys.map(k => fields[k]);
+  // userId param at the end
+  params.push(userId);
+
+  const sql = `UPDATE users SET ${sets.join(', ')} WHERE user_id = $${params.length} RETURNING *`;
+  const rows = await db.execute(connection, sql, params);
+  return rows[0] || null;
+};
+
 const ordersCountPerUser = async function (connection) {
   // Conta il numero di ordini per ogni utente (inclusi utenti senza ordini)
   const sql = `
@@ -132,8 +148,7 @@ const ordersCountPerUser = async function (connection) {
 
 module.exports = { 
   getAllUsers, findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, 
-  RecentOrders, updateAccountStatus, updateUserRole, ordersCountPerUser, deleteUser, deleteOrdersByUser };
-
+  RecentOrders, updateAccountStatus, updateUserRole, ordersCountPerUser, deleteUser, deleteOrdersByUser, updateUserFields };
 // Return addresses for a specific user (attempt common Italian table 'indirizzi')
 const findAddressesByUser = async function(connection, userId) {
   // Try common Italian schema first
@@ -160,13 +175,29 @@ const findAddressesByUser = async function(connection, userId) {
 
 module.exports.findAddressesByUser = findAddressesByUser;
 
+// Controlla se un utente (user_id) ha ruolo 'admin'
+const isUserAdmin = async function(connection, userId) {
+  if (!userId) return false;
+  try {
+    const rows = await db.execute(connection, 'SELECT role FROM users WHERE user_id = $1', [userId]);
+    if (!rows || !rows[0]) return false;
+    const role = rows[0].role || null;
+    return role === 'admin';
+  } catch (err) {
+    console.error('userDAO.isUserAdmin error', err && err.message ? err.message : err);
+    return false;
+  }
+};
+
+module.exports.isUserAdmin = isUserAdmin;
+
 // Create a new address for a user. Try italian 'indirizzi' table first, fallback to 'addresses'.
 const createAddress = async function(connection, userId, addr) {
   // normalize incoming fields
   const fullName = addr.fullName || addr.name || addr.label || null;
-  const address = addr.address || addr.street || null;
-  const city = addr.city || null;
-  const postalCode = addr.postalCode || addr.zip || addr.cap || null;
+  const address = (addr.address || addr.street || '').trim();
+  const city = (addr.city || '').trim();
+  const postalCode = (addr.postalCode || addr.postal_code || addr.zip || addr.cap || '').toString().trim();
   const phone = addr.phone || null;
 
   // Try to find existing in italian table
@@ -175,7 +206,7 @@ const createAddress = async function(connection, userId, addr) {
     const exists = await db.execute(connection, checkIt, [userId, address || '', city || '', postalCode || '']);
     if (exists && exists[0]) return { existed: true, row: exists[0] };
   } catch (err) {
-    // ignore and continue to try insert/fallback
+    // ignore and continue to try english-style table
   }
 
   // Try insert into italian table
@@ -185,6 +216,17 @@ const createAddress = async function(connection, userId, addr) {
     if (rows && rows[0]) return { created: true, row: rows[0] };
   } catch (err) {
     console.warn('userDAO.createAddress: inserimento indirizzi fallito, provando fallback addresses table', err.message);
+    // If failure due to NOT NULL cap (missing postal code in italian table), retry with empty cap to allow creation
+    try {
+      const isNotNullCap = err && (err.code === '23502' || /null value in column "cap" violates/i.test(err.message || ''));
+      if (isNotNullCap) {
+        console.warn('userDAO.createAddress: retrying italian insert with empty cap to satisfy NOT NULL constraint');
+        const rowsRetry = await db.execute(connection, sqlIt, [userId, fullName, address, city, '', phone]);
+        if (rowsRetry && rowsRetry[0]) return { created: true, row: rowsRetry[0] };
+      }
+    } catch (retryErr) {
+      console.error('userDAO.createAddress: retry italian insert failed', retryErr && retryErr.message ? retryErr.message : retryErr);
+    }
   }
 
   // Fallback to english-style table
@@ -209,3 +251,106 @@ const createAddress = async function(connection, userId, addr) {
 };
 
 module.exports.createAddress = createAddress;
+
+// Create an address in the canonical 'addresses' table, creating the table if missing.
+const createAddressDirect = async function(connection, userId, addr) {
+  const fullName = addr.fullName || addr.name || addr.label || null;
+  const address = addr.address || addr.street || null;
+  const city = addr.city || null;
+  const postalCode = addr.postalCode || addr.postal_code || addr.zip || addr.cap || null;
+  const phone = addr.phone || null;
+
+  // Ensure the english-style table exists (minimal schema)
+  const createSql = `CREATE TABLE IF NOT EXISTS addresses (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER,
+    label TEXT,
+    address TEXT,
+    city TEXT,
+    postal_code TEXT,
+    phone TEXT,
+    created_at TIMESTAMP DEFAULT now()
+  )`;
+  try {
+    await db.execute(connection, createSql);
+  } catch (err) {
+    console.error('userDAO.createAddressDirect: failed to create addresses table', err && err.message ? err.message : err);
+    return null;
+  }
+
+  const sqlEn = `INSERT INTO addresses (user_id, label, address, city, postal_code, phone) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`;
+  try {
+    const rows = await db.execute(connection, sqlEn, [userId, fullName, address, city, postalCode, phone]);
+    if (rows && rows[0]) return { created: true, row: rows[0] };
+  } catch (err) {
+    console.error('userDAO.createAddressDirect: insert failed', err && err.message ? err.message : err);
+  }
+
+  return null;
+};
+
+module.exports.createAddressDirect = createAddressDirect;
+
+// Update an address by id ensuring it belongs to the provided userId.
+const updateAddressById = async function(connection, userId, addrId, addr) {
+  const fullName = addr.fullName || addr.label || null;
+  const address = addr.address || null;
+  const city = addr.city || null;
+  const postalCode = addr.postalCode || addr.postal_code || addr.cap || null;
+  const phone = addr.phone || null;
+
+  // Try italian table first: update where id and user_id match
+  try {
+    const sqlIt = `UPDATE indirizzi SET nome_campanello = $1, indirizzo = $2, citta = $3, cap = $4, telefono = $5 WHERE id = $6 AND user_id = $7 RETURNING *`;
+    const paramsIt = [fullName, address, city, postalCode, phone, addrId, userId];
+    const rowsIt = await db.execute(connection, sqlIt, paramsIt);
+    if (rowsIt && rowsIt[0]) {
+      const r = rowsIt[0];
+      return { id: r.id, fullName: r.nome_campanello || r.fullName, address: r.indirizzo || r.address, city: r.citta || r.city, postalCode: r.cap || r.postalCode, phone: r.telefono || r.phone };
+    }
+  } catch (err) {
+    // ignore and try english table
+  }
+
+  // Try english-style table
+  try {
+    const sqlEn = `UPDATE addresses SET label = $1, address = $2, city = $3, postal_code = $4, phone = $5 WHERE id = $6 AND user_id = $7 RETURNING *`;
+    const paramsEn = [fullName, address, city, postalCode, phone, addrId, userId];
+    const rowsEn = await db.execute(connection, sqlEn, paramsEn);
+    if (rowsEn && rowsEn[0]) {
+      const r = rowsEn[0];
+      return { id: r.id, fullName: r.label || r.fullName, address: r.address, city: r.city, postalCode: r.postal_code || r.postalCode, phone: r.phone };
+    }
+  } catch (err2) {
+    console.error('userDAO.updateAddressById error', err2.message);
+  }
+
+  return null;
+};
+
+module.exports.updateAddressById = updateAddressById;
+
+// Delete an address by id ensuring it belongs to the provided userId.
+const deleteAddressById = async function(connection, userId, addrId) {
+  // Try italian table first
+  try {
+    const sqlIt = `DELETE FROM indirizzi WHERE id = $1 AND user_id = $2 RETURNING *`;
+    const rowsIt = await db.execute(connection, sqlIt, [addrId, userId]);
+    if (rowsIt && rowsIt[0]) return true;
+  } catch (err) {
+    // ignore and try english table
+  }
+
+  // Try english-style table
+  try {
+    const sqlEn = `DELETE FROM addresses WHERE id = $1 AND user_id = $2 RETURNING *`;
+    const rowsEn = await db.execute(connection, sqlEn, [addrId, userId]);
+    if (rowsEn && rowsEn[0]) return true;
+  } catch (err2) {
+    console.error('userDAO.deleteAddressById error', err2 && err2.message ? err2.message : err2);
+  }
+
+  return false;
+}
+
+module.exports.deleteAddressById = deleteAddressById;

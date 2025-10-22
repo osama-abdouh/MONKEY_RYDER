@@ -36,6 +36,16 @@ export class UserService {
         }
         return this.http.get<User[]>(url);
     }
+    // Get current authenticated user (uses protected endpoint /user/me)
+    getCurrentUser(): Observable<User> {
+        return this.http.get<User>(`${this.apiUrl}/user/me`);
+    }
+
+    // Patch current authenticated user
+    patchCurrentUser(payload: Partial<User>): Observable<User> {
+        return this.http.patch<User>(`${this.apiUrl}/user/me`, payload);
+    }
+
     getUserById(id: number): Observable<User> {
         return this.http.get<User>(`${this.apiUrl}/user/${id}`);
     }
@@ -85,4 +95,30 @@ export class UserService {
         const qs = cascade ? '?cascade=true' : '';
         return this.http.delete<any>(`${this.apiUrl}/user/${userId}${qs}`);
     }
+    
+    // Get saved addresses for current authenticated user
+    getSavedAddresses(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/users/addresses`);
+    }
+
+    // Save (create) an address for the authenticated user
+    saveAddress(payload: any): Observable<any> {
+        return this.http.post<any>(`${this.apiUrl}/users/addresses`, payload);
+    }
+
+    // Save (create) an address using the direct endpoint that will create the table if missing
+    saveAddressDirect(payload: any): Observable<any> {
+        return this.http.post<any>(`${this.apiUrl}/users/addresses/direct`, payload);
+    }
+    
+    // Update an existing address by id for the authenticated user
+    updateAddress(id: number | string, payload: any): Observable<any> {
+        return this.http.put<any>(`${this.apiUrl}/users/addresses/${id}`, payload);
+    }
+
+    // Delete an address by id for the authenticated user
+    deleteAddress(id: number | string): Observable<any> {
+        return this.http.delete<any>(`${this.apiUrl}/users/addresses/${id}`);
+    }
+    
 }
