@@ -13,6 +13,11 @@ import { ProductDetailComponent } from './features/product-detail/product-detail
 import { Gestione } from './features/gestione/gestione';
 import { Modifiche } from './features/modifiche/modifiche';
 import { Orfini } from './features/orfini/orfini';
+import { AdminComponent } from './features/admin/admin';
+import { UsersManagementComponent } from './features/admin/users-management/users-management';
+import { OrdersManagementComponent } from './features/admin/orders-management/orders-management';
+import { ProductsManagementComponent } from './features/admin/products-management/products-management';
+import { CouponsManagementComponent } from './features/admin/coupons-management/coupons-management';
 
 
 export const routes: Routes = [
@@ -26,12 +31,16 @@ export const routes: Routes = [
     { path: 'contact-us', component: ContactUsComponent },
     { path: 'profile', component: ProfileComponent },
     { path: 'product-list', component: ProductListComponent },
-
     { path: 'ordini', component: Orfini },
-
     { path: 'product/:id', component: ProductDetailComponent }, // Rotta per i dettagli del prodotto
-
     { path: 'gestione', component: Gestione },
+    { path: 'admin', component: AdminComponent , children: [
+        { path: 'users', component: UsersManagementComponent },
+        { path: 'orders', component: OrdersManagementComponent },
+        { path: 'products', component: ProductsManagementComponent },
+        { path: 'coupons', component: CouponsManagementComponent },
+        { path: '', redirectTo: 'users', pathMatch: 'full' }
+    ]},
     { path: 'modifiche', component: Modifiche },
     { path: '**', redirectTo: '' } // Rotta di fallback per URL non validi
 ];

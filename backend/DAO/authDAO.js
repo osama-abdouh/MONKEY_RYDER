@@ -43,4 +43,15 @@ const findUserById = async function (connection, userId) {
   return rows[0] || null;
 };
 
-module.exports = { createUser, findUserByEmail, findUsers, findUserById };
+const updateLastLogin = async function (connection, userId) {
+  const query = `UPDATE users
+              SET last_login = NOW() 
+              WHERE user_id = $1 
+              RETURNING user_id, last_login`;
+  const params = [userId];
+  const rows = await db.execute(connection, query, params);
+  
+  return rows && rows[0] ? rows[0] : null;
+};
+
+module.exports = { createUser, findUserByEmail, findUsers, findUserById, updateLastLogin };

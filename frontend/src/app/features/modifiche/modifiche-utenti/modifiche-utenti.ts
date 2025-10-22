@@ -55,7 +55,7 @@ export class ModificheUtenti {
   loadUsers(): void {
     this.loading = true;
     this.error = null;
-    this.userService.getUsersAll().subscribe({
+    this.userService.getUsers().subscribe({
       next: (data) => {
         this.users = data || [];
         // fetch orders count and merge

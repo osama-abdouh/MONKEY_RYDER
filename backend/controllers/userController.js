@@ -1,7 +1,67 @@
 const db = require('../services/db');
 const userDAO = require('../DAO/userDAO');
+const bcrypt = require('bcrypt');
 
+// Recupero di tutti gli utenti
 exports.getAllUsers = async function (req, res) {
+    let conn;
+    try {
+        conn = await db.getConnection();
+        res.json(await userDAO.getAllUsers(conn, req.query));
+    } catch (error) {
+        console.error('controller/userController.js', error);
+        res.status(500).json({ 
+            message: 'User endpoint failed', 
+            error: error.message 
+        });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+// Creazione di un nuovo utente
+exports.createUser = async function (req, res) {
+    let conn;
+    try {
+        const { first_name, last_name, email, password, role, birth_date, phone_number, account_status } = req.body;
+        // Validatori di base
+        if (!first_name || !last_name || !email || !password) {
+            return res.status(400).json({ message: 'Campi obbligatori mancanti' });
+        }
+        conn = await db.getConnection();
+        const hashed = await bcrypt.hash(password, 10);
+
+        const user = { 
+            email,
+            password_hash: hashed,
+            first_name,
+            last_name,
+            birth_date: birth_date || null,
+            phone_number: phone_number || null,
+            role: role || 'customer',
+            account_status: account_status || 'active'
+        };
+
+        const created = await userDAO.createUser(conn, user);
+
+        if (created) {
+            console.log(`User ${email} created successfully.`);
+            return res.status(201).json({ message: 'Utente creato con successo' });
+        } else {
+            return res.status(500).json({ message: 'Creazione utente fallita' });
+        }
+    } catch (error) {
+        console.error('controller/userController.js', error);
+        res.status(500).json({ 
+            message: 'User endpoint failed', 
+            error: error.message 
+        });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+//???
+exports.getUsers = async function (req, res) {
     let conn;
     try {
         conn = await db.getConnection();

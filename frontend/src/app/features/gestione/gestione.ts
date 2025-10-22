@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService, User } from '../../services/user.service';
+import { UserService , User } from '../../services/user.service';
 import { ProductService, LeastProduct, Category } from '../../services/product.service';
 import { ModificheUtenti } from '../modifiche/modifiche-utenti/modifiche-utenti';
 import { RouterModule, Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-gestione',
@@ -34,7 +33,7 @@ export class Gestione implements OnInit {
     this.loading = true;
     this.error = null;
     // total users across roles for the counter
-    this.userService.getUsersAll().subscribe({
+    this.userService.getAllUsers().subscribe({
       next: (all) => { this.totalUsers = (all || []).length; },
       error: (e) => { console.warn('Failed to load total users', e); this.totalUsers = 0; }
     });
