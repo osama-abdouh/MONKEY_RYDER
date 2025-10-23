@@ -129,6 +129,34 @@ exports.updateDeliveryData = async function(req, res) {
   }
 };
 
+// Get tracking events for a specific order (authenticated)
+exports.getOrderTracking = async function(req, res) {
+  let conn;
+  try {
+    const user_id = req.user && req.user.userId;
+    if (!user_id) return res.status(401).json({ message: 'Utente non autenticato' });
+    const orderId = Number(req.params.id);
+    if (!orderId) return res.status(400).json({ message: 'order id non valido' });
+    conn = await db.getConnection();
+    // verify ownership
+    const data = await require('../DAO/orderDAO').findById(conn, orderId);
+    if (!data || !data.order) return res.status(404).json({ message: 'Ordine non trovato' });
+    if (data.order.user_id !== user_id) return res.status(403).json({ message: 'Accesso negato' });
+
+  console.log('[DEBUG] getOrderTracking: verifying order ownership ok for orderId=%s userId=%s', orderId, user_id);
+  const spediDAO = require('../DAO/spediDAO');
+  const events = await spediDAO.getTrackingByOrderId(conn, orderId);
+  console.log('[DEBUG] getOrderTracking: events fetched for orderId=%s count=%s', orderId, Array.isArray(events) ? events.length : 'non-array');
+  if (Array.isArray(events) && events.length > 0) console.log('[DEBUG] getOrderTracking: first event=%o', events[0]);
+  res.json({ tracking: events });
+  } catch (error) {
+    console.error('controller/orderController.js getOrderTracking', error);
+    res.status(500).json({ message: 'Get order tracking failed', error: error.message });
+  } finally {
+    if (conn) conn.done();
+  }
+}
+
 exports.getOrdersByUser = async function(req, res) {
   let conn;
   try {

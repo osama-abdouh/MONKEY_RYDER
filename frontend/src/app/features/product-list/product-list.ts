@@ -14,7 +14,7 @@ import { WishlistManagerService } from '../../services/wishlist-manager.service'
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './product-list.html',
-  styleUrl: './product-list.css',
+  styleUrls: ['./product-list.css'],
 })
 export class ProductListComponent implements OnInit {
   products: ProductItem[] = [];

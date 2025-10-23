@@ -9,7 +9,7 @@ import { Router, RouterModule} from '@angular/router';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.html',
-  styleUrl: './register.css'
+  styleUrls: ['./register.css']
 })
 export class RegisterComponent {
   first_name: string = '';

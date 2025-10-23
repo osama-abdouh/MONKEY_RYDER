@@ -1,0 +1,55 @@
+<div class="traking-container">
+	<h2 *ngIf="orderId">Tracking ordine #{{ orderId }}</h2>
+
+	<!-- Progress bar -->
+	<div class="progress-wrapper" *ngIf="tracking">
+		<div class="progress-rail">
+			<div class="progress-fill" [style.width.%]="progressPercent"></div>
+		</div>
+		<div class="progress-steps">
+			<span *ngFor="let s of progressSteps; let i = index" class="step" [class.active]="(progressPercent >= ((i/(progressSteps.length-1))*100))">{{ s }}</span>
+		</div>
+	</div>
+
+	<div class="mt-8 delivery-actions">
+		<div class="left-column">
+			<div class="delivery-card">
+				<strong>Indirizzo di consegna</strong>
+				<div *ngIf="hasDelivery; else noDelivery">
+					<div class="delivery-line" *ngIf="delivery?.fullName">{{ delivery?.fullName }}</div>
+					<div class="delivery-line" *ngIf="delivery?.address">{{ delivery?.address }}</div>
+					<div class="delivery-line" *ngIf="delivery?.city || delivery?.postalCode">{{ delivery?.city }} {{ delivery?.postalCode }}</div>
+					<div class="delivery-line" *ngIf="delivery?.phone">Tel: {{ delivery?.phone }}</div>
+				</div>
+				<ng-template #noDelivery>
+					<div class="delivery-line muted">Nessun indirizzo di consegna trovato per questo ordine.</div>
+				</ng-template>
+			</div>
+
+			<!-- Collapsible box that appears under the card -->
+			<div class="updates-box" *ngIf="showAll">
+				<ul class="updates-list">
+					<li *ngFor="let ev of tracking" class="update-row">
+						<div class="u-date">{{ ev.data_evento | date:'dd/MM/yyyy HH:mm' }}</div>
+						<div class="u-body">
+							<ul class="u-info-list">
+								<div class="u-status"><strong>{{ ev.stato_pacco || '-' }}</strong></div>
+								<div class="u-location">{{ ev.localita ? (ev.localita + ': ' + (ev.note || '')) : (ev.note || '-') }}</div>
+								<div class="u-carrier" *ngIf="ev.corriere">{{ ev.corriere }}</div>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="actions-column">
+			<div *ngIf="!loading && tracking && tracking.length > 0" class="actions-row">
+				<button class="btn-track-page" (click)="toggleShowAll()">{{ showAll ? 'Nascondi aggiornamenti' : 'Visualizza tutti gli aggiornamenti' }}</button>
+				<button *ngIf="isCancellable()" class="btn-secondary" (click)="cancelOrder()">Annulla ordine</button>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="!loading && (!tracking || tracking.length === 0)">Nessun evento di tracking disponibile.</div>
+</div>
+

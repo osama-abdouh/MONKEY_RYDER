@@ -13,6 +13,7 @@ import { ProductDetailComponent } from './features/product-detail/product-detail
 import { Gestione } from './features/gestione/gestione';
 import { Modifiche } from './features/modifiche/modifiche';
 import { Orfini } from './features/orfini/orfini';
+import { Traking } from './features/traking/traking';
 
 
 export const routes: Routes = [
@@ -28,6 +29,7 @@ export const routes: Routes = [
     { path: 'product-list', component: ProductListComponent },
 
     { path: 'ordini', component: Orfini },
+    { path: 'traking/:id', component: Traking },
 
     { path: 'product/:id', component: ProductDetailComponent }, // Rotta per i dettagli del prodotto
 

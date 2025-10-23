@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-colab',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './colab.html',
-  styleUrl: './colab.css'
+  styleUrls: ['./colab.css']
 })
 export class ColabComponent {
 

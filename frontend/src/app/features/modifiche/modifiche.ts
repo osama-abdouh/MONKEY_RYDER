@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, ModificheUtenti, HighestOrder, LowestStock],
   templateUrl: './modifiche.html',
-  styleUrl: './modifiche.css'
+  styleUrls: ['./modifiche.css']
 })
 export class Modifiche {
   incomingMaxOrder: any = null;

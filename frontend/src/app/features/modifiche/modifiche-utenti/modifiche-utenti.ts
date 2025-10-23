@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './modifiche-utenti.html',
-  styleUrl: './modifiche-utenti.css'
+  styleUrls: ['./modifiche-utenti.css']
 })
 export class ModificheUtenti {
   @Input() incomingMaxOrder: any = null;

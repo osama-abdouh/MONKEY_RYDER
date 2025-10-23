@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-search',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './product-search.html',
-  styleUrl: './product-search.css'
+  styleUrls: ['./product-search.css']
 })
 export class ProductSearch {
     searchProducts(event: Event): void {
