@@ -15,7 +15,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, PersonalDataComponent, AddressesComponent, Orfini, WishlistComponent, RouterModule],
   templateUrl: './profile.html',
-  styleUrl: './profile.css'
+  styleUrls: ['./profile.css']
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;

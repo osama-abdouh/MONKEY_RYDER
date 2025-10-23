@@ -8,7 +8,7 @@ import { ProductService, Category, Product, DbColumn } from '../../../services/p
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './lowest-stock.html',
-  styleUrl: './lowest-stock.css'
+  styleUrls: ['./lowest-stock.css']
 })
 export class LowestStock implements OnInit {
   @Input() incomingProduct: any = null;

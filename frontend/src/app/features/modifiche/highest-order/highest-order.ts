@@ -8,7 +8,7 @@ import { OrderService, OrderDTO } from '../../../services/order.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './highest-order.html',
-  styleUrl: './highest-order.css'
+  styleUrls: ['./highest-order.css']
 })
 export class HighestOrder implements OnInit {
   @Input() incomingMaxOrder: any = null;
@@ -42,7 +42,8 @@ export class HighestOrder implements OnInit {
 
   cancel(o: OrderDTO): void {
     if (!o || !o.id_ordine) return;
-    if ((o.stato || '').toLowerCase() !== 'pending' && (o.stato || '').toLowerCase() !== 'in attesa') return;
+    const st = (o.stato_pacco_latest || '').toLowerCase();
+    if (st !== 'pending' && st !== 'in attesa' && st !== 'in transito' && st !== 'spedito') return;
     this.isLoading = true;
     this.orderService.cancelOrder(o.id_ordine).subscribe({
       next: () => { this.loadOrders(); },

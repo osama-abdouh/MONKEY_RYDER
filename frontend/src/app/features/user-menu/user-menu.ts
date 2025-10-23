@@ -9,7 +9,7 @@ import { UserService, User } from '../../services/user.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './user-menu.html',
-  styleUrl: './user-menu.css'
+  styleUrls: ['./user-menu.css']
 })
 export class UserMenuComponent {
   @Input() closeDropdown!: () => void;

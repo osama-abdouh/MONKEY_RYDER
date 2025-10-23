@@ -21,7 +21,7 @@
         <td>{{ o.id_ordine }}</td>
         <td>{{ o.datas | date:'short' }}</td>
         <td>{{ formatCurrency(o.prezzo) }}</td>
-        <td>{{ o.stato || '-' }}</td>
+  <td>{{ o.stato_pacco_latest || '-' }}</td>
         <td>
           <div *ngIf="o.payment_status">{{ o.payment_status }}</div>
           <div *ngIf="o.payment_provider">{{ o.payment_provider }}</div>
@@ -45,13 +45,15 @@
         <div class="order-meta">
           <p><strong>Data:</strong> {{ selectedOrderDetails.order.datas | date:'full' }}</p>
           <p><strong>Prezzo:</strong> {{ formatCurrency(selectedOrderDetails.order.prezzo) }}</p>
-          <p><strong>Stato:</strong> {{ selectedOrderDetails.order.stato }}</p>
+          <p><strong>Stato:</strong> {{ selectedOrderDetails.order.stato_pacco_latest || '-' }}</p>
           <p *ngIf="selectedOrderDetails.order.delivery_address"><strong>Indirizzo:</strong> {{ selectedOrderDetails.order.delivery_address }}, {{ selectedOrderDetails.order.delivery_city }} {{ selectedOrderDetails.order.delivery_postal_code }}</p>
         </div>
 
           <!-- show cancel button only when order is pending -->
           <div style="text-align:left; margin:8px 0;">
             <button *ngIf="isOrderPending()" class="btn-cancel" (click)="cancelOrder()">Annulla ordine</button>
+            <!-- Traking button -->
+            <a [routerLink]="['/traking', selectedOrderDetails.order.id_ordine]" class="btn-track">Traccia ordine</a>
           </div>
         <br>
         <hr>

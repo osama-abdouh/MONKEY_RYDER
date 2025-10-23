@@ -16,6 +16,9 @@ router.get('/orders/mine', authenticateToken, orderController.getOrdersByUser);
 // GET /api/orders/:id -> get details for a specific order (authenticated)
 router.get('/orders/:id', authenticateToken, orderController.getOrderDetails);
 
+// GET /api/orders/:id/tracking -> get tracking events for an order (authenticated)
+router.get('/orders/:id/tracking', authenticateToken, orderController.getOrderTracking);
+
 // PATCH /api/orders/:id/cancel -> cancel a pending order by id
 router.patch('/orders/:id/cancel', orderController.cancelOrder);
 

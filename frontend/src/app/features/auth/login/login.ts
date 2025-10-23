@@ -11,7 +11,7 @@ import { SessionService } from '../../../services/session.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrls: ['./login.css']
 })
 export class LoginComponent {
   loginForm: FormGroup;

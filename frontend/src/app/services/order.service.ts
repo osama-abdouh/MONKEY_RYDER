@@ -14,6 +14,7 @@ export interface OrderDTO {
   payment_provider?: string;
   payment_ref?: string;
   payment_status?: string;
+  stato_pacco_latest?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -49,6 +50,15 @@ export class OrderService {
   // Ottiene i dettagli di un singolo ordine (order + items)
   getOrderDetails(orderId: number, token?: string): Observable<any> {
     const url = `${this.apiUrl}/orders/${orderId}`;
+    if (token) {
+      return this.http.get<any>(url, { headers: { Authorization: `Bearer ${token}` } as any });
+    }
+    return this.http.get<any>(url);
+  }
+
+  // Ottiene gli eventi di tracking per un ordine
+  getOrderTracking(orderId: number, token?: string): Observable<any> {
+    const url = `${this.apiUrl}/orders/${orderId}/tracking`;
     if (token) {
       return this.http.get<any>(url, { headers: { Authorization: `Bearer ${token}` } as any });
     }

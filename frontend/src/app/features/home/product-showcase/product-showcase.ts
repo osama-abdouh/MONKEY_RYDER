@@ -10,7 +10,7 @@ import { WishlistManagerService } from '../../../services/wishlist-manager.servi
   standalone: true,
   imports: [CommonModule],
   templateUrl: './product-showcase.html',
-  styleUrl: './product-showcase.css',
+  styleUrls: ['./product-showcase.css'],
 })
 export class ProductShowcase implements OnInit {
   products: ShowcaseProduct[] = [];

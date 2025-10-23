@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WishlistService } from '../../services/wishlist.service';
 import { ProductItem } from '../../models/product.model';
@@ -7,9 +7,9 @@ import { ProductItem } from '../../models/product.model';
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, NgIf, NgForOf, FormsModule],
   templateUrl: './wishlist.html',
-  styleUrl: './wishlist.css',
+  styleUrls: ['./wishlist.css'],
 })
 export class WishlistComponent implements OnInit {
   wishlist: ProductItem[] = [];
@@ -80,5 +80,28 @@ export class WishlistComponent implements OnInit {
 
   clearError(): void {
     this.error = '';
+  }
+
+  getImageUrl(item: ProductItem | any): string {
+    if (!item) return 'assets/images/no-image.png';
+    const candidates = [item.image, item.image_path, item.product_image, item.product_image_path, item.imageUrl];
+    for (const c of candidates) {
+      if (c && String(c).trim()) {
+        const s = String(c).trim();
+        if (/^https?:\/\//i.test(s)) return s;
+        return `http://localhost:3000/${s}`;
+      }
+    }
+    return 'assets/images/no-image.png';
+  }
+
+  onImageError(ev: Event): void {
+    try { const img = ev.target as HTMLImageElement; if (img) img.src = 'assets/images/no-image.png'; } catch(e){}
+  }
+
+  addToCart(item: ProductItem | any): void {
+    // placeholder action: in future integrate with cartService
+    console.log('addToCart clicked for', item);
+    alert('Aggiunto al carrello (simulazione)');
   }
 }

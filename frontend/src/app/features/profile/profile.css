@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  border-right: 1px solid #ff8800;
+  border-right: 1px solid #D64933;
   padding-right: 1.2rem;
 }
 
@@ -23,18 +23,18 @@
   padding: 0.5rem 0;
   text-align: left;
   cursor: pointer;
-  color: #86612d;
+  color: #68241a;
   transition: color 0.3s, background 0.3s;
 }
 
 .sidebar-menu button.active {
   font-weight: bold;
-  color: #F7A700;
+  color: #D64933;
 }
 
 /* hover effect: change text color and add subtle background */
 .sidebar-menu button:hover {
-  color: #F7A700;
+  color: #D64933;
   background: rgba(247,167,0,0.12);
   border-radius: 4px;
   padding-left: 0.25rem;
@@ -42,7 +42,7 @@
 
 /* keyboard focus accessibility */
 .sidebar-menu button:focus {
-  outline: 2px solid #FFD166;
+  outline: 2px solid #D64933;
   outline-offset: 2px;
 }
 

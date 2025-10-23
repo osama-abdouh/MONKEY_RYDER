@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { RouterModule , Router} from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserMenuComponent } from "../../features/user-menu/user-menu";
 import { AuthService } from '../../services/auth.service';
@@ -8,9 +8,9 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule, UserMenuComponent, FormsModule, ReactiveFormsModule],
+  imports: [RouterModule, CommonModule, NgIf, UserMenuComponent, FormsModule, ReactiveFormsModule],
   templateUrl: './header.html',
-  styleUrl: './header.css'
+  styleUrls: ['./header.css']
 })
 export class HeaderComponent {
   showDropdown = false;
