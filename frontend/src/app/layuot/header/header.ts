@@ -1,9 +1,12 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { RouterModule , Router} from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserMenuComponent } from "../../features/user-menu/user-menu";
 import { AuthService } from '../../services/auth.service';
+// per la barra di ricerca
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -12,12 +15,14 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './header.html',
   styleUrls: ['./header.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
   showDropdown = false;
   isAdmin: boolean = false;
   loginForm! : FormGroup;
   errorMessage: string = '';
   searchQuery: string = '';
+  private searchSubject = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -33,6 +38,19 @@ export class HeaderComponent {
 
     // sottoscrizione allo stato admin
     this.authService.isAdmin$.subscribe({ next: (v) => this.isAdmin = v, error: () => this.isAdmin = false });
+
+    // Live search: debounce user input and navigate to product-list with query
+    this.searchSubject
+      .pipe(debounceTime(400), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((q) => {
+        const trimmed = q ? q.trim() : '';
+        if (trimmed) {
+          this.router.navigate(['/product-list'], { queryParams: { search: trimmed } });
+        } else {
+          // If search is empty, still navigate to product list without search param
+          this.router.navigate(['/product-list'], { queryParams: {} });
+        }
+      });
   }
 
   onLoginSubmit() {
@@ -78,8 +96,19 @@ export class HeaderComponent {
       this.router.navigate(['/product-list'], {
         queryParams: { search: this.searchQuery.trim() }
       });
-      this.searchQuery = '';
+      // keep the query visible in the header after submit
     }
+  }
+
+  onSearchInput(value: string): void {
+    this.searchQuery = value;
+    this.searchSubject.next(value);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.searchSubject.complete();
   }
 
 }
