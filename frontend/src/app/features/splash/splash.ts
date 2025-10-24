@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SplashService } from '../../services/splash.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-splashPage',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './splash.html',
-  styleUrl: './splash.css'
+  styleUrls: ['./splash.css']
 })
 export class SplashComponent {
   constructor(private router: Router, private splashService: SplashService) {

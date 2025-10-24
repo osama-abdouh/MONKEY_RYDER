@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http'; // Aggiungi HttpParams
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,15 +8,23 @@ import { Brand } from '../../models/brand.model';
 import { ProductItem } from '../../models/product.model';
 import { ActivatedRoute, Router } from '@angular/router'; // Aggiungi questi import
 import { WishlistManagerService } from '../../services/wishlist-manager.service'; // Cambia import
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './product-list.html',
-  styleUrl: './product-list.css',
+  styleUrls: ['./product-list.css'],
 })
 export class ProductListComponent implements OnInit {
+  private searchSubject = new Subject<string>();
+  private destroy$ = new Subject<void>();
+
+  // Debounce delay in ms for live search
+  private readonly SEARCH_DEBOUNCE = 400;
+
   products: ProductItem[] = [];
   filteredProducts: ProductItem[] = [];
   categories: Category[] = [];
@@ -58,6 +66,16 @@ export class ProductListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Subscribe to live-search subject
+    this.searchSubject.pipe(debounceTime(this.SEARCH_DEBOUNCE), distinctUntilChanged(), takeUntil(this.destroy$)).subscribe((q) => {
+      this.searchTerm = q || '';
+      if (this.searchTerm.trim()) {
+        this.searchProducts();
+      } else {
+        this.getAllProducts();
+      }
+    });
+
     // Leggi i parametri di query
     this.route.queryParams.subscribe((params) => {
       this.searchTerm = params['search'] || '';
@@ -80,6 +98,16 @@ export class ProductListComponent implements OnInit {
     this.wishlistManager.wishlistProductIds$.subscribe((ids) => {
       this.wishlistProductIds = ids;
     });
+  }
+
+  onSearchTermChange(value: string) {
+    this.searchSubject.next(value);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.searchSubject.complete();
   }
 
   // Nuovo metodo per la ricerca dei prodotti

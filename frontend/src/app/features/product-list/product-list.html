@@ -78,6 +78,7 @@
       <input
         type="text"
         [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchTermChange($event)"
         placeholder="Cerca prodotti..."
         class="search-input"
         (keyup.enter)="searchProducts()"

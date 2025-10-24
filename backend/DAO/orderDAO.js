@@ -2,11 +2,15 @@ const db = require('../services/db');
 
 // Return all orders with essential fields; join user for names
 const findAll = async function(connection) {
-  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas, o.stato,
+  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas,
     o.payment_provider, o.payment_ref, o.payment_status,
-    u.first_name, u.last_name, u.email
+    u.first_name, u.last_name, u.email,
+    lt.stato_pacco AS stato_pacco_latest
     FROM ordini o
     LEFT JOIN users u ON u.user_id = o.user_id
+    LEFT JOIN LATERAL (
+      SELECT stato_pacco FROM tracking WHERE id_ordine = o.id_ordine ORDER BY data_evento DESC LIMIT 1
+    ) lt ON true
     ORDER BY o.datas DESC`;
   try {
     const rows = await db.execute(connection, sql);
@@ -19,11 +23,15 @@ const findAll = async function(connection) {
 
 // Return only orders in pending status (accepts 'pending' or 'in attesa' in DB)
 const findPending = async function(connection) {
-  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas, o.stato,
-    u.first_name, u.last_name, u.email
+  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas,
+    u.first_name, u.last_name, u.email,
+    lt.stato_pacco AS stato_pacco_latest
     FROM ordini o
     LEFT JOIN users u ON u.user_id = o.user_id
-    WHERE LOWER(COALESCE(o.stato, '')) IN ('pending','in attesa')
+    LEFT JOIN LATERAL (
+      SELECT stato_pacco FROM tracking WHERE id_ordine = o.id_ordine ORDER BY data_evento DESC LIMIT 1
+    ) lt ON true
+    WHERE LOWER(COALESCE(lt.stato_pacco, '')) IN ('pending','in attesa')
     ORDER BY o.datas DESC`;
   try {
     const rows = await db.execute(connection, sql);
@@ -36,13 +44,17 @@ const findPending = async function(connection) {
 
 // Cancel an order by id, only if currently pending; returns updated row
 const cancelById = async function(connection, id) {
-  const sql = `UPDATE ordini
-    SET stato = 'annullato'
-    WHERE id_ordine = $1 AND LOWER(COALESCE(stato,'')) IN ('pending','in attesa')
-    RETURNING id_ordine, stato`;
+  // ordini.stato column may not exist in DB. Instead, record the cancellation in tracking
   try {
-    const rows = await db.execute(connection, sql, [id]);
-    return rows && rows[0] ? rows[0] : null;
+    const now = new Date().toISOString();
+    const insertSql = `INSERT INTO tracking (id_ordine, data_evento, localita, stato_pacco, note, corriere)
+      VALUES ($1, $2, NULL, 'annullato', 'annullato via API', NULL) RETURNING *`;
+    const rows = await db.execute(connection, insertSql, [id, now]);
+    if (rows && rows[0]) {
+      // return an object similar to previous API (id_ordine, stato)
+      return { id_ordine: id, stato: 'annullato' };
+    }
+    return null;
   } catch (err) {
     console.error('orderDAO.cancelById error', err);
     return null;
@@ -82,8 +94,9 @@ const deleteOrderAndRestoreStock = async function(connection, id) {
 
 // Create a new order with basic payment fields
 const createOrder = async function(connection, { user_id, prezzo, payment_provider, payment_ref, payment_status }) {
-  const sql = `INSERT INTO ordini (user_id, prezzo, stato, payment_provider, payment_ref, payment_status)
-               VALUES ($1, $2, 'pending', $3, $4, COALESCE($5, 'created'))
+  // Don't rely on a non-existent ordini.stato column. Tracking should carry parcel states.
+  const sql = `INSERT INTO ordini (user_id, prezzo, payment_provider, payment_ref, payment_status)
+               VALUES ($1, $2, $3, $4, COALESCE($5, 'created'))
                RETURNING *`;
   const params = [user_id, prezzo, payment_provider || null, payment_ref || null, payment_status || null];
   const rows = await db.execute(connection, sql, params);
@@ -122,9 +135,13 @@ const updateDeliveryData = async function(connection, orderId, deliveryData) {
 
 // Return orders for a specific user
 const findByUser = async function(connection, userId) {
-  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas, o.stato,
-    o.payment_provider, o.payment_ref, o.payment_status
+  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas,
+    o.payment_provider, o.payment_ref, o.payment_status,
+    lt.stato_pacco AS stato_pacco_latest
     FROM ordini o
+    LEFT JOIN LATERAL (
+      SELECT stato_pacco FROM tracking WHERE id_ordine = o.id_ordine ORDER BY data_evento DESC LIMIT 1
+    ) lt ON true
     WHERE o.user_id = $1
     ORDER BY o.datas DESC`;
   try {
@@ -139,9 +156,13 @@ const findByUser = async function(connection, userId) {
 
 // Find single order by id and return order + items (if ordine_prodotti table exists)
 const findById = async function(connection, orderId) {
-  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas, o.stato,
-    o.payment_provider, o.payment_ref, o.payment_status, o.delivery_address, o.delivery_city, o.delivery_postal_code, o.delivery_phone
+  const sql = `SELECT o.id_ordine, o.user_id, o.prezzo, o.datas,
+    o.payment_provider, o.payment_ref, o.payment_status, o.delivery_address, o.delivery_city, o.delivery_postal_code, o.delivery_phone,
+    lt.stato_pacco AS stato_pacco_latest
     FROM ordini o
+    LEFT JOIN LATERAL (
+      SELECT stato_pacco FROM tracking WHERE id_ordine = o.id_ordine ORDER BY data_evento DESC LIMIT 1
+    ) lt ON true
     WHERE o.id_ordine = $1`;
   try {
     const rows = await db.execute(connection, sql, [orderId]);

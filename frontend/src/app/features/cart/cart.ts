@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CartService, CartItem } from './cart.service';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, NgIf, NgForOf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, FormsModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, CurrencyPipe, NgIf, NgForOf, FormsModule, RouterLink, RouterLinkActive],
   templateUrl: './cart.html',
   styleUrls: ['./cart.css']
 })

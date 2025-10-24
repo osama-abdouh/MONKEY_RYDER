@@ -22,6 +22,7 @@
                 type="text" 
                 placeholder="Cerca"
                 [(ngModel)]="searchQuery"
+                (ngModelChange)="onSearchInput($event)"
                 name="searchQuery"
                 class="search-input">
             </form>

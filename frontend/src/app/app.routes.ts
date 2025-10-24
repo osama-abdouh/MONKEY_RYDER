@@ -11,6 +11,7 @@ import { LoginComponent } from './features/auth/login/login';
 import { ProductListComponent } from './features/product-list/product-list';
 import { ProductDetailComponent } from './features/product-detail/product-detail';
 import { Orfini } from './features/orfini/orfini';
+import { Traking } from './features/traking/traking';
 import { AdminComponent } from './features/admin/admin';
 import { UsersManagementComponent } from './features/admin/users-management/users-management';
 import { OrdersManagementComponent } from './features/admin/orders-management/orders-management';
@@ -30,6 +31,8 @@ export const routes: Routes = [
     { path: 'profile', component: ProfileComponent },
     { path: 'product-list', component: ProductListComponent },
     { path: 'ordini', component: Orfini },
+    { path: 'traking/:id', component: Traking },
+
     { path: 'product/:id', component: ProductDetailComponent }, // Rotta per i dettagli del prodotto
     { path: 'admin', component: AdminComponent , children: [
         { path: 'users', component: UsersManagementComponent },

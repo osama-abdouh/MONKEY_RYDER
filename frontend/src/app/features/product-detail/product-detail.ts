@@ -11,7 +11,7 @@ import { WishlistManagerService } from '../../services/wishlist-manager.service'
   standalone: true,
   imports: [CommonModule],
   templateUrl: './product-detail.html',
-  styleUrl: './product-detail.css'
+  styleUrls: ['./product-detail.css']
 })
 export class ProductDetailComponent implements OnInit {
   product: ProductItem | null = null;
