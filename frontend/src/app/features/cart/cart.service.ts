@@ -6,6 +6,8 @@ export interface CartItem {
   productId: number;
   name?: string;
   price?: number;
+  // full product object (optional) so callers can store extra product metadata
+  product?: any;
   quantity: number;
 }
 
