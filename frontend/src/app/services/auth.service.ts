@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap, BehaviorSubject, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SessionService } from './session.service';
+import { User } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -27,6 +28,10 @@ export class AuthService {
         }
       })
     );
+  }
+
+  register(userData: User): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, userData);
   }
 
   logout(): void {

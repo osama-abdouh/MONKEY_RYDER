@@ -1,17 +1,21 @@
 const express = require('express');
 const userController = require('../controllers/userController');
+const { authenticateToken, isAdmin } = require('../middleware/authMiddleware');
 
 
 const router = express.Router();
 
 router.get('/user', userController.getAllUsers);
+router.post('/user', authenticateToken, isAdmin, userController.createUser);
+
 router.get('/user/all', userController.getUsers);
 router.get('/user/max-order', userController.getMaxOrder);
 router.get('/user/role/:role', userController.findUserByRole);
 router.get('/user/:userId/recent-orders', userController.getRecentOrders);
 router.get('/user/orders-count', userController.ordersCountPerUser);
+router.get('/user/:userId', userController.getUserById);
 // GET /user/me -> dati dell'utente autenticato (deve comparire prima di /user/:userId)
-const authenticateToken = require('../middleware/authMiddleware');
+
 router.get('/user/me', authenticateToken, userController.getCurrentUser);
 // GET /api/users/addresses -> get saved addresses for authenticated user
 router.get('/users/addresses', authenticateToken, userController.getSavedAddresses);

@@ -3,7 +3,6 @@ const cors = require('cors');
 require('dotenv').config();
 const authRouter = require('./routes/authRoutes');
 const productRouter = require('./routes/productsRoutes');
-const testRouter = require('./routes/test');
 const userRouter = require('./routes/userRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const couponRouter = require('./routes/couponRoutes');
@@ -29,12 +28,11 @@ app.use(express.json()); // necessario per leggere il body JSON
 app.use(contextPath, authRouter);
 app.use(contextPath, productRouter);
 app.use(contextPath, wishlistRoutes);
+app.use(contextPath, userRouter);
 
 app.use('/assets/Immagini', staticImagesMiddleware);
 app.use('/images', express.static('public/images'));
 //rotte ancora da implementare
-app.use(contextPath, userRouter);
-app.use(contextPath, testRouter);
 app.use(contextPath, orderRouter);
 app.use(contextPath, couponRouter);
 app.use(contextPath, showcaseRoutes);

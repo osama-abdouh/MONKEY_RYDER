@@ -2,7 +2,15 @@ const db = require('../services/db');
 
 
 // colonne permesse come filtro (evita SQL injection)
-const ALLOWED_COLUMNS = ['user_id', 'email', 'password_hash'];
+const ALLOWED_COLUMNS = ['user_id', 'first_name', 'last_name', 'email', 'birth_date', 'phone_number', 'role', 'account_status', 'created_at', 'last_login'];
+
+// Recupero degli utenti
+const getAllUsers = async function (connection) {
+  const query = 'SELECT * FROM users';
+  const result = await db.execute(connection, query);
+  return result;
+};
+
 
 const findAllUsers = async function (connection, reqQuery = {}) {
   let sql = 'SELECT * FROM users'; // usa il nome reale della tabella
@@ -30,14 +38,12 @@ const findUserById = async function (connection, userId) {
 };
 
 const createUser = async function (connection, user) {
-  const sql = `INSERT INTO users 
-         (email, password_hash) 
-         VALUES ($1, $2) RETURNING *`;
-  const params = [user.email, user.password_hash];
-
-  const result = await db.execute(connection, sql, params);
-
-  // db.execute (pg-promise) returns an array of rows; RETURNING * returns the inserted row
+  const query = `INSERT INTO users 
+         (first_name, last_name, email, password_hash, birth_date, phone_number, role, account_status) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING *`;
+  const params = [user.first_name, user.last_name, user.email, user.password_hash, user.birth_date, user.phone_number, user.role, user.account_status];
+  const result = await db.execute(connection, query, params);
   return result[0] || null;
 };
 
@@ -80,11 +86,6 @@ const RecentOrders = async function (connection, limit = 3) {
     console.error('userDAO.RecentOrders error', err);
     return [];
   }
-};
-const Users = async function (connection) {
-  const sql = 'SELECT * FROM users';
-  const rows = await db.execute(connection, sql);
-  return rows || [];
 };
 
 const updateAccountStatus = async function (connection, userId, status) {
@@ -145,8 +146,9 @@ const ordersCountPerUser = async function (connection) {
 
 
 
-module.exports = { findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, RecentOrders, updateAccountStatus, updateUserRole, Users, ordersCountPerUser, deleteUser, deleteOrdersByUser, updateUserFields };
-
+module.exports = { 
+  getAllUsers, findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, 
+  RecentOrders, updateAccountStatus, updateUserRole, ordersCountPerUser, deleteUser, deleteOrdersByUser, updateUserFields };
 // Return addresses for a specific user (attempt common Italian table 'indirizzi')
 const findAddressesByUser = async function(connection, userId) {
   // Try common Italian schema first

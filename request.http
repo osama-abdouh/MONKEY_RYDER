@@ -1,7 +1,30 @@
+### test admin creazione utenti
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "password123"
+}
+### 
+POST http://localhost:3000/api/user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjcsImlhdCI6MTc2MTE3MDU4NywiZXhwIjoxNzYxMTc0MTg3fQ.oKcpSjuWtTVEE1Ov9WTUC6f1IYmBiDFpVAkHxMey-q8
+
+{
+  "first_name": "Created",
+  "last_name": "User",
+  "email": "createduser@example.com",
+  "password": "password123"
+}
+###
+
+
 POST http://localhost:3000/api/products/1/image \ -F "image=@/path/to/test-image.jpg"
   
 
-# test brands endpoint
+### test brands endpoint
+
 GET http://localhost:3000/api/search?search=molle
 
 

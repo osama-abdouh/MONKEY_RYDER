@@ -44,6 +44,16 @@ const findUserById = async function (connection, userId) {
   return rows[0] || null;
 };
 
+const updateLastLogin = async function (connection, userId) {
+  const query = `UPDATE users
+              SET last_login = NOW() 
+              WHERE user_id = $1 
+              RETURNING user_id, last_login`;
+  const params = [userId];
+  const rows = await db.execute(connection, query, params);
+  
+  return rows && rows[0] ? rows[0] : null;
+};
 // Aggiorna la password di un utente (assumendo password gia' hashata)
 const changePassword = async function(connection, userId, newPasswordHash) {
   const sql = `UPDATE users SET password_hash = $1 WHERE user_id = $2 RETURNING *`;
@@ -52,4 +62,4 @@ const changePassword = async function(connection, userId, newPasswordHash) {
   return rows[0] || null;
 };
 
-module.exports = { createUser, findUserByEmail, findUsers, findUserById, changePassword };
+module.exports = { createUser, findUserByEmail, findUsers, findUserById, updateLastLogin, changePassword };

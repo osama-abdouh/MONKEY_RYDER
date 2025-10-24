@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const db = require("../services/db");
+const userDAO = require("../DAO/userDAO");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -9,11 +11,10 @@ if (!JWT_SECRET) {
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"] || "";
-  console.log("Auth header ricevuto:", authHeader); // Aggiungi questo per debug
-
   const parts = authHeader.split(" ");
   const token =
-    parts.length === 2 && /^Bearer$/i.test(parts[0]) ? parts[1] : null;
+    parts.length === 2 && /^Bearer$/i.test(parts[0]) ? parts[1] : null; 
+    // regex case-insensitive ( /^Bearer$/i ) per validare il prefisso “Bearer”
 
   console.log("Token estratto:", token ? "Presente" : "Mancante"); // Aggiungi questo
 
@@ -31,4 +32,23 @@ function authenticateToken(req, res, next) {
   });
 }
 
-module.exports = authenticateToken;
+// Middleware per verificare che l'utente sia admin
+const isAdmin = async (req, res, next) => {
+    let conn;
+    try {
+        conn = await db.getConnection();
+        const user = await userDAO.findUserById(conn, req.user.id);
+
+        if (!user || user.role !== 'admin') {
+            return res.status(403).json({ message: 'Accesso negato: non sei un admin' });
+        }
+        next();
+    } catch (error) {
+        console.error('Errore verifica ruolo admin:', error);
+        return res.status(500).json({ message: 'Errore del server' });
+    } finally {
+        if (conn) conn.done();
+    }
+};
+
+module.exports = { authenticateToken, isAdmin };

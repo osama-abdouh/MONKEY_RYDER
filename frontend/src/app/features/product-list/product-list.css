@@ -89,7 +89,9 @@ h1 {
 .search-container input {
   color: #E0E0E0;
   background-color: #444444;
-  padding: 10px 200px;
+  height: 38px;
+  width: 30rem;
+  padding: 0 10px;
   font-size: 16px;
   border: 1px solid #444444;
   border-radius: 1px;
