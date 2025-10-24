@@ -32,6 +32,8 @@ exports.login = async function (req, res) {
             return res.status(400).json({ message: 'Email o password non corretti' });
         }
 
+        await authDAO.updateLastLogin(conn, user.user_id);
+
         const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         // Autenticazione riuscita
         res.json({ message: 'Login successful', token });
@@ -86,7 +88,7 @@ exports.register = async function (req, res) {
             return res.status(500).json({ message: 'Errore nella creazione dell\'utente' });
         }
     } catch (error) {
-        console.error('register error:', error);
+        console.error('controller/AuthController.js', error);
         return res.status(500).json({
             message: 'register endpoint failed',
             error: error.message

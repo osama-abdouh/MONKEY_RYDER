@@ -1,0 +1,23 @@
+<div class="admin-page">
+  <div class="admin-header">
+    <h1>Admin Dashboard</h1>
+  </div>
+  <div class="admin-body">
+  <aside class="sidebar-menu">
+    <nav>
+        <ul>
+            @for(item of menuItems; track item.route){
+                <li>
+                    <a [routerLink]="item.route" routerLinkActive="active">
+                      <span class="icon">{{item.icon}}</span> {{item.label}}
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+  </aside>
+  <section class="content">
+    <router-outlet></router-outlet>
+  </section>
+  </div>
+</div>

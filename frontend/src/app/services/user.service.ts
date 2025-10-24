@@ -7,19 +7,41 @@ export interface User {
     first_name: string;
     last_name: string;
     email: string;
-    birth_date?: string | null;
-    role?: string | null;
-    account_status?: string | null;
-    created_at?: string | null;
+    password?: string;
+    birth_date?: string;
+    phone_number?: string;
+    role: string;
+    account_status: string;
+    created_at?: string;
+    last_login?: string;
 }
 
 @Injectable({providedIn: 'root'})
 
 export class UserService {
+    
     private apiUrl = 'http://localhost:3000/api';
 
     constructor(private http: HttpClient) {}
 
+    getAllUsers(): Observable<User[]> {
+        return this.http.get<User[]>(`${this.apiUrl}/user`);
+    }
+    createUser(userData: User): Observable<User> {
+        return this.http.post<User>(`${this.apiUrl}/user`, userData);
+    }
+
+
+    
+    getUsers(queryParams: any = {}): Observable<User[]> {
+        const keys = Object.keys(queryParams || {});
+        let url = `${this.apiUrl}/user`;
+        if (keys.length) {
+            const qs = keys.map(k => `${encodeURIComponent(k)}=${encodeURIComponent(queryParams[k])}`).join('&');
+            url += `?${qs}`;
+        }
+        return this.http.get<User[]>(url);
+    }
     // Get current authenticated user (uses protected endpoint /user/me)
     getCurrentUser(): Observable<User> {
         return this.http.get<User>(`${this.apiUrl}/user/me`);
@@ -34,6 +56,8 @@ export class UserService {
         return this.http.get<User>(`${this.apiUrl}/user/${id}`);
     }
     
+
+
     // New: fetch users by role (returns array)
     getUsersByRole(role: string): Observable<User[]> {
         return this.http.get<User[]>(`${this.apiUrl}/user/role/${encodeURIComponent(role)}`);
@@ -49,22 +73,10 @@ export class UserService {
         return this.http.get<any[]>(`${this.apiUrl}/user/${userId}/recent-orders`);
     }
 
-    // get all users (optionally filtered by query params)
-    getAllUsers(queryParams: any = {}): Observable<User[]> {
-        // build a query string if params provided
-        const keys = Object.keys(queryParams || {});
-        let url = `${this.apiUrl}/user`;
-        if (keys.length) {
-            const qs = keys.map(k => `${encodeURIComponent(k)}=${encodeURIComponent(queryParams[k])}`).join('&');
-            url += `?${qs}`;
-        }
-        return this.http.get<User[]>(url);
-    }
+
 
     // get all users without filters (calls backend userDAO.Users)
-    getUsersAll(): Observable<User[]> {
-        return this.http.get<User[]>(`${this.apiUrl}/user/all`);
-    }
+
 
     // get orders count per user
     getOrdersCount(): Observable<any[]> {
@@ -86,20 +98,6 @@ export class UserService {
         return this.http.delete<any>(`${this.apiUrl}/user/${userId}${qs}`);
     }
     
-    // create a new user (uses auth register endpoint)
-    createUser(payload: { first_name: string; last_name: string; email: string; password: string; birth_date?: string | null; phone_number?: string | null; role?: 'customer' | 'admin'; account_status?: 'active' | 'suspended' }): Observable<any> {
-        const body: any = {
-            first_name: payload.first_name,
-            last_name: payload.last_name,
-            email: payload.email,
-            password: payload.password,
-            birth_date: payload.birth_date ?? null,
-            phone_number: payload.phone_number ?? null,
-            role: payload.role ?? 'customer',
-            account_status: payload.account_status ?? 'active'
-        };
-        return this.http.post<any>(`${this.apiUrl}/register`, body);
-    }
     
     // Get saved addresses for current authenticated user
     getSavedAddresses(): Observable<any[]> {
