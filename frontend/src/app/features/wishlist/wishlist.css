@@ -97,6 +97,7 @@
   color: #cfd8b7;
   padding: 8px 12px;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 /* Empty State */
@@ -115,6 +116,7 @@
   border: 0;
   padding: 10px 14px;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 /* position empty-state CTA bottom-right inside the card */

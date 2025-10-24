@@ -73,7 +73,7 @@ exports.getUsers = async function (req, res) {
             error: error.message 
         });
     } finally {
-        if (conn) conn.done(); // Rilascia la connessione se esiste
+        if (conn) conn.done();
     }
 }
 

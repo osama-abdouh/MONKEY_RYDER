@@ -7,32 +7,6 @@ z-index: 1000;
 background: #8A9B68;
 box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-.header-top {
-background: #423E37;
-font-size: 0.95rem;
-padding: 0.3rem 0;
-}
-.header-top .container {
-display: flex;
-justify-content: flex-end;
-align-items: center;
-}
-.lang-switcher {
-display: flex;
-gap: 0.5rem;
-}
-.lang-btn {
-background: none;
-border: none;
-color: black;
-padding: 0.2rem 0.5rem;
-cursor: pointer;
-transition: background 0.3s;
-}
-.lang-btn:hover {
-background: rgba(255, 255, 255, 0.2);
-}
-
 .header-middle {
 padding: 1rem 0;
 border-bottom: 1.5px solid #403D39; /* linea divisoria */

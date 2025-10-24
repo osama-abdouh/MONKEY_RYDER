@@ -36,13 +36,48 @@ export class AuthService {
 
   logout(): void {
     this.session.clearToken();
-    // al logout resetta lo stato admin
     this.isAdmin$.next(false);
   }
 
   isAuthenticated(): boolean {
-    return this.session.getToken() !== null;
+    const token = this.session.getToken();
+
+    if (!token) {
+      return false;
+    }
+    if (this.isTokenExpired(token)) {
+      this.logout();
+      return false;
+    }
+    return true;
   }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp;
+      if (!exp) return false;
+      const now = Math.floor(Date.now() / 1000);
+      return now >= exp;
+    } catch (e) {
+      return true;
+    }
+  }
+  getUserRole(): string | null {
+    const token = this.session.getToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.role || null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+
+
+
+
 
   // helper che chiama backend /is-admin e aggiorna stream
   checkAdmin(): Observable<boolean> {

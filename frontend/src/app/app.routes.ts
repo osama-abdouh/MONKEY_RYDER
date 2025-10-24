@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './guards/admin-guard';
+import { userGuard } from './guards/user-guard';
 import { HomeComponent } from './features/home/home';
 import { CartComponent } from './features/cart/cart';
 import { Checkout } from './features/cart/checkout/checkout';
@@ -17,7 +19,7 @@ import { UsersManagementComponent } from './features/admin/users-management/user
 import { OrdersManagementComponent } from './features/admin/orders-management/orders-management';
 import { ProductsManagementComponent } from './features/admin/products-management/products-management';
 import { CouponsManagementComponent } from './features/admin/coupons-management/coupons-management';
-
+import { AccessDeniedComponent } from './features/acces-dennied/acces-dennied';
 
 export const routes: Routes = [
     { path: '', component: SplashComponent }, // Splash page come pagina principale
@@ -26,20 +28,21 @@ export const routes: Routes = [
     { path: 'checkout', component: Checkout },
     { path: 'register', component: RegisterComponent },
     { path: 'login', component: LoginComponent },
-    { path: 'wishlist', component: WishlistComponent },
+    { path: 'wishlist', canActivate: [userGuard], component: WishlistComponent },
     { path: 'contact-us', component: ContactUsComponent },
-    { path: 'profile', component: ProfileComponent },
+    { path: 'profile', canActivate: [userGuard], component: ProfileComponent },
     { path: 'product-list', component: ProductListComponent },
-    { path: 'ordini', component: Orfini },
-    { path: 'traking/:id', component: Traking },
+    { path: 'ordini', canActivate: [userGuard], component: Orfini },
+    { path: 'traking/:id', canActivate: [userGuard], component: Traking },
 
     { path: 'product/:id', component: ProductDetailComponent }, // Rotta per i dettagli del prodotto
-    { path: 'admin', component: AdminComponent , children: [
+    { path: 'admin', canActivate: [adminGuard], component: AdminComponent , children: [
         { path: 'users', component: UsersManagementComponent },
         { path: 'orders', component: OrdersManagementComponent },
         { path: 'products', component: ProductsManagementComponent },
         { path: 'coupons', component: CouponsManagementComponent },
         { path: '', redirectTo: 'users', pathMatch: 'full' }
     ]},
+    { path: 'access-denied', component: AccessDeniedComponent },
     { path: '**', redirectTo: '' } // Rotta di fallback per URL non validi
 ];

@@ -13,41 +13,52 @@
     } @else if(filteredUsers.length === 0){
       <div>Nessun utente trovato.</div>
     } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Email</th>
-          <th>Data di nascita</th>
-          <th>Telefono</th>
-          <th>Ruolo</th>
-          <th>Numero ordini</th>
-          <th>Data di creazione</th>
-          <th>Ultimo accesso</th>
-          <th>Azioni</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for(user of filteredUsers; track user.id){
+    <div class="table-wrapper">
+      <table>
+        <thead>
           <tr>
-            <td>{{ user.first_name + ' ' + user.last_name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.birth_date | date: 'dd/MM/yyyy' }}</td>
-            <td>{{ user.phone_number }}</td>
-            <td>{{ user.role }}</td>
-            <td>{{ user.account_status }}</td>
-            <td>{{ user.created_at | date: 'dd/MM/yyyy'}}</td>
-            <td>{{ user.last_login | date: 'dd/MM/yyyy'}}</td>
-            <td>
-              <button (click)="viewUserDetails(user)">Dettagli</button>
-              <button (click)="editUser(user)">Modifica</button>
-              <button (click)="changeRole(user)">{{ user.role === 'admin' ? 'Rendi utente' : 'Rendi admin' }}</button>
-              <button (click)="deleteUser(user)">Elimina</button>
-            </td>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Data di nascita</th>
+            <th>Telefono</th>
+            <th>Ruolo</th>
+            <th>Stato</th>
+            <th>Data di creazione</th>
+            <th>Ultimo accesso</th>
+            <th>Azioni</th>
           </tr>
+        </thead>
+        <tbody>
+          @for(user of displayedUsers; track user.id) {
+            <tr>
+              <td>{{ user.first_name + ' ' + user.last_name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.birth_date | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ user.phone_number }}</td>
+              <td>{{ user.role }}</td>
+              <td>{{ user.account_status }}</td>
+              <td>{{ user.created_at | date: 'dd/MM/yyyy'}}</td>
+              <td>{{ user.last_login | date: 'dd/MM/yyyy'}}</td>
+              <td class="actions-cell">
+                <button (click)="toggleDetails($event, user)">Dettagli</button>
+                <button (click)="changeRole(user)">{{ user.role === 'admin' ? 'Rendi utente' : 'Rendi admin' }}</button>
+                <button (click)="deleteUser(user)">Elimina</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+    <!-- Paginazione -->
+    @if(totalPages > 1){
+      <div class="pagination">
+        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
+        @for(p of pages; track p) {
+          <button (click)="goToPage(p)" [class.active]="currentPage === p">{{ p }}</button>
         }
-      </tbody>
-    </table>
+        <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+      </div>
     }
   </div>
   @if(showCreate){
@@ -106,4 +117,27 @@
     </div>
   </div>
 }
+  @if(showDetails && selectedUser){
+  <div class="popup-overlay" aria-modal="true" role="dialog">
+    <div class="popup-content">
+      <header class="popup-header">
+        <h3>Dettagli utente</h3>
+      </header>
+      <div class="popup-body">
+        <p><strong>Nome:</strong> {{ selectedUser.first_name + ' ' + selectedUser.last_name }}</p>
+        <p><strong>Email:</strong> {{ selectedUser.email }}</p>
+        <p><strong>Data di nascita:</strong> {{ selectedUser.birth_date | date: 'dd/MM/yyyy' }}</p>
+        <p><strong>Telefono:</strong> {{ selectedUser.phone_number }}</p>
+        <p><strong>Ruolo:</strong> {{ selectedUser.role }}</p>
+        <p><strong>Stato account:</strong> {{ selectedUser.account_status }}</p>
+        <p><strong>Data di creazione:</strong> {{ selectedUser.created_at | date: 'dd/MM/yyyy'}}</p>
+        <p><strong>Ultimo accesso:</strong> {{ selectedUser.last_login | date: 'dd/MM/yyyy'}}</p>
+      </div>
+        <footer class="popup-footer">
+          <button class="annulla-button" (click)="toggleDetails($event, selectedUser)">Annulla</button>
+        </footer>
+      
+    </div>
+  </div>
+  }
 </div>

@@ -14,6 +14,8 @@ router.get('/user/role/:role', userController.findUserByRole);
 router.get('/user/:userId/recent-orders', userController.getRecentOrders);
 router.get('/user/orders-count', userController.ordersCountPerUser);
 router.get('/user/:userId', userController.getUserById);
+
+
 // GET /user/me -> dati dell'utente autenticato (deve comparire prima di /user/:userId)
 
 router.get('/user/me', authenticateToken, userController.getCurrentUser);
@@ -30,6 +32,8 @@ router.post('/users/addresses/direct', authenticateToken, userController.saveAdd
 // PUT /api/users/addresses/:id -> update existing address for authenticated user
 router.put('/users/addresses/:id', authenticateToken, userController.updateAddress);
 // DELETE /api/users/addresses/:id -> delete an address owned by authenticated user
+
+
 router.delete('/users/addresses/:id', authenticateToken, userController.deleteAddress);
 router.patch('/user/:userId/status', userController.updateAccountStatus);
 router.patch('/user/:userId/role', userController.updateUserRole);

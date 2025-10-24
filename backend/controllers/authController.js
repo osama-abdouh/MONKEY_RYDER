@@ -16,9 +16,7 @@ exports.login = async function (req, res) {
         if (!email) {
             return res.status(400).json({ error: 'Email mancante' });
         }
-
         conn = await db.getConnection();
-        
         // Trova utente per email
         const userResult = await authDAO.findUserByEmail(conn, email);
         if (!userResult) {
@@ -26,18 +24,14 @@ exports.login = async function (req, res) {
         }
         
         const user = userResult;
-
         const isValid = await bcrypt.compare(password, user.password_hash);
         if (!isValid) {
             return res.status(400).json({ message: 'Email o password non corretti' });
         }
 
         await authDAO.updateLastLogin(conn, user.user_id);
-
-        const token = jwt.sign({ userId: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        // Autenticazione riuscita
+        const token = jwt.sign({ userId: user.user_id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ message: 'Login successful', token });
-        console.log(`User ${email} logged in successfully.`);
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Errore del server durante il login' });
@@ -94,7 +88,7 @@ exports.register = async function (req, res) {
             error: error.message
         });
     } finally {
-        if (conn) conn.done(); // Rilascia la connessione se esiste
+        if (conn) conn.done();
     }
 };
 
