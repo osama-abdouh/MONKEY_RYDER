@@ -19,7 +19,7 @@
       <div *ngIf="!loading && wishlist.length === 0 && !error" class="empty-row">
         <h3>La tua wishlist è vuota</h3>
         <p>Aggiungi i prodotti che ti piacciono!</p>
-        <a routerLink="/home" class="btn-primary">Vai ai prodotti</a>
+  <a routerLink="/product-list" class="btn-primary empty-cta">Vai ai prodotti</a>
       </div>
 
       <div *ngIf="!loading && wishlist.length > 0" class="fields">
@@ -41,8 +41,6 @@
       </div>
     </div>
 
-    <div class="wl-card-footer">
-      <button class="btn-primary">Svuota La Wishlist</button>
-    </div>
+    <!-- Footer removed per request: 'Svuota La Wishlist' button omitted -->
   </div>
 </div>

@@ -1,5 +1,16 @@
-.ordini-container { padding: 1rem; color: rgb(255, 255, 255); }
-.orders-table { width: 100%; max-width: 920px; border-collapse: separate; /* ensure spacing works */ border-spacing: 0 12px; margin: 1rem auto 0 auto; }
+.ordini-container { 
+	padding: 1rem;
+	color: rgb(255, 255, 255); 
+
+	}
+.orders-table { 
+	 width: 100%;
+	 max-width: 920px;
+	 border-collapse: separate; 
+	 /* ensure spacing works */ 
+	 border-spacing: 0 12px; 
+	 margin: 1rem auto 0 auto; 
+	}
 
 /* Base cell styling (no vertical borders between columns) */
 .orders-table th, .orders-table td {
@@ -37,29 +48,91 @@
 .error { color: #c33; }
 
 /* Modal */
-.modal-backdrop { position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:2000; }
-.modal { background: #2b2b2b; color: #fff; padding: 1rem; width: 90%; max-width: 900px; border-radius:6px; position: relative; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column; }
-.modal .close { position: absolute; right: 8px; top: 8px; background: transparent; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; }
+.modal-backdrop { 
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.6);
+	display:flex;
+	align-items:center; 
+	justify-content:center; 
+	z-index:2000; }
+.modal { 
+	background: #2b2b2b; 
+	color: #fff; 
+	padding: 1rem; 
+	width: 90%; 
+	max-width: 900px; 
+	border-radius:6px; 
+	position: relative; 
+	max-height: 80vh; 
+	overflow: hidden; 
+	display: flex; 
+	flex-direction: column; }
+.modal .close { 
+	position: absolute; 
+	right: 8px; 
+	top: 8px; 
+	background: transparent; 
+	border: none; 
+	color: #fff; 
+	font-size: 1.4rem; 
+	cursor: pointer; }
 
 /* Ensure modal header and its contents are left-aligned and shifted slightly left */
 
-.modal .modal-header{ padding-left: 6px; }
-.items-list { list-style: none; padding: 0; margin: 0; }
-.item-row { display:flex; gap: 0.75rem; align-items:center; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-.item-img { width:56px; height:56px; object-fit:cover; border-radius:4px; }
+.modal .modal-header{ 
+	padding-left: 6px; 
+}
+.items-list { 
+	list-style: none; 
+	padding: 0; 
+	margin: 0; 
+}
+.item-row { 
+	display:flex; 
+	gap: 0.75rem; 
+	align-items:center; 
+	padding: 0.5rem 0; 
+	border-bottom: 1px solid rgba(255,255,255,0.03); 
+}
+.item-img { 
+	width:56px; 
+	height:56px; 
+	object-fit:cover; 
+	border-radius:4px; }
 
 /* Larger thumbnails when displayed inside the modal */
-.modal .item-img { width: 110px; height: 110px; border-radius: 6px; }
+.modal .item-img { 
+	width: 110px; 
+	height: 110px; 
+	border-radius: 6px; 
+}
 
 /* Make the products container scrollable inside the modal */
-.modal-body{ overflow:auto; flex: 1 1 auto; padding-right: 6px; }
-.modal-body .items-list{ padding-right: 6px; }
+.modal-body{ 
+	overflow:auto; 
+	flex: 1 1 auto; 
+	padding-right: 6px; 
+}
+.modal-body .items-list{ 
+	padding-right: 6px; 
+}
 
 @media (max-width: 520px){
-	.modal .item-img { width: 72px; height: 72px; }
+	.modal .item-img { 
+		width: 72px; height: 72px; 
+	}
 }
-.item-info .item-name { font-weight:600; }
-.item-info .item-qty, .item-info .item-price { font-size: 0.9rem; color: #ccc; }
+.item-info .item-name { 
+	font-weight:600; 
+}
+.item-info .item-qty, .item-info .item-price { 
+	font-size: 0.9rem; 
+	color: #ccc; 
+}
 
 /* Target the actual modal header elements from the template and left-align them */
 
@@ -71,7 +144,10 @@
 }
 
 /* Slightly reduce the line-height to keep the block compact */
-.modal .order-meta p { line-height: 1.2; margin: 4px 0; }
+.modal .order-meta p { 
+	line-height: 1.2; 
+	margin: 4px 0; 
+}
 
 /* Cancel button style inside modal */
 .modal .btn-cancel{
@@ -82,4 +158,38 @@
 	border-radius: 6px;
 	cursor: pointer;
 }
-.modal .btn-cancel:hover{ background: rgba(255,255,255,0.04); }
+.modal .btn-cancel:hover{ 
+	background: rgba(255,255,255,0.04); 
+}
+
+/* Track link should match cancel button aesthetic when shown inside modal */
+.modal .btn-track{
+	display: inline-block;
+	background: transparent;
+	color: #fff;
+	border: 1px solid #fff;
+	padding: 6px 10px;
+	border-radius: 6px;
+	cursor: pointer;
+	text-decoration: none;
+}
+.modal .btn-track:hover{
+	background: rgba(255,255,255,0.04);
+}
+
+/* Make cancel and track buttons identical size and add spacing between them */
+.modal .btn-cancel,
+.modal .btn-track {
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 140px; /* same minimum width */
+	height: 40px; /* same height */
+	padding: 8px 12px; /* consistent padding */
+	font-weight: 600;
+}
+
+.modal .btn-track {
+	margin-left: 10px; /* spacing between the two controls */
+}

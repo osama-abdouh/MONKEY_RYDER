@@ -3,14 +3,14 @@
   padding: 20px;
   max-width: 1100px;
   margin: 0 auto;
-  color: #333;
+  color: #ffffff;
 }
 
 .cart-page h1 {
   text-align: center;
   margin-bottom: 18px;
   font-size: 1.6rem;
-  color: #222;
+  color: #ffffff;
 }
 
 .cart-list {
@@ -49,7 +49,7 @@
 }
 
 .cart-item .price {
-  color: #007bff;
+  color: #8A9B68;
   font-weight: 700;
 }
 
@@ -150,7 +150,7 @@
   padding: 8px 12px;
   border-radius: 8px;
   border: none;
-  background:#0ea5a0;
+  background:#8A9B68;
   color: white;
   font-weight:700;
   cursor:pointer;
