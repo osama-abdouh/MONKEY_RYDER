@@ -10,8 +10,6 @@ import { ProfileComponent } from './features/profile/profile';
 import { LoginComponent } from './features/auth/login/login';
 import { ProductListComponent } from './features/product-list/product-list';
 import { ProductDetailComponent } from './features/product-detail/product-detail';
-import { Gestione } from './features/gestione/gestione';
-import { Modifiche } from './features/modifiche/modifiche';
 import { Orfini } from './features/orfini/orfini';
 import { AdminComponent } from './features/admin/admin';
 import { UsersManagementComponent } from './features/admin/users-management/users-management';
@@ -33,7 +31,6 @@ export const routes: Routes = [
     { path: 'product-list', component: ProductListComponent },
     { path: 'ordini', component: Orfini },
     { path: 'product/:id', component: ProductDetailComponent }, // Rotta per i dettagli del prodotto
-    { path: 'gestione', component: Gestione },
     { path: 'admin', component: AdminComponent , children: [
         { path: 'users', component: UsersManagementComponent },
         { path: 'orders', component: OrdersManagementComponent },
@@ -41,6 +38,5 @@ export const routes: Routes = [
         { path: 'coupons', component: CouponsManagementComponent },
         { path: '', redirectTo: 'users', pathMatch: 'full' }
     ]},
-    { path: 'modifiche', component: Modifiche },
     { path: '**', redirectTo: '' } // Rotta di fallback per URL non validi
 ];

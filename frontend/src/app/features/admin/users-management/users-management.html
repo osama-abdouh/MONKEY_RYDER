@@ -1,6 +1,5 @@
 <div class="user-page">
   <div class="header">
-    <h1>Gestione Utenti</h1>
   </div>
   <div class="options-bar">
     <input type="text" placeholder="Cerca utenti..." [(ngModel)]="searchTerm" (ngModelChange)="filterUsers()"/>
@@ -24,6 +23,7 @@
           <th>Ruolo</th>
           <th>Numero ordini</th>
           <th>Data di creazione</th>
+          <th>Ultimo accesso</th>
           <th>Azioni</th>
         </tr>
       </thead>
@@ -37,6 +37,7 @@
             <td>{{ user.role }}</td>
             <td>{{ user.account_status }}</td>
             <td>{{ user.created_at | date: 'dd/MM/yyyy'}}</td>
+            <td>{{ user.last_login | date: 'dd/MM/yyyy'}}</td>
             <td>
               <button (click)="viewUserDetails(user)">Dettagli</button>
               <button (click)="editUser(user)">Modifica</button>
@@ -99,8 +100,8 @@
         <div class="error-muted" >{{ error }}</div>
       }
       <footer class="popup-footer">
-        <button class="qa-btn secondary" (click)="toggleCreate($event)">Annulla</button>
-        <button class="qa-btn primary">Crea</button>
+        <button class="annulla-button" (click)="toggleCreate($event)">Annulla</button>
+        <button class="create-button" (click)="createUser()">Crea</button>
       </footer>
     </div>
   </div>

@@ -2,15 +2,6 @@
     color: blanchedalmond;
 }
 
-.user-page{
-    padding: 1rem;
-    
-}
-.user-page h1{
-    margin-bottom: 1rem;
-    color: #E0E0E0;
-}
-
 .options-bar{
     display: flex;
     justify-content: center;

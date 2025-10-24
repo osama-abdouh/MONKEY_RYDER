@@ -115,13 +115,15 @@ display: inline-block;
 font-weight: bold;
 transition: background 0.2s, color 0.2s;
 }
-
+.gestione-btn,
 .cart-btn:hover,
 .user-btn:hover,
 .whishlist-btn:hover{
-background: #B6C197;
+background: transparent;
+cursor: pointer;
 color: black;
 opacity: 0.85;
+border: none;
 }
 
 .profile-menu {

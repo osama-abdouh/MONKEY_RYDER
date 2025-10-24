@@ -27,6 +27,12 @@ export class UserService {
     getAllUsers(): Observable<User[]> {
         return this.http.get<User[]>(`${this.apiUrl}/user`);
     }
+    createUser(userData: User): Observable<User> {
+        return this.http.post<User>(`${this.apiUrl}/user`, userData);
+    }
+
+
+    
     getUsers(queryParams: any = {}): Observable<User[]> {
         const keys = Object.keys(queryParams || {});
         let url = `${this.apiUrl}/user`;
@@ -50,10 +56,6 @@ export class UserService {
         return this.http.get<User>(`${this.apiUrl}/user/${id}`);
     }
     
-
-    createUser(userData: User): Observable<any> {
-        return this.http.post<any>(`${this.apiUrl}/user`, userData);
-    }
 
 
     // New: fetch users by role (returns array)
@@ -95,6 +97,7 @@ export class UserService {
         const qs = cascade ? '?cascade=true' : '';
         return this.http.delete<any>(`${this.apiUrl}/user/${userId}${qs}`);
     }
+    
     
     // Get saved addresses for current authenticated user
     getSavedAddresses(): Observable<any[]> {

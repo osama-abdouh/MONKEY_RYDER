@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { UserService, User} from '../../../services/user.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,7 @@ export class RegisterComponent {
   registerForm: FormGroup;
   message: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private fb: FormBuilder, private userService: UserService) {
+  constructor(private http: HttpClient, private router: Router, private fb: FormBuilder, private userService: UserService, private authService: AuthService) {
     this.registerForm = this.fb.group(
       {
         first_name: ['', Validators.required],
@@ -56,7 +57,7 @@ export class RegisterComponent {
     }
 
     const userData: User = this.registerForm.value; // Ottieni i dati dal form
-    this.userService.registerUser(userData).subscribe({
+    this.authService.register(userData).subscribe({
       next: (response) => {
         this.message = 'Registrazione avvenuta con successo!';
         console.log('Risposta dal server:', response);

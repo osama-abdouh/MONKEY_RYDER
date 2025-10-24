@@ -74,7 +74,18 @@ export class UsersManagementComponent implements OnInit {
 
   }
   createUser(): void {
-    // Implement create user functionality
+    this.userService.createUser(this.newUser).subscribe({
+      next: (data: User) => {
+        this.users.push(data);
+        this.filterUsers();
+        this.resetForm();
+        this.showCreate = false;
+        alert('Utente creato con successo!');
+      },
+      error: (err) => {
+        this.error = 'Errore nella creazione dell\'utente.';
+      }
+    });
   }
 
   deleteUser(user: User): void {
