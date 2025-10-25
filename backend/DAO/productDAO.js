@@ -287,6 +287,30 @@ const deleteProduct = async function (connection, id) {
   return result.rowCount > 0;
 };
 
+const getProductsByVehicle = async function (connection, vehicleId) {
+  const query = `
+    SELECT DISTINCT
+      p.id,
+      p.name,
+      p.description,
+      p.price,
+      p.category_id,
+      p.image_path,
+      p.quantity,
+      c.name AS category_name,
+      b.name AS brand_name
+    FROM products p
+    JOIN compatibility comp ON comp.product_id = p.id
+    LEFT JOIN categories c ON p.category_id = c.id
+    LEFT JOIN brand b ON p.brand_id = b.id
+    WHERE comp.vehicle_id = $1
+    ORDER BY p.name
+  `;
+  const result = await db.execute(connection, query, [vehicleId]);
+  return result;
+};
+
+
 module.exports = {
   getAllCategories,
   getAllProducts,
@@ -303,4 +327,5 @@ module.exports = {
   deleteCategory,
   createProduct,
   deleteProduct,
+  getProductsByVehicle,
 };

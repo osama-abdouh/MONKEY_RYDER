@@ -1,18 +1,23 @@
 .search-section{
-    background: black;
-    width: 60%;
-    height: 30vh;
-    margin: 0 auto;
+    background: #888888;
+    width: 80%;
+    min-height: 24vh;
+    margin: 2rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .search-container {
     max-width: 100%;
     margin: 0;
-    padding: 1.5rem 4rem;
+    padding: 1.5rem 2.5rem;
     width: 100%;
+    color: #888888;
+    box-sizing: border-box;
 }
 
 .search-container h2 {
-    text-align: start;
+    text-align: center;
     color: white;
     font-size: 1.7rem;
     margin-bottom: 1.5rem;
@@ -22,16 +27,23 @@
 .search-form{
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
 }
 .search-row{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 2rem;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    gap: 1.5rem 2rem;
+    width: 100%;
+    align-items: center;
+    justify-items: center;
 }
 .search-field {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 .search-field label{
     color: white;
@@ -43,10 +55,12 @@
 .search-field input {
     padding: 0.8rem 1rem;
     border: 1px solid #18191a;
-    border-radius: none;
+    border-radius: 6px;
     font-size: 1.25rem;
     background: white;
     transition: all 0.3s ease;
+    width: 100%;
+    max-width: 320px;
 }
 .search-field select:focus,
 .search-field input:focus {
@@ -57,13 +71,21 @@
 .search-button{
     padding: 0.8rem 1rem; /* Stesso padding dei select per uniformare l'altezza */
     border: 1px solid #18191a;
-    border-radius: none;
+    border-radius: 6px;
     font-size: 1.25rem;
     background: #D64933;
-    color: white; /* Aggiunto colore del testo per migliore leggibilità */
+    color: rgb(255, 255, 255); /* Aggiunto colore del testo per migliore leggibilità */
     cursor: pointer; /* Indica che è cliccabile */
     transition: all 0.3s ease;
-} 
+    align-self: center;
+    min-width: 140px;
+}
 
-
-
+/* Responsive: stack fields on small screens */
+@media (max-width: 768px) {
+  .search-section { width: 95%; margin: 1rem auto; }
+  .search-row { grid-template-columns: 1fr; gap: 1rem; }
+  .search-container h2 { font-size: 1.4rem; }
+  .search-field select, .search-field input { max-width: 100%; font-size: 1rem; }
+  .search-button { width: 100%; }
+}

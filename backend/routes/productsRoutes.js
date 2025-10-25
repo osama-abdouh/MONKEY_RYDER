@@ -19,6 +19,7 @@ router.post('/products/:productId/increment-sales', productController.incrementS
 router.get('/products/push', productController.getPushProducts);
 router.get('/products/count-less', productController.countLessProducts); 
 router.delete('/products/:id', productController.deleteProduct);
+router.get('/products/by-vehicle/:vehicleId', productController.getProductsByVehicle);
 
 router.post('/products/:id/image', fileUploadMiddleware, productController.uploadProductImage);
 

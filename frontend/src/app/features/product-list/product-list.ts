@@ -79,6 +79,16 @@ export class ProductListComponent implements OnInit {
     // Leggi i parametri di query
     this.route.queryParams.subscribe((params) => {
       this.searchTerm = params['search'] || '';
+      const vehicleIdParam = params['vehicleId'];
+
+      // If product-search navigated with a vehicleId, load by vehicle and return
+      if (vehicleIdParam) {
+        const vid = Number(vehicleIdParam);
+        if (!isNaN(vid)) {
+          this.getProductsByVehicle(vid);
+          return;
+        }
+      }
 
       console.log('Search term ricevuto:', this.searchTerm); // Debug
 
@@ -97,6 +107,24 @@ export class ProductListComponent implements OnInit {
     // Sottoscrivi agli aggiornamenti della wishlist
     this.wishlistManager.wishlistProductIds$.subscribe((ids) => {
       this.wishlistProductIds = ids;
+    });
+  }
+
+
+  getProductsByVehicle(vehicleId: number) {
+    this.loading = true;
+    this.error = '';
+    this.http.get<ProductItem[]>(`http://localhost:3000/api/products/by-vehicle/${vehicleId}`).subscribe({
+      next: (data) => {
+        this.products = data || [];
+        this.filteredProducts = [...this.products];
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Errore nel caricamento dei prodotti per il veicolo';
+        this.loading = false;
+        console.error('Errore getProductsByVehicle:', err);
+      }
     });
   }
 

@@ -5,8 +5,8 @@
         <div class="search-row">
             <div class="search-field">
             <label for="marca">Marca Auto</label>
-            <select id="marca" name="marca">
-                <option value="">--Seleziona--</option>
+            <select id="marca" name="marca" (change)="onMarcaChange($event)">
+                <option value="">Seleziona</option>
                 <option value="audi">Audi</option>
                 <option value="bmw">BMW</option>
                 <option value="fiat">Fiat</option>
@@ -15,34 +15,19 @@
                 <option value="volkswagen">Volkswagen</option>
             </select>
             </div>
-            
+           
             <div class="search-field">
             <label for="modello">Modello</label>
             <select id="modello" name="modello">
                 <option value="">Seleziona modello</option>
-                <option value="a3">A3</option>
-                <option value="golf">Golf</option>
-                <option value="panda">Panda</option>
+                <option *ngFor="let m of modelOptions" [value]="m">{{ m }}</option>
             </select>
             </div>
-            
+           
             <div class="search-field">
-            <label for="categoria">Categoria</label>
-            <select id="categoria" name="categoria">
-                <option value="">Seleziona categoria</option>
-                <option value="freni">Freni</option>
-                <option value="impianto">Impianto</option>
-                <option value="ammortizzatori">Ammortizzatori</option>
-                <option value="pneumatici">Pneumatici</option>
-                <option value="motore">Motore</option>
-                <option value="carrozzeria">Carrozzeria</option>
-            </select>
-            </div>
-            
-            <div class="search-field">
-                <label>&nbsp;</label> <!-- Label vuota per allineare -->
+                <label>&nbsp;</label> 
                 <button type="submit" class="search-button" (click)="searchProducts($event)">
-                    🔍 Cerca
+                    Cerca
                 </button>
             </div>
         </div>

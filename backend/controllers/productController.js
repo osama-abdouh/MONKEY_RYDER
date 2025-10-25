@@ -262,3 +262,17 @@ exports.deleteProduct = async (req, res) => {
     if (conn) conn.done();
   }
 };
+
+exports.getProductsByVehicle = async (req, res) => {
+  let conn = await db.getConnection();
+  try {
+    const vehicleId = req.params.vehicleId;
+    const products = await productDAO.getProductsByVehicle(conn, vehicleId);
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching products by vehicle:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (conn) conn.done();
+  }
+};
