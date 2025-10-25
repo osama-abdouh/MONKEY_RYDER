@@ -5,8 +5,13 @@ const { authenticateToken, isAdmin } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
+router.get('/user/me', authenticateToken, userController.getCurrentUser);
+
+
 router.get('/user', userController.getAllUsers);
 router.post('/user', authenticateToken, isAdmin, userController.createUser);
+
+router.put('/user/:userId', authenticateToken, isAdmin, userController.updateUser);
 
 router.get('/user/all', userController.getUsers);
 router.get('/user/max-order', userController.getMaxOrder);
@@ -18,7 +23,6 @@ router.get('/user/:userId', userController.getUserById);
 
 // GET /user/me -> dati dell'utente autenticato (deve comparire prima di /user/:userId)
 
-router.get('/user/me', authenticateToken, userController.getCurrentUser);
 // GET /api/users/addresses -> get saved addresses for authenticated user
 router.get('/users/addresses', authenticateToken, userController.getSavedAddresses);
 // PATCH /user/me -> aggiorna il profilo dell'utente autenticato

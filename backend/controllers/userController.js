@@ -60,6 +60,41 @@ exports.createUser = async function (req, res) {
     }
 }
 
+exports.updateUser = async function (req, res) {
+
+    let conn;
+    try {
+        const userId = req.params.userId;
+        const { first_name, last_name, email, birth_date, phone_number, role, account_status } = req.body;
+        // Validatori di base
+        if (!first_name || !last_name || !email) {
+            return res.status(400).json({ message: 'Campi obbligatori mancanti' });
+        }
+        conn = await db.getConnection();
+        const user = { 
+            email,
+            first_name,
+            last_name,
+            birth_date: birth_date || null,
+            phone_number: phone_number || null,
+            role: role || 'customer',
+            account_status: account_status || 'active'
+        };
+        const updateUser = await userDAO.updateUser(conn, userId, user);
+        if (!updateUser) return res.status(404).json({ message: 'Utente non trovato o aggiornamento fallito' });
+        res.json(updateUser);
+    } catch (error) {
+        console.error('controller/userController.js', error);
+        res.status(500).json({ 
+            message: 'User endpoint failed', 
+            error: error.message 
+        });
+    } finally {
+        if (conn) conn.done();
+    }
+}
+
+
 //???
 exports.getUsers = async function (req, res) {
     let conn;
@@ -76,7 +111,6 @@ exports.getUsers = async function (req, res) {
         if (conn) conn.done();
     }
 }
-
 exports.getUserById = async function (req, res) {
     let conn;
     try {

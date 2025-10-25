@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 export interface User {
-    id: number;
+    user_id: number;
     first_name: string;
     last_name: string;
     email: string;
@@ -30,9 +30,6 @@ export class UserService {
     createUser(userData: User): Observable<User> {
         return this.http.post<User>(`${this.apiUrl}/user`, userData);
     }
-
-
-    
     getUsers(queryParams: any = {}): Observable<User[]> {
         const keys = Object.keys(queryParams || {});
         let url = `${this.apiUrl}/user`;
@@ -42,6 +39,11 @@ export class UserService {
         }
         return this.http.get<User[]>(url);
     }
+    updateUser(userId: number | string, userData: Partial<User>): Observable<User> {
+        return this.http.put<User>(`${this.apiUrl}/user/${userId}`, userData);
+    }
+
+
     // Get current authenticated user (uses protected endpoint /user/me)
     getCurrentUser(): Observable<User> {
         return this.http.get<User>(`${this.apiUrl}/user/me`);

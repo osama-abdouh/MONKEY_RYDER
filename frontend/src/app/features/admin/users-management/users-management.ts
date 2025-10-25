@@ -19,7 +19,7 @@ export class UsersManagementComponent implements OnInit {
 
   showCreate: boolean = false;
   newUser: User = {
-    id: 0,
+    user_id: 0,
     first_name: '',
     last_name: '',
     email: '',
@@ -34,6 +34,10 @@ export class UsersManagementComponent implements OnInit {
 
   showDetails: boolean = false;
   selectedUser: User | null = null;
+  isEditing: boolean = false;
+  editedUser: User | null = null;
+
+  showOrders: boolean = false;
 
   orderCount: any[] = [];
 
@@ -51,8 +55,8 @@ export class UsersManagementComponent implements OnInit {
   fetchUsers() {
     this.userService.getAllUsers().subscribe({
       next: (data: User[]) => {
-        this.users = data;
-        this.filteredUsers = data;
+        this.users = data.filter(user => user.account_status !== 'deleted');
+        this.filteredUsers = this.users;
         this.currentPage = 1;
         this.loading = false;
       },
@@ -98,7 +102,7 @@ export class UsersManagementComponent implements OnInit {
   // funzioni x buttone crea utente
   resetForm(): void {
     this.newUser = {
-      id: 0,
+      user_id: 0,
       first_name: '',
       last_name: '',
       email: '',
@@ -136,30 +140,52 @@ export class UsersManagementComponent implements OnInit {
 
   toggleDetails(event: MouseEvent, user: User): void {
     this.showDetails = !this.showDetails;
+    this.isEditing = false;
     if (this.showDetails) {
       this.selectedUser = { ...user };
     }
   }
+  toggleEdit(event: MouseEvent, user: User): void {
+    this.isEditing = !this.isEditing;
+    if (this.isEditing) {
+      this.editedUser = { ...user };
+    }
+  }
+  saveChanges(): void {
+    if (!this.editedUser || !this.selectedUser) {
+      this.error = 'Nessun utente selezionato per la modifica.';
+      return;
+    }
+    console.log('Edited User:', this.editedUser);
+    console.log('Selected User:', this.selectedUser);
 
-  viewUserDetails(user: User): void {
-    // Implement view user details functionality
+    this.userService.updateUser(this.editedUser.user_id, this.editedUser).subscribe({
+      next: (response: any) => {
+        this.fetchUsers();
+        this.selectedUser = response.user || response;
+        this.isEditing = false;
+        alert('Utente aggiornato con successo!');
+      },
+      error: (err) => {
+        alert(`Errore nell\'aggiornamento dell\'utente: ${err.message}`);
+      }
+    });
   }
 
   deleteUser(user: User): void {
-    // Implement delete user functionality
+    const confirmation = confirm(`Sei sicuro di voler eliminare l'utente ${user.first_name} ${user.last_name}?`);
+    if (!confirmation) {
+      return;
+    }
+    const updatedUser = { ...user, account_status: 'deleted' };
+    this.userService.updateUser(user.user_id, updatedUser).subscribe({
+      next: () => {
+        this.fetchUsers();
+        alert('Utente eliminato con successo!');
+      },
+      error: (err) => {
+        this.error = 'Errore nell\'eliminazione dell\'utente.';
+      }
+    });
   }
-
-
-  editUser(user: User): void {
-    // Implement edit user functionality
-  }
-
-  changeRole(user: User): void {
-
-  }
-
-
-
-
-
 }

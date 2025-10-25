@@ -1,6 +1,6 @@
 // gestione della richiesta di login e token JWT
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, tap, BehaviorSubject, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SessionService } from './session.service';

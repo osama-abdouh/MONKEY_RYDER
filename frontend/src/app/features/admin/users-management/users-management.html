@@ -29,7 +29,7 @@
           </tr>
         </thead>
         <tbody>
-          @for(user of displayedUsers; track user.id) {
+          @for(user of displayedUsers; track user.user_id) {
             <tr>
               <td>{{ user.first_name + ' ' + user.last_name }}</td>
               <td>{{ user.email }}</td>
@@ -41,7 +41,7 @@
               <td>{{ user.last_login | date: 'dd/MM/yyyy'}}</td>
               <td class="actions-cell">
                 <button (click)="toggleDetails($event, user)">Dettagli</button>
-                <button (click)="changeRole(user)">{{ user.role === 'admin' ? 'Rendi utente' : 'Rendi admin' }}</button>
+                <button >Ordini</button>
                 <button (click)="deleteUser(user)">Elimina</button>
               </td>
             </tr>
@@ -123,20 +123,101 @@
       <header class="popup-header">
         <h3>Dettagli utente</h3>
       </header>
-      <div class="popup-body">
-        <p><strong>Nome:</strong> {{ selectedUser.first_name + ' ' + selectedUser.last_name }}</p>
-        <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-        <p><strong>Data di nascita:</strong> {{ selectedUser.birth_date | date: 'dd/MM/yyyy' }}</p>
-        <p><strong>Telefono:</strong> {{ selectedUser.phone_number }}</p>
-        <p><strong>Ruolo:</strong> {{ selectedUser.role }}</p>
-        <p><strong>Stato account:</strong> {{ selectedUser.account_status }}</p>
-        <p><strong>Data di creazione:</strong> {{ selectedUser.created_at | date: 'dd/MM/yyyy'}}</p>
-        <p><strong>Ultimo accesso:</strong> {{ selectedUser.last_login | date: 'dd/MM/yyyy'}}</p>
+      <div class="popup-body-details">
+        <div class="user-details">
+          <div class="detail-row">
+            <label>Nome:</label>
+            @if(!isEditing){
+              <p>{{ selectedUser.first_name }}</p>
+            } @else {
+              <input type="text" [(ngModel)]="editedUser!.first_name" class="form-control" placeholder="Nome" />
+            }
+          </div>
+          <div class="detail-row">
+            <label>Cognome:</label>
+            @if(!isEditing){
+              <p>{{ selectedUser.last_name }}</p>
+            } @else {
+              <input type="text" [(ngModel)]="editedUser!.last_name" class="form-control" placeholder="Cognome" />
+            }
+          </div>
+          <div class="detail-row">
+            <label>Email:</label>
+            @if(!isEditing){
+              <p>{{ selectedUser.email }}</p>
+            } @else {
+              <input type="email" [(ngModel)]="editedUser!.email" class="form-control" placeholder="Email" />
+            }
+          </div>
+
+          <div class="detail-row">
+            <label>Data di nascita:</label>
+            @if(!isEditing){
+              <p>{{ selectedUser.birth_date | date: 'dd/MM/yyyy' }}</p>
+            } @else {
+              <input type="date" [(ngModel)]="editedUser!.birth_date" class="form-control" />
+            }
+          </div>
+
+          <div class="detail-row">
+            <label>Telefono:</label>
+            @if(!isEditing){
+              <p>{{ selectedUser.phone_number }}</p>
+            } @else {
+              <input type="tel" [(ngModel)]="editedUser!.phone_number" class="form-control" placeholder="Telefono" />
+            }
+          </div>
+          <div class="detail-row">
+            <label>Ruolo:</label>
+            @if(!isEditing){
+              <p>{{ selectedUser.role }}</p>
+            } @else {
+              <select [(ngModel)]="editedUser!.role" class="form-control">
+                <option value="customer">customer</option>
+                <option value="admin">admin</option>
+              </select>
+            }
+          </div>
+          <div class="detail-row">
+            <label>Stato account:</label>
+            @if(!isEditing){
+              <p>{{ selectedUser.account_status }}</p>
+            } @else {
+              <select [(ngModel)]="editedUser!.account_status" class="form-control">
+                <option value="active">active</option>
+                <option value="suspended">suspended</option>
+              </select>
+            }
+          </div>
+          <div class="detail-row">
+            <label>Data di creazione:</label>
+            <p>{{ selectedUser.created_at | date: 'dd/MM/yyyy'}}</p>
+          </div>
+          <div class="detail-row">
+            <label>Ultimo accesso:</label>
+            <p>{{ selectedUser.last_login | date: 'dd/MM/yyyy'}}</p>
+          </div>
+        </div>
       </div>
-        <footer class="popup-footer">
-          <button class="annulla-button" (click)="toggleDetails($event, selectedUser)">Annulla</button>
-        </footer>
-      
+      <footer class="popup-footer">
+        @if(!isEditing){
+        <button class="edit-button" (click)="toggleEdit($event, selectedUser)">Modifica</button>
+        } @else {
+        <button class="save-button" (click)="saveChanges()">Salva</button>
+        }
+        <button class="annulla-button" (click)="toggleDetails($event, selectedUser)">Chiudi</button>
+      </footer>
+    </div>
+  </div>
+  }
+  @if(showOrders && selectedUser){
+  <div class="popup-overlay" aria-modal="true" role="dialog">
+    <div class="popup-content">
+      <header class="popup-header">
+        <h3>Ordini di {{ selectedUser.first_name + ' ' + selectedUser.last_name }}</h3>
+      </header>
+      <div class="popup-body">
+      </div>
     </div>
   </div>
   }
