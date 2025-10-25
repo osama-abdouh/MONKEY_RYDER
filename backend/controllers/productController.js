@@ -343,6 +343,12 @@ exports.getProductsByVehicle = async (req, res) => {
     res.json(products);
   } catch (error) {
     console.error("Error fetching products by vehicle:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (conn) conn.done();
+  }
+};
+
 exports.createBrand = async (req, res) => {
   let conn = await db.getConnection();
   try {
@@ -372,8 +378,4 @@ exports.deleteBrand = async (req, res) => {
   }
 };
 
-    res.status(500).json({ error: "Internal Server Error" });
-  } finally {
-    if (conn) conn.done();
-  }
-};
+
