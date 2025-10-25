@@ -86,7 +86,7 @@ export class ProductsManagementComponent implements OnInit {
   showCreateCategory: boolean = false;
   newCategory: Partial<Category> = {
     name: '',
-    image: ''
+    image: '',
   };
   selectedCategoryImage: File | null = null;
   categoryImagePreview: string | null = null;
@@ -436,6 +436,7 @@ export class ProductsManagementComponent implements OnInit {
 
     this.http.post(`${this.apiUrl}/categories/${categoryId}/image`, formData).subscribe({
       next: (response: any) => {
+        console.log('Immagine categoria caricata:', response);
         this.fetchCategories();
         this.showCreateCategory = false;
         this.newCategory = { name: '', image: '' };
@@ -445,14 +446,25 @@ export class ProductsManagementComponent implements OnInit {
       },
       error: (err) => {
         console.error("Errore nel caricamento dell'immagine categoria:", err);
-        alert('Categoria creata ma errore nel caricamento immagine');
+        console.error('Dettagli errore:', err.error);
+        alert(
+          'Categoria creata ma errore nel caricamento immagine: ' +
+            (err.error?.details || err.message)
+        );
+        this.fetchCategories();
+        this.showCreateCategory = false;
       },
     });
   }
 
   getCategoryImageUrl(category: Category): string {
+    console.log('Category:', category);
+    console.log('Category image:', category.image);
+
     if (category.image) {
-      return `http://localhost:3000/${category.image}`;
+      const url = `http://localhost:3000/${category.image}`;
+      console.log('Category image URL:', url);
+      return url;
     }
     return 'assets/placeholder.png';
   }
@@ -469,11 +481,12 @@ export class ProductsManagementComponent implements OnInit {
         alert('Categoria eliminata con successo!');
       },
       error: (err) => {
-        alert('Errore: impossibile eliminare la categoria. Potrebbe essere in uso da alcuni prodotti.');
+        alert(
+          'Errore: impossibile eliminare la categoria. Potrebbe essere in uso da alcuni prodotti.'
+        );
       },
     });
   }
-
 
   // GESTIONE BRAND
   toggleBrandManagement(): void {

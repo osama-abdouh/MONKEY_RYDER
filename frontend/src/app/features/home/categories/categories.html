@@ -1,3 +1,4 @@
+
 <div class="categorie-grid">
   <button 
     class="categoria-card" 
@@ -6,7 +7,7 @@
     (click)="onCategoryClick(category)"
   >
     <img 
-      [src]="category.image" 
+      [src]="getCategoryImageUrl(category)" 
       [alt]="category.name"
       (error)="onImageError($event)"
     />

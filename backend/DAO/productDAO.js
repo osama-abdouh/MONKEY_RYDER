@@ -178,8 +178,15 @@ const updateImagePath = async (connection, productId, imagePath) => {
 };
 
 const updateCategoryImage = async (connection, categoryId, imagePath) => {
-  const query = "UPDATE categories SET image = $1 WHERE id = $2";
-  await db.execute(connection, query, [imagePath, categoryId]);
+  console.log("=== UPDATE CATEGORY IMAGE DAO ===");
+  console.log("Category ID:", categoryId);
+  console.log("Image Path:", imagePath);
+
+  const query = "UPDATE categories SET image = $1 WHERE id = $2 RETURNING *";
+  const result = await db.execute(connection, query, [imagePath, categoryId]);
+
+  console.log("Update result:", result);
+  return result;
 };
 
 // Funzione per incrementare il contatore vendite
@@ -334,7 +341,6 @@ const getProductsByVehicle = async function (connection, vehicleId) {
   const result = await db.execute(connection, query, [vehicleId]);
   return result;
 };
-
 
 module.exports = {
   getAllCategories,

@@ -1,6 +1,5 @@
 const express = require("express");
 const productController = require("../controllers/productController");
-const db = require("../services/db");
 const fileUploadMiddleware = require("../middleware/fileUploadMiddleware");
 
 const router = express.Router();
@@ -17,7 +16,10 @@ router.get(
   "/products/category/name/:categoryName",
   productController.getProductsByCategoryName
 );
-router.get("/products/by-vehicle/:vehicleId", productController.getProductsByVehicle);
+router.get(
+  "/products/by-vehicle/:vehicleId",
+  productController.getProductsByVehicle
+);
 router.get("/categories", productController.getAllCategories);
 router.post("/categories", productController.createCategory);
 router.delete("/categories/:id", productController.deleteCategory);

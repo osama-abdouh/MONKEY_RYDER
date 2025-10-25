@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 export interface Category {
@@ -14,13 +14,13 @@ export interface Category {
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './categories.html',
-  styleUrls: ['./categories.css']
+  styleUrls: ['./categories.css'],
 })
 export class CategoriesComponent implements OnInit {
   categories: Category[] = [];
-  backendUrl = 'http://localhost:3000'; // URL del tuo backend
+  backendUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     this.loadCategories();
@@ -35,24 +35,29 @@ export class CategoriesComponent implements OnInit {
       error: (error) => {
         console.error('Errore nel caricamento delle categorie:', error);
         this.categories = [];
-        // Potresti mostrare un messaggio di errore invece
-      }
+      },
     });
   }
 
+  getCategoryImageUrl(category: Category): string {
+    if (category.image) {
+      return `${this.backendUrl}/${category.image}`;
+    }
+    return 'assets/placeholder.png';
+  }
+
   onCategoryClick(category: Category) {
-    // Naviga alla lista prodotti per categoria
     console.log('Categoria selezionata:', category);
-    // Puoi aggiungere la navigazione qui, ad esempio:
-    // this.router.navigate(['/products', 'category', category.id]);
+    this.router.navigate(['/product-list'], {
+      queryParams: { categoryId: category.id, categoryName: category.name },
+    });
   }
 
   onImageError(event: Event) {
     const target = event.target as HTMLImageElement;
     if (target) {
       console.log('Errore caricamento immagine:', target.src);
-      // Temporaneamente commentato per debug
-      // target.src = 'http://localhost:3000/images/Categorie/motore.jpg';
+      target.src = 'assets/placeholder.png';
     }
   }
 }
