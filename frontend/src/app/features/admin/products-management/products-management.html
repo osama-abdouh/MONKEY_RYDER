@@ -52,7 +52,7 @@
         </div>
       </div>
       }
-
+      
       <div class="items-list-with-images">
         @for (category of categories; track category.id) {
         <div class="category-card">
@@ -151,6 +151,7 @@
     <div class="error">{{ error }}</div>
     }
 
+    @if(!showBrandManagement && !showCategoryManagement){
     <div class="table-wrapper">
       <table>
         <thead>
@@ -203,6 +204,7 @@
       }
       <button (click)="nextPage()" [disabled]="currentPage === totalPages">Successivo</button>
     </div>
+  }
   </div>
 
   @if (showDetails && selectedProduct) {
