@@ -40,10 +40,15 @@ export class CategoriesComponent implements OnInit {
   }
 
   getCategoryImageUrl(category: Category): string {
+    console.log('Category:', category);
+    console.log('Category image:', category.image);
+
     if (category.image) {
-      return `${this.backendUrl}/${category.image}`;
+      const url = `${this.backendUrl}/${category.image}`;
+      console.log('Category image URL:', url);
+      return url;
     }
-    return 'assets/placeholder.png';
+    return 'assets/images/placeholder.png';
   }
 
   onCategoryClick(category: Category) {
@@ -57,7 +62,7 @@ export class CategoriesComponent implements OnInit {
     const target = event.target as HTMLImageElement;
     if (target) {
       console.log('Errore caricamento immagine:', target.src);
-      target.src = 'assets/placeholder.png';
+      target.src = 'assets/images/placeholder.png';
     }
   }
 }

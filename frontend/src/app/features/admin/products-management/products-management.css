@@ -20,7 +20,7 @@
 }
 
 .table-header h2 {
-  color: #E0E0E0;
+  color: #e0e0e0;
   margin: 0;
 }
 
@@ -34,13 +34,13 @@
   background-color: #444444;
   border: 1px solid #888888;
   border-radius: 2px;
-  color: #E0E0E0;
+  color: #e0e0e0;
   min-width: 250px;
 }
 
 .management-btn {
   padding: 0.6rem 1.2rem;
-  background-color: #FF9800;
+  background-color: #ff9800;
   color: white;
   border: none;
   border-radius: 2px;
@@ -68,13 +68,13 @@
 }
 
 .management-header h3 {
-  color: #E0E0E0;
+  color: #e0e0e0;
   margin: 0;
 }
 
 .small-create-btn {
   padding: 0.5rem 1rem;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 2px;
@@ -99,7 +99,7 @@
   background-color: #444444;
   border: 1px solid #888888;
   border-radius: 2px;
-  color: #E0E0E0;
+  color: #e0e0e0;
 }
 
 .items-list {
@@ -119,14 +119,14 @@
 }
 
 .item-name {
-  color: #E0E0E0;
+  color: #e0e0e0;
   font-weight: 500;
 }
 
 .delete-btn-small {
   padding: 0.4rem 0.8rem;
-  background-color: #D64933;
-  color: #E0E0E0;
+  background-color: #d64933;
+  color: #e0e0e0;
   border: none;
   border-radius: 2px;
   cursor: pointer;
@@ -137,7 +137,12 @@
   background-color: #b83a28;
 }
 
-.create-btn, .action-btn, .delete-btn, .edit-btn, .save-btn, .cancel-btn {
+.create-btn,
+.action-btn,
+.delete-btn,
+.edit-btn,
+.save-btn,
+.cancel-btn {
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 2px;
@@ -147,7 +152,7 @@
 }
 
 .create-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -163,7 +168,7 @@
 }
 
 .create-form h3 {
-  color: #E0E0E0;
+  color: #e0e0e0;
   margin-top: 0;
   margin-bottom: 1.5rem;
 }
@@ -184,7 +189,7 @@
 }
 
 .form-group label {
-  color: #BDB0A3;
+  color: #bdb0a3;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
@@ -196,7 +201,7 @@
   background-color: #444444;
   border: 1px solid #888888;
   border-radius: 2px;
-  color: #E0E0E0;
+  color: #e0e0e0;
 }
 
 .form-group textarea {
@@ -273,7 +278,6 @@
   align-items: center;
 }
 
-
 .form-actions {
   margin-top: 1.5rem;
   display: flex;
@@ -300,7 +304,7 @@
   text-align: center;
   padding: 0.8rem;
   border-bottom: 1px solid #888888;
-  color: #E0E0E0;
+  color: #e0e0e0;
 }
 
 .product-table th {
@@ -324,7 +328,7 @@
 }
 
 .action-btn {
-  background-color: #2196F3;
+  background-color: #2196f3;
   color: white;
   margin-right: 0.5rem;
 }
@@ -334,8 +338,8 @@
 }
 
 .delete-btn {
-  background-color: #D64933;
-  color: #E0E0E0;
+  background-color: #d64933;
+  color: #e0e0e0;
 }
 
 .delete-btn:hover {
@@ -353,7 +357,7 @@
 .pagination button {
   padding: 8px 12px;
   background-color: #444444;
-  color: #E0E0E0;
+  color: #e0e0e0;
   border: none;
   border-radius: 2px;
   cursor: pointer;
@@ -369,7 +373,7 @@
 }
 
 .pagination button.active {
-  background-color: #BDB0A3;
+  background-color: #bdb0a3;
   color: #161616;
 }
 
@@ -406,14 +410,14 @@
 
 .modal-header h3 {
   margin: 0;
-  color: #E0E0E0;
+  color: #e0e0e0;
 }
 
 .close-btn {
   background: none;
   border: none;
   font-size: 2rem;
-  color: #E0E0E0;
+  color: #e0e0e0;
   cursor: pointer;
   padding: 0;
   width: 30px;
@@ -424,7 +428,7 @@
 }
 
 .close-btn:hover {
-  color: #D64933;
+  color: #d64933;
 }
 
 .modal-body {
@@ -450,12 +454,12 @@
 
 .detail-info p {
   margin: 0.8rem 0;
-  color: #E0E0E0;
+  color: #e0e0e0;
   font-size: 1rem;
 }
 
 .detail-info strong {
-  color: #BDB0A3;
+  color: #bdb0a3;
 }
 
 .modal-footer {
@@ -467,7 +471,7 @@
 }
 
 .edit-btn {
-  background-color: #FF9800;
+  background-color: #ff9800;
   color: white;
 }
 
@@ -476,7 +480,7 @@
 }
 
 .save-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -486,20 +490,21 @@
 
 .cancel-btn {
   background-color: #888888;
-  color: #E0E0E0;
+  color: #e0e0e0;
 }
 
 .cancel-btn:hover {
   background-color: #757575;
 }
 
-.loading, .error {
+.loading,
+.error {
   text-align: center;
   padding: 2rem;
-  color: #E0E0E0;
+  color: #e0e0e0;
   font-size: 1.1rem;
 }
 
 .error {
-  color: #D64933;
+  color: #d64933;
 }

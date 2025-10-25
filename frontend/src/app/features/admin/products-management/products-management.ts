@@ -98,7 +98,7 @@ export class ProductsManagementComponent implements OnInit {
     name: '',
   };
 
-  pageSize: number = 10;
+  pageSize: number = 5;
   currentPage: number = 1;
 
   private apiUrl = 'http://localhost:3000/api';
