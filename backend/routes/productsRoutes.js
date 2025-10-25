@@ -1,7 +1,6 @@
-const express =require('express');
-const productController = require('../controllers/productController');
-const db = require('../services/db');
-const fileUploadMiddleware = require('../middleware/fileUploadMiddleware');
+const express = require("express");
+const productController = require("../controllers/productController");
+const fileUploadMiddleware = require("../middleware/fileUploadMiddleware");
 
 const router = express.Router();
 
@@ -23,25 +22,9 @@ router.get('/products/by-vehicle/:vehicleId', productController.getProductsByVeh
 
 router.post('/products/:id/image', fileUploadMiddleware, productController.uploadProductImage);
 
-// Query per ottenere la struttura del proprio database
-router.get('/db-structure', async (req, res) => {
-  const connection = await db.getConnection();
-  try {
-    const query = `
-      SELECT table_name, column_name, data_type, is_nullable 
-      FROM information_schema.columns 
-      WHERE table_schema = 'public' 
-      ORDER BY table_name, ordinal_position
-    `;
-    const result = await db.execute(connection, query);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await db.closeConnection(connection);
-  }
-});
+router.post("/brands", productController.createBrand);
+router.delete("/brands/:id", productController.deleteBrand);
+router.put("/products/:id", productController.updateProduct);
 
 
 module.exports = router;
-

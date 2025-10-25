@@ -1,1 +1,292 @@
-<p>products-management works!</p>
+<div class="product-page">
+  <div class="product-table">
+    <div class="table-header">
+      <h2>Gestione Prodotti</h2>
+      <div class="table-actions">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="filterProducts()"
+          placeholder="Cerca prodotto..."
+          class="search-input"
+        />
+        <button (click)="toggleCategoryManagement()" class="management-btn">
+          Gestisci Categorie
+        </button>
+        <button (click)="toggleBrandManagement()" class="management-btn">Gestisci Brand</button>
+        <button (click)="toggleCreate($event)" class="create-btn">
+          {{ showCreate ? 'Annulla' : 'Crea Prodotto' }}
+        </button>
+      </div>
+    </div>
+
+    @if (showCategoryManagement) {
+    <div class="management-section">
+      <div class="management-header">
+        <h3>Gestione Categorie</h3>
+        <button (click)="toggleCreateCategory()" class="small-create-btn">
+          {{ showCreateCategory ? 'Annulla' : '+ Nuova Categoria' }}
+        </button>
+      </div>
+
+      @if (showCreateCategory) {
+      <div class="create-category-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome Categoria</label>
+            <input type="text" [(ngModel)]="newCategory.name" placeholder="Nome categoria" />
+          </div>
+          <div class="form-group">
+            <label>Immagine Categoria</label>
+            <input type="file" (change)="onCategoryImageSelected($event)" accept="image/*" />
+          </div>
+        </div>
+        @if (categoryImagePreview) {
+        <div class="image-preview-container">
+          <img [src]="categoryImagePreview" alt="Preview" class="category-image-preview" />
+        </div>
+        }
+        <div class="form-actions">
+          <button (click)="createCategory()" class="save-btn">Crea Categoria</button>
+          <button (click)="toggleCreateCategory()" class="cancel-btn">Annulla</button>
+        </div>
+      </div>
+      }
+
+      <div class="items-list-with-images">
+        @for (category of categories; track category.id) {
+        <div class="category-card">
+          <img [src]="getCategoryImageUrl(category)" [alt]="category.name" class="category-thumb" />
+          <div class="category-info">
+            <span class="item-name">{{ category.name }}</span>
+            <button (click)="deleteCategory(category)" class="delete-btn-small">Elimina</button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    } @if (showBrandManagement) {
+    <div class="management-section">
+      <div class="management-header">
+        <h3>Gestione Brand</h3>
+        <button (click)="toggleCreateBrand()" class="small-create-btn">
+          {{ showCreateBrand ? 'Annulla' : '+ Nuovo Brand' }}
+        </button>
+      </div>
+
+      @if (showCreateBrand) {
+      <div class="inline-form">
+        <input type="text" [(ngModel)]="newBrand.name" placeholder="Nome brand" />
+        <button (click)="createBrand()" class="save-btn">Crea</button>
+      </div>
+      }
+
+      <div class="items-list">
+        @for (brand of brands; track brand.id) {
+        <div class="item-card">
+          <span class="item-name">{{ brand.name }}</span>
+          <button (click)="deleteBrand(brand)" class="delete-btn-small">Elimina</button>
+        </div>
+        }
+      </div>
+    </div>
+    } @if (showCreate) {
+    <div class="create-form">
+      <h3>Crea Nuovo Prodotto</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nome Prodotto</label>
+          <input type="text" [(ngModel)]="newProduct.name" placeholder="Nome prodotto" />
+        </div>
+        <div class="form-group">
+          <label>Prezzo (€)</label>
+          <input type="number" [(ngModel)]="newProduct.price" placeholder="0.00" />
+        </div>
+        <div class="form-group">
+          <label>Categoria</label>
+          <select [(ngModel)]="newProduct.category_id">
+            <option [value]="0">Seleziona categoria</option>
+            @for (cat of categories; track cat.id) {
+            <option [value]="cat.id">{{ cat.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Brand</label>
+          <select [(ngModel)]="newProduct.brand_id">
+            <option [value]="0">Seleziona brand</option>
+            @for (brand of brands; track brand.id) {
+            <option [value]="brand.id">{{ brand.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quantità</label>
+          <input type="number" [(ngModel)]="newProduct.quantity" placeholder="0" />
+        </div>
+        <div class="form-group full-width">
+          <label>Descrizione</label>
+          <textarea
+            [(ngModel)]="newProduct.description"
+            placeholder="Descrizione prodotto"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="form-group full-width">
+          <label>Immagine Prodotto</label>
+          <input type="file" (change)="onImageSelected($event)" accept="image/*" />
+          @if (imagePreview) {
+          <img [src]="imagePreview" alt="Preview" class="image-preview" />
+          }
+        </div>
+      </div>
+      <div class="form-actions">
+        <button (click)="createProduct()" class="save-btn">Crea Prodotto</button>
+        <button (click)="toggleCreate($event)" class="cancel-btn">Annulla</button>
+      </div>
+    </div>
+    } @if (loading) {
+    <div class="loading">Caricamento prodotti...</div>
+    } @if (error) {
+    <div class="error">{{ error }}</div>
+    }
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Immagine</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Brand</th>
+            <th>Prezzo</th>
+            <th>Quantità</th>
+            <th>Vetrina</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of displayedProducts; track product.id) {
+          <tr>
+            <td>
+              <img [src]="getProductImageUrl(product)" [alt]="product.name" class="product-thumb" />
+            </td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.category_name }}</td>
+            <td>{{ product.brand_name }}</td>
+            <td>€{{ product.price }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>
+              <input
+                type="checkbox"
+                [checked]="isInShowcase(product.id)"
+                (change)="toggleShowcase(product)"
+                class="showcase-checkbox"
+              />
+            </td>
+            <td>
+              <button (click)="toggleDetails($event, product)" class="action-btn">Dettagli</button>
+              <button (click)="deleteProduct(product)" class="delete-btn">Elimina</button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <button (click)="prevPage()" [disabled]="currentPage === 1">Precedente</button>
+      @for (page of pages; track page) {
+      <button (click)="goToPage(page)" [class.active]="currentPage === page">
+        {{ page }}
+      </button>
+      }
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages">Successivo</button>
+    </div>
+  </div>
+
+  @if (showDetails && selectedProduct) {
+  <div class="modal-overlay" (click)="showDetails = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing ? 'Modifica Prodotto' : 'Dettagli Prodotto' }}</h3>
+        <button (click)="showDetails = false" class="close-btn">×</button>
+      </div>
+
+      <div class="modal-body">
+        @if (!isEditing) {
+        <div class="product-detail-view">
+          <img
+            [src]="getProductImageUrl(selectedProduct)"
+            [alt]="selectedProduct.name"
+            class="product-image"
+          />
+          <div class="detail-info">
+            <p><strong>Nome:</strong> {{ selectedProduct.name }}</p>
+            <p><strong>Categoria:</strong> {{ selectedProduct.category_name }}</p>
+            <p><strong>Brand:</strong> {{ selectedProduct.brand_name }}</p>
+            <p><strong>Prezzo:</strong> €{{ selectedProduct.price }}</p>
+            <p><strong>Quantità:</strong> {{ selectedProduct.quantity }}</p>
+            <p><strong>Descrizione:</strong> {{ selectedProduct.description || 'N/A' }}</p>
+            <p><strong>In Vetrina:</strong> {{ isInShowcase(selectedProduct.id) ? 'Sì' : 'No' }}</p>
+          </div>
+        </div>
+        } @else {
+        <div class="product-edit-view">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nome</label>
+              <input type="text" [(ngModel)]="editedProduct!.name" />
+            </div>
+            <div class="form-group">
+              <label>Prezzo (€)</label>
+              <input type="number" [(ngModel)]="editedProduct!.price" />
+            </div>
+            <div class="form-group">
+              <label>Categoria</label>
+              <select [(ngModel)]="editedProduct!.category_id">
+                @for (cat of categories; track cat.id) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Brand</label>
+              <select [(ngModel)]="editedProduct!.brand_id">
+                @for (brand of brands; track brand.id) {
+                <option [value]="brand.id">{{ brand.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Quantità</label>
+              <input type="number" [(ngModel)]="editedProduct!.quantity" />
+            </div>
+            <div class="form-group full-width">
+              <label>Descrizione</label>
+              <textarea [(ngModel)]="editedProduct!.description" rows="3"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>Cambia Immagine</label>
+              <input type="file" (change)="onImageSelected($event)" accept="image/*" />
+              @if (imagePreview) {
+              <img [src]="imagePreview" alt="Preview" class="image-preview" />
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        @if (!isEditing) {
+        <button (click)="toggleEdit($event, selectedProduct)" class="edit-btn">Modifica</button>
+        } @else {
+        <button (click)="saveChanges()" class="save-btn">Salva Modifiche</button>
+        <button (click)="isEditing = false" class="cancel-btn">Annulla</button>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>

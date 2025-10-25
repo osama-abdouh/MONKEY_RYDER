@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 })
 
 export class ProductSearch {
-  // mapping brands -> models
   modelsByBrand: Record<string, string[]> = {
     audi: ['A3'],
     bmw: ['M4'],
@@ -23,7 +22,6 @@ export class ProductSearch {
 
   modelOptions: string[] = [];
 
-  // Simple frontend mapping brand|model -> vehicleId (adjust IDs to match your DB)
   vehicleMap: Record<string, number> = {
     'audi|a3': 1,
     'bmw|m4': 2,
@@ -34,12 +32,10 @@ export class ProductSearch {
   };
 
   constructor(private router: Router) {
-    // default: no brand selected
     this.modelOptions = [];
   }
 
   onMarcaChange(evtOrValue: any) {
-    // accept either the string value or the DOM event
     let brandValue = '';
     if (typeof evtOrValue === 'string') brandValue = evtOrValue;
     else if (evtOrValue && evtOrValue.target) brandValue = (evtOrValue.target as HTMLSelectElement).value;
@@ -60,14 +56,12 @@ export class ProductSearch {
 
     console.log('Ricerca prodotti con parametri:', searchData);
 
-    // try to resolve vehicleId from brand+model
     const brandKey = (searchData.marca || '').toLowerCase();
     const modelKey = (searchData.modello || '').toLowerCase();
     const mapKey = `${brandKey}|${modelKey}`;
     const vehicleId = this.vehicleMap[mapKey];
 
     if (vehicleId) {
-      // navigate to product-list page and pass vehicleId as query param
       this.router.navigate(['/product-list'], { queryParams: { vehicleId } });
       return;
     }
