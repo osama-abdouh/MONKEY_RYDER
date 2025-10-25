@@ -43,7 +43,6 @@ app.use(fileUploadMiddleware);
 
 // Endpoint per controllare lo stato del server per il frontend
 app.get('/health', (req, res) => {
-  // Restituisce un oggetto JSON che indica che il server è attivo
   res.json({ status: 'ok', message: 'Server is running' });
 });
 

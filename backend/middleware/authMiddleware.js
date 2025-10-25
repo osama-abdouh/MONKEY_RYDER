@@ -16,18 +16,22 @@ function authenticateToken(req, res, next) {
     parts.length === 2 && /^Bearer$/i.test(parts[0]) ? parts[1] : null; 
     // regex case-insensitive ( /^Bearer$/i ) per validare il prefisso “Bearer”
 
-  console.log("Token estratto:", token ? "Presente" : "Mancante"); // Aggiungi questo
+  console.log("Token estratto:", token ? "Presente" : "Mancante");// Log per debug presenza del token
 
   if (!token) return res.status(401).json({ message: "Token mancante" });
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
+      if(err.name === "TokenExpiredError") {
+        console.error("Token expired:", err);
+        return res.status(401).json({ message: "Token scaduto" });
+      }
       console.error("Token verification error:", err);
       return res.status(403).json({ message: "Token non valido" });
     }
     req.user = user;
     req.user.id = user.userId || user.id;
-    console.log("User autenticato:", req.user.id); // Aggiungi questo
+    console.log("User autenticato:", req.user.id);
     next();
   });
 }

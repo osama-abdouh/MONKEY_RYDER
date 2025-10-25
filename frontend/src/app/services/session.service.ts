@@ -7,7 +7,7 @@ export class SessionService {
   private readonly TOKEN_KEY = 'token';
 
   setToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token); // Usa localStorage per coerenza
+    localStorage.setItem(this.TOKEN_KEY, token);
   }
 
   getToken(): string | null {

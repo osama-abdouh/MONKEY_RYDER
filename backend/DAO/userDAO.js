@@ -1,17 +1,63 @@
 const db = require('../services/db');
 
-
-// colonne permesse come filtro (evita SQL injection)
-const ALLOWED_COLUMNS = ['user_id', 'first_name', 'last_name', 'email', 'birth_date', 'phone_number', 'role', 'account_status', 'created_at', 'last_login'];
-
 // Recupero degli utenti
 const getAllUsers = async function (connection) {
   const query = 'SELECT * FROM users';
   const result = await db.execute(connection, query);
   return result;
 };
+const findUserById = async function (connection, userId) {
+  const query = 'SELECT * FROM users WHERE user_id = $1';
+  const result = await db.execute(connection, query, [userId]);
+  return result[0] || null; // Restituisce singolo oggetto o null
+};
+const findUserByEmail = async function (connection, email) {
+    const rows = await db.execute(connection, 'SELECT * FROM users WHERE email = $1', [email]);
+    return rows[0] || null;
+};
+const createUser = async function (connection, user) {
+  const query = `INSERT INTO users 
+         (first_name, last_name, email, password_hash, birth_date, phone_number, role, account_status) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING *`;
+  const params = [user.first_name, user.last_name, user.email, user.password_hash, user.birth_date, user.phone_number, user.role, user.account_status];
+  const result = await db.execute(connection, query, params);
+  return result[0] || null;
+};
+const updateUser = async function (connection, userId, user) {
+  const query = `UPDATE users SET 
+         first_name = $1,
+          last_name = $2,
+          email = $3,
+          birth_date = $4,
+          phone_number = $5,
+          role = $6,
+          account_status = $7
+          WHERE user_id = $8
+          RETURNING *`;
+  const params = [user.first_name, user.last_name, user.email, user.birth_date, user.phone_number, user.role, user.account_status, userId];
+  const result = await db.execute(connection, query, params);
+  return result[0] || null;
+};
+
+// Elimina definitivamente un utente dal DB (hard delete)
+const deleteUser = async function (connection, userId) {
+  const sql = `DELETE FROM users WHERE user_id = $1 RETURNING *`;
+  const rows = await db.execute(connection, sql, [userId]);
+  return rows[0] || null;
+};
+// Elimina tutti gli ordini associati ad un utente
+const deleteOrdersByUser = async function (connection, userId) {
+  const sql = `DELETE FROM ordini WHERE user_id = $1`;
+  await db.execute(connection, sql, [userId]);
+  return true;
+};
+
+//??? colonne permesse come filtro (evita SQL injection)
+const ALLOWED_COLUMNS = ['user_id', 'first_name', 'last_name', 'email', 'birth_date', 'phone_number', 'role', 'account_status', 'created_at', 'last_login'];
 
 
+//???
 const findAllUsers = async function (connection, reqQuery = {}) {
   let sql = 'SELECT * FROM users'; // usa il nome reale della tabella
   const params = [];
@@ -31,31 +77,18 @@ const findAllUsers = async function (connection, reqQuery = {}) {
 };
 
 
-const findUserById = async function (connection, userId) {
-  const query = 'SELECT * FROM users WHERE user_id = $1';
-  const result = await db.execute(connection, query, [userId]);
-  return result[0] || null; // Restituisce singolo oggetto o null
-};
-
-const createUser = async function (connection, user) {
-  const query = `INSERT INTO users 
-         (first_name, last_name, email, password_hash, birth_date, phone_number, role, account_status) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-         RETURNING *`;
-  const params = [user.first_name, user.last_name, user.email, user.password_hash, user.birth_date, user.phone_number, user.role, user.account_status];
-  const result = await db.execute(connection, query, params);
-  return result[0] || null;
-};
-
-const findUserByEmail = async function (connection, email) {
-    const rows = await db.execute(connection, 'SELECT * FROM users WHERE email = $1', [email]);
-    return rows[0] || null;
-}
-
 const findUserByRole = async function (connection, role) {
   const rows = await db.execute(connection, 'SELECT * FROM users WHERE role = $1', [role]);
   return rows || null;
 };
+
+
+
+
+
+
+
+
 
 const maxOrder = async function (connection) {
   const params = [];
@@ -102,34 +135,9 @@ const updateUserRole = async function (connection, userId, role) {
   return rows[0] || null;
 };
 
-// Elimina definitivamente un utente dal DB (hard delete)
-const deleteUser = async function (connection, userId) {
-  const sql = `DELETE FROM users WHERE user_id = $1 RETURNING *`;
-  const rows = await db.execute(connection, sql, [userId]);
-  return rows[0] || null;
-};
-// Elimina tutti gli ordini associati ad un utente
-const deleteOrdersByUser = async function (connection, userId) {
-  const sql = `DELETE FROM ordini WHERE user_id = $1`;
-  await db.execute(connection, sql, [userId]);
-  return true;
-};
 
-// Aggiorna campi permessi di un utente (first_name, last_name, email, phone, birth_date)
-const updateUserFields = async function(connection, userId, fields = {}) {
-  const allowed = ['first_name', 'last_name', 'email', 'phone', 'birth_date'];
-  const keys = Object.keys(fields || {}).filter(k => allowed.includes(k));
-  if (!keys.length) return null;
 
-  const sets = keys.map((k, idx) => `${k} = $${idx + 1}`);
-  const params = keys.map(k => fields[k]);
-  // userId param at the end
-  params.push(userId);
 
-  const sql = `UPDATE users SET ${sets.join(', ')} WHERE user_id = $${params.length} RETURNING *`;
-  const rows = await db.execute(connection, sql, params);
-  return rows[0] || null;
-};
 
 const ordersCountPerUser = async function (connection) {
   // Conta il numero di ordini per ogni utente (inclusi utenti senza ordini)
@@ -147,8 +155,8 @@ const ordersCountPerUser = async function (connection) {
 
 
 module.exports = { 
-  getAllUsers, findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, 
-  RecentOrders, updateAccountStatus, updateUserRole, ordersCountPerUser, deleteUser, deleteOrdersByUser, updateUserFields };
+  getAllUsers, findAllUsers, findUserById, createUser, findUserByEmail, findUserByRole, maxOrder, updateUser,
+  RecentOrders, updateAccountStatus, updateUserRole, ordersCountPerUser, deleteUser, deleteOrdersByUser };
 // Return addresses for a specific user (attempt common Italian table 'indirizzi')
 const findAddressesByUser = async function(connection, userId) {
   // Try common Italian schema first

@@ -30,7 +30,9 @@ export class OrderService {
     return this.http.get<OrderDTO[]>(`${this.apiUrl}/orders/pending`);
   }
 
-  cancelOrder(id_ordine: number): Observable<{ message: string; order?: { id_ordine: number; stato: string } }> {
+  cancelOrder(
+    id_ordine: number
+  ): Observable<{ message: string; order?: { id_ordine: number; stato: string } }> {
     return this.http.patch<{ message: string; order?: { id_ordine: number; stato: string } }>(
       `${this.apiUrl}/orders/${id_ordine}/cancel`,
       {}
@@ -42,7 +44,9 @@ export class OrderService {
   getMyOrders(token?: string): Observable<OrderDTO[]> {
     const url = `${this.apiUrl}/orders/mine`;
     if (token) {
-      return this.http.get<OrderDTO[]>(url, { headers: { Authorization: `Bearer ${token}` } as any });
+      return this.http.get<OrderDTO[]>(url, {
+        headers: { Authorization: `Bearer ${token}` } as any,
+      });
     }
     return this.http.get<OrderDTO[]>(url);
   }
@@ -63,5 +67,11 @@ export class OrderService {
       return this.http.get<any>(url, { headers: { Authorization: `Bearer ${token}` } as any });
     }
     return this.http.get<any>(url);
+  }
+  // Avanza lo stato della consegna con località personalizzata
+  advanceOrderStatus(id_ordine: number, localita?: string): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/orders/${id_ordine}/advance-status`, {
+      localita: localita || 'Centro logistico',
+    });
   }
 }

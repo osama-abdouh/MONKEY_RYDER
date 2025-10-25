@@ -9,13 +9,13 @@
     </div>
 
     <div class="wl-card-body">
-      <div *ngIf="loading" class="loading-row">
+      @if(loading) {
+        <div class="loading-row">
         <div class="loading-spinner"></div>
         <div class="loading-txt">Caricamento...</div>
-      </div>
-
+        </div>
+      }
       
-
       <div *ngIf="!loading && wishlist.length === 0 && !error" class="empty-row">
         <h3>La tua wishlist è vuota</h3>
         <p>Aggiungi i prodotti che ti piacciono!</p>
