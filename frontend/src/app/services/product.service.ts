@@ -77,4 +77,5 @@ export class ProductService {
   getProductsByVehicle(vehicleId: number): Observable<Product[]> {
   return this.http.get<Product[]>(`${this.apiUrl}/products/by-vehicle/${vehicleId}`);
 }
+
 }

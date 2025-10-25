@@ -91,3 +91,11 @@
 }
 
 
+/* Responsive: stack fields on small screens */
+@media (max-width: 768px) {
+  .search-section { width: 95%; margin: 1rem auto; }
+  .search-row { grid-template-columns: 1fr; gap: 1rem; }
+  .search-container h2 { font-size: 1.4rem; }
+  .search-field select, .search-field input { max-width: 100%; font-size: 1rem; }
+  .search-button { width: 100%; }
+}

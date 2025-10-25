@@ -335,6 +335,14 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
+exports.getProductsByVehicle = async (req, res) => {
+  let conn = await db.getConnection();
+  try {
+    const vehicleId = req.params.vehicleId;
+    const products = await productDAO.getProductsByVehicle(conn, vehicleId);
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching products by vehicle:", error);
 exports.createBrand = async (req, res) => {
   let conn = await db.getConnection();
   try {
@@ -364,20 +372,6 @@ exports.deleteBrand = async (req, res) => {
   }
 };
 
-exports.getProductsByVehicle = async (req, res) => {
-  let conn = await db.getConnection();
-  try {
-    const vid = parseInt(req.params.vehicleId, 10);
-    if (isNaN(vid)) {
-      return res.status(400).json({ error: "vehicleId non valido" });
-    }
-    const products = await productDAO.getProductsByVehicle(conn, vid);
-    res.json(products);
-  } catch (error) {
-    console.error(
-      "Error fetching products by vehicle:",
-      error && error.message ? error.message : error
-    );
     res.status(500).json({ error: "Internal Server Error" });
   } finally {
     if (conn) conn.done();

@@ -1,1 +1,111 @@
-<p>coupons-management works!</p>
+<div class="coupon-page">
+  <div class="options-bar">
+    <label class="sr-only" for="coupon-search"></label>
+    <div class="search-wrapper">
+      <input id="coupon-search" type="search" placeholder="Cerca coupon..." [(ngModel)]="searchTerm" (ngModelChange)="filterCoupons()" aria-label="Cerca coupon" />
+    </div>
+    <button class="primary" (click)="toggleCreate($event)">Crea Nuovo Coupon</button>
+  </div>
+  <div class="coupon-table">
+    <div *ngIf="loading">Caricamento coupon...</div>
+    <div *ngIf="!loading && error" class="error">{{ error }}</div>
+    <div *ngIf="!loading && !error && coupons.length === 0">Nessun coupon trovato.</div>
+
+    <div *ngIf="!loading && !error && coupons.length > 0" class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Code</th>
+            <th>Tipo</th>
+            <th>Valore</th>
+            <th>Validità</th>
+            <th>Usi</th>
+            <th>Active</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of visibleCoupons; trackBy: couponTrack">
+            <td>{{ c.coupon_id }}</td>
+            <td>{{ c.code }}</td>
+            <td>{{ c.discount_type || 'N/A' }}</td>
+            <td>
+              <ng-container *ngIf="c.discount_type === 'percent'; else fixedVal">
+                {{ c.discount_value }} %
+              </ng-container>
+              <ng-template #fixedVal>€{{ c.discount_value }}</ng-template>
+            </td>
+            <td>
+              da: {{ c.valid_from | date:'dd/MM/yy' }}<br />
+              a: {{ c.valid_until | date:'dd/MM/yy' }}
+            </td>
+            <td>
+              {{ c.uses_count || 0 }} <span *ngIf="c.max_uses">/ {{ c.max_uses }}</span>
+            </td>
+            <td>{{ c.active ? 'Si' : 'No' }}</td>
+            <td class="actions-cell">
+              <button (click)="editCoupon(c)">Modifica</button>
+              <button (click)="deleteCoupon(c)">Elimina</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div *ngIf="modalVisible && editModel" class="popup-overlay">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h3>Modifica coupon</h3>
+    </div>
+    <div class="popup-body">
+      <div class="form-row">
+        <label>Code:</label>
+        <input type="text" [value]="editModel.code || ''" (input)="onInput($event,'code')" />
+      </div>
+      <div class="form-row">
+        <label>Tipo:</label>
+        <select (change)="onSelect($event,'discount_type')" [value]="editModel.discount_type || ''">
+          <option value="percent">percent</option>
+          <option value="fixed">fixed</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Valore:</label>
+        <input type="number" step="0.01" [value]="editModel.discount_value != null ? editModel.discount_value : ''" (input)="onNumberInput($event,'discount_value')" />
+      </div>
+      <div class="form-row">
+        <label>Validità da:</label>
+        <input type="date" [value]="(editModel.valid_from | date:'yyyy-MM-dd') || ''" (input)="onInput($event,'valid_from')" />
+      </div>
+      <div class="form-row">
+        <label>Validità a:</label>
+        <input type="date" [value]="(editModel.valid_until | date:'yyyy-MM-dd') || ''" (input)="onInput($event,'valid_until')" />
+      </div>
+      <div class="form-row">
+        <label>Usi massimi:</label>
+        <input type="number" [value]="editModel.max_uses != null ? editModel.max_uses : ''" (input)="onNumberInput($event,'max_uses')" />
+      </div>
+      <div class="form-row">
+        <label>Min ordine:</label>
+        <input type="number" step="0.01" [value]="editModel.min_order_amount != null ? editModel.min_order_amount : ''" (input)="onNumberInput($event,'min_order_amount')" />
+      </div>
+      <!-- Description removed: not present in DB, do not show or edit -->
+      <div class="form-row">
+        <label>Active:</label>
+        <select (change)="onSelect($event,'active')" [value]="(editModel.active === true) ? 'true' : 'false'">
+          <option value="true">Si</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+    </div>
+    <div class="popup-footer">
+      <button *ngIf="editModel?.coupon_id" (click)="saveEdit()">Modifica</button>
+      <button *ngIf="editModel && !editModel?.coupon_id" (click)="createCoupon()">Crea</button>
+      <button (click)="closeModal()">Chiudi</button>
+    </div>
+  </div>
+</div>

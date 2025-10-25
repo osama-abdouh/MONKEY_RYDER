@@ -100,20 +100,19 @@ export class Orfini implements OnInit {
     this.detailsLoading = false;
   }
 
-  // helper used by template: true when order status is pending (accepts localized forms)
+
   isOrderPending(): boolean {
-    // Prefer the latest tracking state (stato_pacco_latest). Fall back to order.stato or the orders list.
+    
     const order = this.selectedOrderDetails && this.selectedOrderDetails.order ? this.selectedOrderDetails.order : null;
     let st = order && order.stato_pacco_latest ? order.stato_pacco_latest : (order && order.stato ? order.stato : null);
-    // if still missing, try to find the order entry in the list (may have been enriched)
+
     if (!st && order && order.id_ordine) {
       const o = this.orders.find(x => x.id_ordine === order.id_ordine);
       if (o) st = (o as any).stato_pacco_latest || (o as any).stato || null;
     }
     if (!st) return false;
     const s = String(st).toLowerCase();
-    // treat several localized statuses as cancellable
-    const cancellable = [
+    const cancellable = ['-',
       'ordine ricevuto', 'ricevuto',
       'in preparazione', 'preparazione',
     ];

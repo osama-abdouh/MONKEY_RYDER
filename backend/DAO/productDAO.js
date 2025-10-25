@@ -342,6 +342,7 @@ const getProductsByVehicle = async function (connection, vehicleId) {
   return result;
 };
 
+
 module.exports = {
   getAllCategories,
   getAllProducts,
@@ -360,6 +361,7 @@ module.exports = {
   deleteCategory,
   createProduct,
   deleteProduct,
+  getProductsByVehicle,
   createBrand,
   deleteBrand,
 };

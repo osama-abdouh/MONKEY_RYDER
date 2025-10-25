@@ -3,10 +3,19 @@ const couponController = require('../controllers/couponController');
 
 const router = express.Router();
 
-// POST /api/coupons/validate -> validate coupon for an order
+
 router.post('/coupons/validate', couponController.validateCoupon);
 
-// POST /api/coupons/redeem -> mark coupon as used
+
 router.post('/coupons/redeem', couponController.redeemCoupon);
+
+
+router.post('/coupons', couponController.createCoupon);
+// GET all coupons
+router.get('/coupons', couponController.getAllCoupons);
+// Update coupon
+router.put('/coupons/:id', couponController.updateCoupon);
+// Delete coupon
+router.delete('/coupons/:id', couponController.deleteCoupon);
 
 module.exports = router;

@@ -137,11 +137,19 @@ exports.cancelOrder = async function (req, res) {
     const found = await orderDAO.findById(conn, id);
     if (!found || !found.order)
       return res.status(404).json({ message: "Order not found" });
-    const stato = (found.order.stato || "").toString().toLowerCase();
-    if (!["pending", "in attesa"].includes(stato))
-      return res
-        .status(400)
-        .json({ message: "Order not pending, cannot delete" });
+    const spediDAO = require("../DAO/spediDAO");
+    const events = await spediDAO.getTrackingByOrderId(conn, id);
+
+    let latestStatus = (found.order.stato || "").toString().toLowerCase();
+    if (events && events.length > 0) {
+      const latest = events.reduce((a, b) =>
+        new Date(a.data_evento) > new Date(b.data_evento) ? a : b
+      );
+      latestStatus = (latest.stato_pacco || latestStatus || "").toString().toLowerCase();
+    }
+    if (latestStatus.includes("spedito") || latestStatus.includes("in transito") || latestStatus.includes("in consegna") || latestStatus.includes("consegnato")) {
+      return res.status(400).json({ message: "Order already shipped or in delivery, cannot delete" });
+    }
 
     const ok = await orderDAO.deleteOrderAndRestoreStock(conn, id);
     if (!ok) return res.status(500).json({ message: "Failed to delete order" });

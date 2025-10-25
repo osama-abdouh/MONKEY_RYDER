@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './product-search.html',
   styleUrls: ['./product-search.css']
 })
+
 export class ProductSearch {
   modelsByBrand: Record<string, string[]> = {
     audi: ['A3'],
