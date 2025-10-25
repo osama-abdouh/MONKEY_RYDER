@@ -90,7 +90,6 @@ exports.getProductsByCategoryName = async (req, res) => {
 exports.searchProducts = async (req, res) => {
   let conn = await db.getConnection();
   try {
-
     const { search, category, brand, minPrice, maxPrice } = req.query;
 
     // Prepara i filtri
@@ -126,30 +125,87 @@ exports.uploadProductImage = async (req, res) => {
 
     const imageFile = req.files.image;
     const imageName = `product_${Date.now()}${path.extname(imageFile.name)}`;
-    const uploadPath = path.join(__dirname, '..', 'public', 'images', imageName);
+    const uploadPath = path.join(
+      __dirname,
+      "..",
+      "public",
+      "images",
+      imageName
+    );
 
     // Sposta file nella cartella immagini
     await imageFile.mv(uploadPath);
 
     // Aggiorna DB con il percorso immagine
-    await productDAO.updateImagePath(conn, productId, 'images/' + imageName);
+    await productDAO.updateImagePath(conn, productId, "images/" + imageName);
 
-    return res.json({ message: 'Immagine caricata', path: 'images/' + imageName });
+    return res.json({
+      message: "Immagine caricata",
+      path: "images/" + imageName,
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: 'Errore nel caricamento' });
+    return res.status(500).json({ error: "Errore nel caricamento" });
   } finally {
     if (conn) conn.done();
   }
 };
 
+exports.uploadCategoryImage = async (req, res) => {
+  let conn = await db.getConnection();
 
+  try {
+    const categoryId = req.params.id;
 
+    if (!req.file) {
+      return res.status(400).json({ error: "No image file uploaded" });
+    }
 
+    const imagePath = req.file.path.replace(/\\/g, "/");
 
+    await productDAO.updateCategoryImage(conn, categoryId, imagePath);
 
+    res.json({
+      message: "Category image uploaded successfully",
+      imagePath: imagePath,
+    });
+  } catch (error) {
+    console.error("Error uploading category image:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (conn) conn.done();
+  }
+};
 
+exports.updateProduct = async (req, res) => {
+  let conn = await db.getConnection();
+  try {
+    const productId = req.params.id;
+    const payload = req.body;
 
+    const keys = Object.keys(payload).filter(
+      (k) => !["id", "created_at", "updated_at"].includes(k.toLowerCase())
+    );
+
+    const setClauses = keys.map((k, i) => `${k} = $${i + 1}`).join(", ");
+    const params = [...keys.map((k) => payload[k]), productId];
+
+    const query = `
+      UPDATE products 
+      SET ${setClauses}
+      WHERE id = $${params.length}
+      RETURNING *
+    `;
+
+    const result = await db.execute(conn, query, params);
+    res.json(result[0]);
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (conn) conn.done();
+  }
+};
 
 exports.incrementSales = async (req, res) => {
   let conn = await db.getConnection();
@@ -258,6 +314,52 @@ exports.deleteProduct = async (req, res) => {
   } catch (error) {
     console.error("Error deleting product:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (conn) conn.done();
+  }
+};
+
+exports.createBrand = async (req, res) => {
+  let conn = await db.getConnection();
+  try {
+    const payload = req.body || {};
+    const created = await productDAO.createBrand(conn, payload);
+    res.status(201).json(created);
+  } catch (error) {
+    console.error("Error creating brand:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (conn) conn.done();
+  }
+};
+
+exports.deleteBrand = async (req, res) => {
+  let conn = await db.getConnection();
+  try {
+    const id = req.params.id;
+    const deleted = await productDAO.deleteBrand(conn, id);
+    if (deleted) return res.json({ success: true, id: Number(id) });
+    return res.status(404).json({ success: false, message: "Brand not found" });
+  } catch (error) {
+    console.error("Error deleting brand:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (conn) conn.done();
+  }
+};
+
+exports.getProductsByVehicle = async (req, res) => {
+  let conn = await db.getConnection();
+  try {
+    const vid = parseInt(req.params.vehicleId, 10);
+    if (isNaN(vid)) {
+      return res.status(400).json({ error: 'vehicleId non valido' });
+    }
+    const products = await productDAO.getProductsByVehicle(conn, vid);
+    res.json(products);
+  } catch (error) {
+    console.error('Error fetching products by vehicle:', error && error.message ? error.message : error);
+    res.status(500).json({ error: 'Internal Server Error' });
   } finally {
     if (conn) conn.done();
   }

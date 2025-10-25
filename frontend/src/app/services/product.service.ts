@@ -73,4 +73,8 @@ export class ProductService {
   deleteProduct(id: number): Observable<{ success: boolean }>{
     return this.http.delete<{ success: boolean }>(`${this.apiUrl}/products/${id}`);
   }
+
+  getProductsByVehicle(vehicleId: number): Observable<Product[]> {
+  return this.http.get<Product[]>(`${this.apiUrl}/products/by-vehicle/${vehicleId}`);
+}
 }

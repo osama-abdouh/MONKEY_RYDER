@@ -173,11 +173,14 @@ const searchProducts = async function (connection, filter = {}) {
 };
 
 const updateImagePath = async (connection, productId, imagePath) => {
-  const query = 'UPDATE products SET image_path = $1 WHERE id = $2';
+  const query = "UPDATE products SET image_path = $1 WHERE id = $2";
   await db.execute(connection, query, [imagePath, productId]);
 };
 
-
+const updateCategoryImage = async (connection, categoryId, imagePath) => {
+  const query = "UPDATE categories SET image = $1 WHERE id = $2";
+  await db.execute(connection, query, [imagePath, categoryId]);
+};
 
 // Funzione per incrementare il contatore vendite
 const incrementSalesCount = async function (
@@ -287,15 +290,63 @@ const deleteProduct = async function (connection, id) {
   return result.rowCount > 0;
 };
 
+const createBrand = async function (connection, payload) {
+  const deny = new Set(["id", "created_at", "updated_at"]);
+  const keys = Object.keys(payload || {}).filter(
+    (k) => !deny.has(String(k).toLowerCase())
+  );
+  if (keys.length === 0) {
+    throw new Error("No valid fields provided for brand");
+  }
+  const colsSql = keys.join(", ");
+  const params = keys.map((k) => payload[k]);
+  const valuesSql = keys.map((_, i) => `$${i + 1}`).join(", ");
+  const query = `INSERT INTO brand (${colsSql}) VALUES (${valuesSql}) RETURNING id, name`;
+  const result = await db.execute(connection, query, params);
+  return result && result[0] ? result[0] : null;
+};
+
+const deleteBrand = async function (connection, id) {
+  const query = `DELETE FROM brand WHERE id = $1`;
+  const result = await connection.result(query, [id]);
+  return result.rowCount > 0;
+};
+
+const getProductsByVehicle = async function (connection, vehicleId) {
+  const query = `
+    SELECT DISTINCT
+      p.id,
+      p.name,
+      p.description,
+      p.price,
+      p.category_id,
+      p.image_path,
+      p.quantity,
+      c.name AS category_name,
+      b.name AS brand_name
+    FROM products p
+    JOIN compatibility comp ON comp.product_id = p.id
+    LEFT JOIN categories c ON p.category_id = c.id
+    LEFT JOIN brand b ON p.brand_id = b.id
+    WHERE comp.vehicle_id = $1
+    ORDER BY p.name
+  `;
+  const result = await db.execute(connection, query, [vehicleId]);
+  return result;
+};
+
+
 module.exports = {
   getAllCategories,
   getAllProducts,
   getAllBrands,
+  getProductsByVehicle,
   getProductsByID,
   getProductsByCategory,
   getPushProducts,
   searchProducts,
   updateImagePath,
+  updateCategoryImage,
   incrementSalesCount,
   getProductsByCategoryName,
   countLessProducts,
@@ -303,4 +354,6 @@ module.exports = {
   deleteCategory,
   createProduct,
   deleteProduct,
+  createBrand,
+  deleteBrand,
 };

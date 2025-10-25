@@ -4,14 +4,13 @@ import { Api } from './services/api';
 import { SplashService } from './services/splash.service';
 import { HeaderComponent } from './layuot/header/header';
 import { FooterComponent } from './layuot/footer/footer';
-import { ColabComponent } from './layuot/colab/colab';
 import { SessionService } from './services/session.service';
 import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, ColabComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })
@@ -41,21 +40,5 @@ export class App implements OnInit {
         document.body.scrollTop = 0;
       }, 100);
     });
-
-    // Recupera lo stato del server al caricamento del componente
-    this.api.getHealth().subscribe({
-      next: (response) => {
-        this.serverStatus.set(response.status); // Aggiorna lo stato del server
-      },
-      error: (error) => {
-        console.error('Error fetching health status:', error);
-        this.serverStatus.set('Server not reachable');
-      },
-    });
-  }
-
-  logout() {
-    this.session.clearToken(); // Rimuove il token
-    this.router.navigate(['/login']);
   }
 }
