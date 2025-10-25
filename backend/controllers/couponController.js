@@ -58,3 +58,75 @@ exports.redeemCoupon = async function(req, res) {
     if (conn) conn.done();
   }
 };
+
+exports.createCoupon = async function(req, res) {
+  let conn;
+  try {
+    conn = await db.getConnection();
+    const payload = req.body || {};
+
+    // Basic validation
+    if (!payload.code) return res.status(400).json({ message: 'code obbligatorio' });
+    if (!payload.discount_value && payload.discount_value !== 0) return res.status(400).json({ message: 'discount_value obbligatorio' });
+
+    const created = await couponDAO.createCoupon(conn, payload);
+    res.status(201).json({ success: true, coupon: created });
+  } catch (err) {
+    console.error('couponController.createCoupon', err && err.message ? err.message : err);
+    res.status(500).json({ message: 'Create coupon failed', error: err.message });
+  } finally {
+    if (conn) conn.done();
+  }
+};
+
+exports.getAllCoupons = async function(req, res) {
+  let conn;
+  try {
+    conn = await db.getConnection();
+    const coupons = await couponDAO.getAllCoupons(conn);
+    res.json({ success: true, coupons });
+  } catch (err) {
+    console.error('couponController.getAllCoupons', err && err.message ? err.message : err);
+    res.status(500).json({ message: 'Get all coupons failed', error: err.message });
+  } finally {
+    if (conn) conn.done();
+  }
+};
+
+exports.updateCoupon = async function(req, res) {
+  let conn;
+  try {
+    conn = await db.getConnection();
+    const couponId = parseInt(req.params.id, 10);
+    if (isNaN(couponId)) return res.status(400).json({ message: 'coupon id non valido' });
+    const payload = req.body || {};
+    if (Object.keys(payload).length === 0) return res.status(400).json({ message: 'Nessun campo fornito per l\'aggiornamento' });
+
+    const updated = await couponDAO.updateCoupon(conn, couponId, payload);
+    if (!updated) return res.status(404).json({ success: false, message: 'Coupon non trovato' });
+    res.json({ success: true, coupon: updated });
+  } catch (err) {
+    console.error('couponController.updateCoupon', err && err.message ? err.message : err);
+    res.status(500).json({ message: 'Update coupon failed', error: err.message });
+  } finally {
+    if (conn) conn.done();
+  }
+};
+
+exports.deleteCoupon = async function(req, res) {
+  let conn;
+  try {
+    conn = await db.getConnection();
+    const couponId = parseInt(req.params.id, 10);
+    if (isNaN(couponId)) return res.status(400).json({ message: 'coupon id non valido' });
+
+    const deleted = await couponDAO.deleteCoupon(conn, couponId);
+    if (!deleted) return res.status(404).json({ success: false, message: 'Coupon non trovato' });
+    res.json({ success: true, coupon: deleted });
+  } catch (err) {
+    console.error('couponController.deleteCoupon', err && err.message ? err.message : err);
+    res.status(500).json({ message: 'Delete coupon failed', error: err.message });
+  } finally {
+    if (conn) conn.done();
+  }
+};
