@@ -47,9 +47,6 @@ export class OrdersManagementComponent {
     });
   }
 
-  viewOrderDetails(order: OrderDTO): void {
-    console.log("Visualizza dettagli per l'ordine:", order);
-  }
 
   advanceStatus(order: OrderDTO): void {
     const currentStatus = (order.stato_pacco_latest || order.stato || 'pending').toLowerCase();
