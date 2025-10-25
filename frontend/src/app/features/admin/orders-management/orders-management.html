@@ -19,7 +19,6 @@
             <th>Prezzo</th>
             <th>Data</th>
             <th>Pagamento</th>
-            <th>Stato</th>
             <th>Azioni</th>
           </tr>
         </thead>
@@ -37,11 +36,6 @@
               <br />
               <span class="payment-status" [class]="'status-' + order.payment_status">
                 {{ order.payment_status || 'N/A' }}
-              </span>
-            </td>
-            <td>
-              <span class="order-status" [class]="'status-' + order.stato">
-                {{ order.stato || 'N/A' }}
               </span>
             </td>
             <td class="actions-cell">
